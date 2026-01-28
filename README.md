@@ -215,7 +215,7 @@ Library:CreateSettingsPage(Window, KeybindList)
 ## 🚀 Full Example
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_GITHUB/REPO/main/CSGO_UI_Fixed.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
 
 local Window = Library:Window({
     Name = "Neverlose.lua",
