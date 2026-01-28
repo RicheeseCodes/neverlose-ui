@@ -1,187 +1,114 @@
-local Library = loadstring(game:HttpGet("YOUR_RAW_LINK_HERE"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
+local CheatName = "MyProject"
 
-local CheatName = "RemadeHub"
 Library.Folders = {
     Directory = CheatName,
     Configs = CheatName .. "/Configs",
     Assets = CheatName .. "/Assets",
 }
 
-local Accent = Color3.fromRGB(255, 65, 65)
-local Gradient = Color3.fromRGB(180, 0, 0)
+local Accent = Color3.fromRGB(255, 80, 80)
+local Gradient = Color3.fromRGB(120, 20, 20)
 
 Library.Theme.Accent = Accent
 Library.Theme.AccentGradient = Gradient
 Library:ChangeTheme("Accent", Accent)
 Library:ChangeTheme("AccentGradient", Gradient)
-
 local Window = Library:Window({
-    Name = "Remade Hub",
-    SubName = "Premium Script",
+    Name = "Like Neverlose UI",
+    SubName = "Example btw",
     Logo = "120959262762131"
 })
 
-local KeybindList = Library:KeybindList("Active Keybinds")
-
-Window:Category("Combat & Legit")
-
-local CombatPage = Window:Page({Name = "Aimbot", Icon = "138827881557940"})
-local AimSection = CombatPage:Section({Name = "Main Settings", Side = 1})
-
-local SilentAim = AimSection:Toggle({
-    Name = "Silent Aim",
-    Flag = "SilentAim",
-    Default = false,
-    Callback = function(Val)
-        print("Silent Aim:", Val)
-    end
+local KeybindList = Library:KeybindList("Keybinds")
+Library:Watermark({
+    "Like Neverlose UI",
+    "by ImInsane",
+    120959262762131
 })
 
-SilentAim:Keybind({
-    Flag = "SilentAimBind",
-    Default = Enum.KeyCode.E,
-    Mode = "Toggle",
-    Callback = function(Val)
-        print("Silent Bind:", Val)
-    end
-})
-
-AimSection:Keybind({
-    Name = "Trigger Bot (Hold)",
-    Flag = "TriggerBind",
-    Default = Enum.KeyCode.X,
-    Mode = "Hold",
-    Callback = function(Val)
-        print("TriggerBot Active:", Val)
-    end
-})
-
-AimSection:Slider({
-    Name = "FOV Radius",
-    Flag = "FovRadius",
-    Min = 0,
-    Max = 500,
-    Default = 100,
-    Suffix = "px",
-    Callback = function() end
-})
-
-Window:Category("Visuals & ESP")
-
-local VisualsPage = Window:Page({Name = "ESP", Icon = "100050851789190"})
-local EspSection = VisualsPage:Section({Name = "Player ESP", Side = 1})
-
-EspSection:Toggle({
-    Name = "Box ESP",
-    Flag = "BoxEsp",
-    Default = true,
-    Callback = function() end
-}):Colorpicker({
-    Flag = "BoxColor",
-    Default = Color3.fromRGB(255, 255, 255),
-    Callback = function() end
-})
-
-local ChatSection = VisualsPage:Section({Name = "Global Chat", Side = 2})
-local GlobalChat = VisualsPage:GlobalChat(2)
-
-local ChatUsers = {
-    {Name = "Admin", Icon = "rbxassetid://78993485446406"},
-    {Name = "User123", Icon = "rbxassetid://136061992085389"},
-    {Name = "Hacker", Icon = "rbxassetid://92657697206261"}
-}
-
-local ChatIndex = 1
-
-GlobalChat:OnMessageSendPressed(function()
-    local User = ChatUsers[ChatIndex]
-    GlobalChat:SendMessage(User.Icon, User.Name, GlobalChat:GetTypedMessage(), true)
-    GlobalChat:ClearText()
-    ChatIndex += 1
-    if ChatIndex > #ChatUsers then
-        ChatIndex = 1
+task.spawn(function()
+    while true do
+        local FPS = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
+        
+        Library:Watermark({
+            "Like Neverlose UI",
+            "by ImInsane",
+            120959262762131,
+            "FPS: " .. FPS
+        })
+        task.wait(0.5)
     end
 end)
 
-Window:Category("Miscellaneous")
+Window:Category("Main")
 
-local MiscPage = Window:Page({Name = "Settings", Icon = "103180437044643"})
-local MiscSection = MiscPage:Section({Name = "Character", Side = 1})
+local LegitPage = Window:Page({Name = "Legit", Icon = "138827881557940"})
+local MainSection = LegitPage:Section({Name = "Main Features", Side = 1})
 
-local SpeedToggle = MiscSection:Toggle({
-    Name = "Speedhack (Open Settings)",
-    Flag = "SpeedToggle",
-    Default = false,
-    Callback = function() end
+MainSection:Toggle({
+    Name = "Enabled",
+    Flag = "LegitEnabled",
+    Default = true,
+    Callback = function(Value)
+        print("Legit Enabled:", Value)
+    end
 })
 
-local SpeedSettings = SpeedToggle:Settings(200)
-
-SpeedSettings:Slider({
-    Name = "WalkSpeed",
-    Flag = "WalkSpeedVal",
-    Min = 16,
-    Max = 500,
+MainSection:Slider({
+    Name = "Speed Hack",
+    Flag = "SpeedSlider",
+    Min = 1,
+    Max = 100,
     Default = 16,
-    Callback = function(Val)
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Val
+    Suffix = " studs",
+    Callback = function(Value)
+        print("Speed set to:", Value)
     end
 })
 
-SpeedSettings:Label("Extra Options")
-
-SpeedSettings:Toggle({
-    Name = "Auto Jump",
-    Flag = "AutoJump",
-    Default = false,
-    Callback = function() end
-})
-
-MiscSection:Dropdown({
-    Name = "Multi Selection",
-    Flag = "MultiDrop",
-    Items = {"Legit", "Rage", "HvH", "Semi-Rage"},
-    Default = {"Legit"},
+MainSection:Dropdown({
+    Name = "Hitbox Type",
+    Flag = "HitboxType",
+    Default = {"Head"},
+    Items = {"Head", "Torso", "Arms", "Legs"},
     Multi = true,
-    Callback = function(Val)
-        for _, v in pairs(Val) do
-            print(v)
-        end
+    Callback = function(Value)
+        print("Selected Hitboxes:", table.concat(Value, ", "))
     end
 })
 
-local ListSection = MiscPage:Section({Name = "Player List (Listbox)", Side = 2})
-
-local PlayerList = ListSection:Listbox({
-    Flag = "PlayerList",
-    Size = 200,
-    Items = {},
-    Multi = false,
-    Callback = function(Val)
-        print("Selected Player:", Val)
+MainSection:Label("ESP Color"):Colorpicker({
+    Name = "Color",
+    Flag = "EspColor",
+    Default = Color3.fromRGB(255, 255, 255),
+    Callback = function(Value)
+        print("Color changed")
     end
 })
 
-for _, Player in pairs(game.Players:GetPlayers()) do
-    PlayerList:Add(Player.Name)
-end
-
-ListSection:Button({
-    Name = "Refresh Players",
+local MiscSection = LegitPage:Section({Name = "Misc", Side = 2})
+MiscSection:Button({
+    Name = "Test Notification",
     Callback = function()
-        for _, Player in pairs(game.Players:GetPlayers()) do
-            print(Player.Name)
-        end
+        Library:Notification({
+            Title = "System",
+            Description = "This is a test notification!",
+            Duration = 5,
+            Icon = "73789337996373"
+        })
     end
 })
 
-local SettingsPage = Library:CreateSettingsPage(Window, KeybindList)
-
-Library:Notification({
-    Title = "Welcome",
-    Description = "Script loaded successfully!",
-    Duration = 5,
-    Icon = "120959262762131"
+MiscSection:Keybind({
+    Name = "Test keybind",
+    Flag = "testkeybind",
+    Default = Enum.KeyCode.Delete,
+    Callback = function(Value)
+        print("Keybind pressed")
+    end
 })
 
+Window:Category("Settings")
+local SettingsPage = Library:CreateSettingsPage(Window, KeybindList)
 Window:Init()
