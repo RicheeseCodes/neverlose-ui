@@ -1,3 +1,4 @@
+// Hello :3
 local Library do 
     local Workspace = game:GetService("Workspace")
     local UserInputService = game:GetService("UserInputService")
@@ -1593,7 +1594,6 @@ local Library do
                     end)
 
                     if Data.Section.IsSettings ~= true then
-                        --print("sus")
                         for Index, Value in Library.OpenFrames do 
                             if Value ~= Colorpicker then
                                 Value:SetOpen(false)
@@ -1604,7 +1604,6 @@ local Library do
                     Library.OpenFrames[Colorpicker] = Colorpicker 
                 else
                     if not Data.Section.IsSettings then
-                        --print("sus2")
                         if Library.OpenFrames[Colorpicker] then 
                             Library.OpenFrames[Colorpicker] = nil
                         end
@@ -4326,7 +4325,7 @@ local Library do
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 50, 0, 28),
+                    Position = UDim2New(0, 50, 0, 32),
                     BorderSizePixel = 0,
                     TextTransparency = 0.4,
                     ZIndex = 2,
@@ -7372,7 +7371,6 @@ local Library do
         local ConfigsSection = Page:Section({Name = "Configs", Side = 2}) do 
             local ConfigSelected = nil
 
-            -- Сначала создаем элемент и записываем его в переменную
             local ConfigsDropdown = ConfigsSection:Listbox({
                 Flag = "ConfigsList", 
                 Items = { }, 
