@@ -1,4 +1,3 @@
--- Hello :3
 local Library do 
     local Workspace = game:GetService("Workspace")
     local UserInputService = game:GetService("UserInputService")
@@ -422,14 +421,9 @@ local Library do
                 local DragDelta = Input.Position - DragStart
                 local NewX = StartPosition.X.Offset + DragDelta.X
                 local NewY = StartPosition.Y.Offset + DragDelta.Y
-
-                local ScreenSize = Gui.Parent.AbsoluteSize
-                local GuiSize = Gui.AbsoluteSize
-        
-                NewX = MathClamp(NewX, 0, ScreenSize.X - GuiSize.X)
-                NewY = MathClamp(NewY, 0, ScreenSize.Y - GuiSize.Y)
-        
-                self:Tween(TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(0, NewX, 0, NewY)})
+                self:Tween(TweenInfo.new(0.05, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Position = UDim2New(StartPosition.X.Scale, NewX, StartPosition.Y.Scale, NewY)
+                })
             end
         
             local InputChanged
@@ -447,8 +441,10 @@ local Library do
                     InputChanged = Input.Changed:Connect(function()
                         if Input.UserInputState == Enum.UserInputState.End then
                             Dragging = false
-                            InputChanged:Disconnect()
-                            InputChanged = nil
+                            if InputChanged then
+                                InputChanged:Disconnect()
+                                InputChanged = nil
+                            end
                         end
                     end)
                 end
@@ -740,6 +736,11 @@ local Library do
             self.UnusedHolder:Clean()
         end
 
+        if self.WatermarkFrame then
+            self.WatermarkFrame.Instance:Destroy()
+            self.WatermarkFrame = nil
+        end
+
         for _, Object in pairs(self.ToClean) do
             if Object and Object.Parent then
                 Object:Destroy()
@@ -840,9 +841,9 @@ local Library do
         self.ThemeMap[Item] = ThemeData
     end
 
-	Library.ToRich = function(self, Text, Color)
-		return `<font color="rgb({MathFloor(Color.R * 255)}, {MathFloor(Color.G * 255)}, {MathFloor(Color.B * 255)})">{Text}</font>`
-	end
+    Library.ToRich = function(self, Text, Color)
+        return `<font color="rgb({MathFloor(Color.R * 255)}, {MathFloor(Color.G * 255)}, {MathFloor(Color.B * 255)})">{Text}</font>`
+    end
 
     Library.GetConfig = function(self)
         local Config = { } 
@@ -1890,7 +1891,8 @@ local Library do
                     Size = UDim2New(0, 100, 0, 30),
                     BorderSizePixel = 0,
                     AutomaticSize = Enum.AutomaticSize.XY,
-                    BackgroundColor3 = FromRGB(27, 25, 29)
+                    BackgroundColor3 = FromRGB(27, 25, 29),
+                    Visible = false,
                 })  Items["KeybindsList"]:AddToTheme({BackgroundColor3 = "Section Background"})
 
                 Items["KeybindsList"]:MakeDraggable()
@@ -2013,7 +2015,7 @@ local Library do
             end
 
             function KeybindList:SetVisibility(Bool)
-                Items["KeybindsList"].Instance.Visible = false
+                Items["KeybindsList"].Instance.Visible = Bool
             end
 
             function KeybindList:Add(Name, Key)
@@ -3204,11 +3206,9 @@ local Library do
                 Settings:Keybind({
                     Name = "Menu Keybind",
                     Flag = "MenuBind",
-                    Default = Enum.KeyCode.Insert,
+                    Default = Enum.KeyCode.Z,
                     Callback = function(Value)
-                        if Library.Flags["MenuBind"] then
-                            Library.MenuKeybind = tostring(Library.Flags["MenuBind"].Key)
-                        end
+                        Window:SetOpen(Value)
                     end
                 })
 
@@ -3428,6 +3428,180 @@ local Library do
             task.wait()
             Window:SetOpen(true)
             return setmetatable(Window, Library)
+        end
+
+        Library.Watermark = function(self, Data)
+            if not Library.WatermarkFrame then
+                Library.WatermarkFrame = Instances:Create("Frame", {
+                    Parent = Library.Holder.Instance,
+                    Name = "Watermark",
+                    AnchorPoint = Vector2New(0, 0),
+                    Position = UDim2New(0, 15, 0, 15),
+                    Size = UDim2New(0, 0, 0, 28), 
+                    AutomaticSize = Enum.AutomaticSize.X, 
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(27, 25, 29),
+                    ZIndex = 10,
+                    Visible = false
+                })
+                Library.WatermarkFrame:MakeDraggable()
+
+                Instances:Create("UICorner", {
+                    Parent = Library.WatermarkFrame.Instance,
+                    CornerRadius = UDimNew(0, 4)
+                })
+                
+                Instances:Create("UIStroke", {
+                    Parent = Library.WatermarkFrame.Instance,
+                    Color = FromRGB(0, 0, 0),
+                    Thickness = 1,
+                    Transparency = 0
+                })
+                local AccentLine = Instances:Create("Frame", {
+                    Parent = Library.WatermarkFrame.Instance,
+                    Name = "Accent",
+                    Size = UDim2New(1, 0, 0, 2),
+                    Position = UDim2New(0, 0, 0, 0), 
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255),
+                    ZIndex = 12
+                })
+                
+                Instances:Create("UICorner", {
+                    Parent = AccentLine.Instance,
+                    CornerRadius = UDimNew(0, 4)
+                })
+
+                local Gradient = Instances:Create("UIGradient", {
+                    Parent = AccentLine.Instance,
+                    Color = RGBSequence{
+                        RGBSequenceKeypoint(0, Library.Theme.Accent), 
+                        RGBSequenceKeypoint(1, Library.Theme.AccentGradient)
+                    }
+                })
+                
+                Gradient:AddToTheme({
+                    Color = function()
+                        return RGBSequence{
+                            RGBSequenceKeypoint(0, Library.Theme.Accent), 
+                            RGBSequenceKeypoint(1, Library.Theme.AccentGradient)
+                        }
+                    end
+                })
+
+                local Content = Instances:Create("Frame", {
+                    Parent = Library.WatermarkFrame.Instance,
+                    Name = "Content",
+                    Size = UDim2New(1, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    ZIndex = 11
+                })
+
+                Instances:Create("UIListLayout", {
+                    Parent = Content.Instance,
+                    FillDirection = Enum.FillDirection.Horizontal,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    VerticalAlignment = Enum.VerticalAlignment.Center,
+                    Padding = UDimNew(0, 6)
+                })
+
+                Instances:Create("UIPadding", {
+                    Parent = Content.Instance,
+                    PaddingLeft = UDimNew(0, 10),
+                    PaddingRight = UDimNew(0, 10),
+                    PaddingTop = UDimNew(0, 4) 
+                })
+
+                if Library.ToClean then
+                    table.insert(Library.ToClean, Library.WatermarkFrame.Instance)
+                end
+            end
+
+            local ContentFrame = Library.WatermarkFrame.Instance:FindFirstChild("Content")
+            for Index, Value in ipairs(Data) do
+                if Index > 1 then
+                    local SepName = "Sep_" .. Index
+                    local Sep = ContentFrame:FindFirstChild(SepName)
+                    if not Sep then
+                        Sep = Instances:Create("TextLabel", {
+                            Parent = ContentFrame,
+                            Name = SepName,
+                            Text = "|",
+                            TextColor3 = FromRGB(80, 80, 80),
+                            FontFace = Library.Font,
+                            TextSize = 14,
+                            BackgroundTransparency = 1,
+                            AutomaticSize = Enum.AutomaticSize.XY,
+                            LayoutOrder = (Index * 2) - 1,
+                            ZIndex = 11
+                        }).Instance
+                    end
+                end
+
+                local ItemName = "Item_" .. Index
+                local ExistingItem = ContentFrame:FindFirstChild(ItemName)
+                
+                local Type = type(Value)
+                local IsImage = (Type == "number" or (Type == "string" and string.find(Value, "rbxassetid")))
+
+                if ExistingItem then
+                    if IsImage and not ExistingItem:IsA("ImageLabel") then
+                        ExistingItem:Destroy()
+                        ExistingItem = nil
+                    elseif not IsImage and not ExistingItem:IsA("TextLabel") then
+                        ExistingItem:Destroy()
+                        ExistingItem = nil
+                    end
+                end
+
+                if not ExistingItem then
+                    if IsImage then
+                        ExistingItem = Instances:Create("ImageLabel", {
+                            Parent = ContentFrame,
+                            Name = ItemName,
+                            BackgroundTransparency = 1,
+                            Size = UDim2New(0, 14, 0, 14),
+                            ImageColor3 = FromRGB(255, 255, 255),
+                            LayoutOrder = Index * 2,
+                            ZIndex = 11
+                        }).Instance
+                    else
+                        ExistingItem = Instances:Create("TextLabel", {
+                            Parent = ContentFrame,
+                            Name = ItemName,
+                            TextColor3 = FromRGB(240, 240, 240),
+                            FontFace = Library.Font,
+                            TextSize = 13,
+                            BackgroundTransparency = 1,
+                            AutomaticSize = Enum.AutomaticSize.XY,
+                            LayoutOrder = Index * 2,
+                            ZIndex = 11
+                        }).Instance
+                    end
+                end
+
+                if IsImage then
+                    local ImageId = (Type == "number") and "rbxassetid://"..Value or Value
+                    if ExistingItem.Image ~= ImageId then
+                        ExistingItem.Image = ImageId
+                    end
+                else
+                    local TextVal = tostring(Value)
+                    if ExistingItem.Text ~= TextVal then
+                        ExistingItem.Text = TextVal
+                    end
+                end
+            end
+
+            for _, Child in pairs(ContentFrame:GetChildren()) do
+                if Child.Name:find("Item_") or Child.Name:find("Sep_") then
+                    local _, IndexStr = Child.Name:match("(%a+)_(%d+)")
+                    local Index = tonumber(IndexStr)
+                    if Index and Index > #Data then
+                        Child:Destroy()
+                    end
+                end
+            end
         end
 
         Library.Category = function(self, Name)
@@ -4249,6 +4423,7 @@ local Library do
                 Description = Data.Description or Data.Description or "",
                 Icon = Data.Icon or Data.icon or "123944728972740",
                 Side = Data.Side or Data.side or 1,
+                EnableToggle = Data.EnableToggle or Data.enabletoggle or false,
 
                 Items = { },
                 IsActive = true,
@@ -4305,7 +4480,7 @@ local Library do
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  --Items["Icon"]:AddToTheme({ImageColor3 = "Accent"})
+                })
                 
                 Instances:Create("UIGradient", {
                     Parent = Items["Icon"].Instance,
@@ -4325,7 +4500,7 @@ local Library do
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 50, 0, 32),
+                    Position = UDim2New(0, 50, 0, 28),
                     BorderSizePixel = 0,
                     TextTransparency = 0.4,
                     ZIndex = 2,
@@ -4349,7 +4524,8 @@ local Library do
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 50, 0, 10),
+                    -- Сохранил твою логику центрирования из прошлого вопроса
+                    Position = (Section.Description == "") and UDim2New(0, 50, 0, 19) or UDim2New(0, 50, 0, 10),
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 15,
@@ -4360,6 +4536,8 @@ local Library do
                     Parent = Items["Top"].Instance,
                     Name = "\0",
                     Active = false,
+                    -- ДОБАВЛЕНО: Видимость зависит от параметра EnableToggle
+                    Visible = Section.EnableToggle,
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
                     AutoButtonColor = false,
@@ -4370,7 +4548,7 @@ local Library do
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  --Items["Toggle"]:AddToTheme({BackgroundColor3 = "Accent"})
+                })
                 
                 Items["Circle"] = Instances:Create("Frame", {
                     Parent = Items["Toggle"].Instance,
@@ -5321,7 +5499,7 @@ local Library do
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
- 
+
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Slider"].Instance,
                     Name = "\0",
@@ -5483,11 +5661,11 @@ local Library do
                 if Bool then 
                     Items["RealSlider"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 20, 1, -3)})
                     Items["Text"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 0)})
-                   -- Items["Value"].Instance.TextTransparency = 0.3
+                -- Items["Value"].Instance.TextTransparency = 0.3
                 else
                     Items["RealSlider"].Instance.Position = UDim2New(0, 80, 1, -3)
                     Items["Text"].Instance.Position = UDim2New(0, 80, 0, 0)
-                   -- Items["Value"].Instance.TextTransparency = 1
+                -- Items["Value"].Instance.TextTransparency = 1
                 end
             end
 
@@ -5711,7 +5889,7 @@ local Library do
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
                 })  Items["OptionHolder"]:AddToTheme({BackgroundColor3 = "Background"})
-                 
+                
                 Instances:Create("UIStroke", {
                     Parent = Items["OptionHolder"].Instance,
                     Name = "\0",
@@ -5888,13 +6066,13 @@ local Library do
                     if type(Option) ~= "table" then 
                         return
                     end
- 
+
                     Dropdown.Value = Option
                     Library.Flags[Dropdown.Flag] = Option
 
                     for Index, Value in Option do
                         local OptionData = Dropdown.Options[Value]
-                         
+                        
                         if not OptionData then
                             continue
                         end
@@ -6121,13 +6299,25 @@ local Library do
                 end
             end
 
-            function Dropdown:Refresh(List)
-                for Index, Value in Dropdown.Options do 
-                    Dropdown:Remove(Value.Name)
+            function Dropdown:Refresh(List, DefaultVal)
+                local OptionsToRemove = {}
+                for Name, _ in pairs(Dropdown.Options) do
+                    table.insert(OptionsToRemove, Name)
                 end
-
-                for Index, Value in List do 
+                for _, Name in ipairs(OptionsToRemove) do
+                    Dropdown:Remove(Name)
+                end
+                Dropdown.Options = {}
+                Dropdown.OptionsWithIndexes = {}
+                for Index, Value in ipairs(List) do
                     Dropdown:Add(Value)
+                end
+                if DefaultVal then
+                    Dropdown:Set(DefaultVal)
+                else
+                    Dropdown.Value = nil
+                    Library.Flags[Dropdown.Flag] = nil
+                    Items["Value"].Instance.Text = "..." 
                 end
             end
 
@@ -7118,7 +7308,7 @@ local Library do
 
                     for Index, Value in Option do
                         local OptionData = Dropdown.Options[Value]
-                         
+                        
                         if not OptionData then
                             continue
                         end
@@ -7367,8 +7557,7 @@ local Library do
 
     Library.CreateSettingsPage = function(self, Window, KeybindList)
         local Page = Window:Page({Name = "Settings", Icon = "122669828593160"})
-
-        local ConfigsSection = Page:Section({Name = "Configs", Side = 2}) do 
+        local ConfigsSection = Page:Section({Name = "Configs", Side = 1}) do 
             local ConfigSelected = nil
 
             local ConfigsDropdown = ConfigsSection:Listbox({
@@ -7400,7 +7589,6 @@ local Library do
                         local FinalName = InputName:find(".json") and InputName or InputName .. ".json"
                         writefile(Library.Folders.Configs .. "/" .. FinalName, Library:GetConfig())
                         
-                        -- Обновляем список
                         Library:RefreshConfigsList(ConfigsDropdown)
                     end
                 end
@@ -7446,6 +7634,30 @@ local Library do
                 makefolder(Library.Folders.Configs)
             end
             Library:RefreshConfigsList(ConfigsDropdown)
+        end
+
+        local UISection = Page:Section({Name = "UI Settings", Side = 2}) do
+            UISection:Toggle({
+                Name = "Watermark",
+                Flag = "WatermarkToggle",
+                Default = false,
+                Callback = function(Value)
+                    if Library.WatermarkFrame then
+                        Library.WatermarkFrame.Instance.Visible = Value
+                    end
+                end
+            })
+
+            UISection:Toggle({
+                Name = "Keybind List",
+                Flag = "KeybindListToggle",
+                Default = false,
+                Callback = function(Value)
+                    if KeybindList then
+                        KeybindList:SetVisibility(Value)
+                    end
+                end
+            })
         end
 
         return Page
