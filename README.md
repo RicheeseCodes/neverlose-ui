@@ -37,7 +37,7 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImIns
 
 ### 2. Setup Directories & Theme
 
-> ⚠️ **Note:** It is recommended to set up the theme **before** creating the window to prevent color flickering on startup.
+> **Note:** You can "rewrite" default colors using Accent and Gradient below
 
 ```lua
 local CheatName = "MyProject"
