@@ -1,4 +1,3 @@
-
 local Library do 
     local Workspace = game:GetService("Workspace")
     local UserInputService = game:GetService("UserInputService")
@@ -893,6 +892,10 @@ local Library do
     end
 
     Library.RefreshConfigsList = function(self, Element)
+        if not Element or not Element.Refresh then 
+            return 
+        end
+
         local List = { }
 
         if isfolder(Library.Folders.Configs) then
@@ -3204,7 +3207,9 @@ local Library do
                     Flag = "MenuBind",
                     Default = Enum.KeyCode.Insert,
                     Callback = function(Value)
-                        Window:SetOpen(Value)
+                        if Library.Flags["MenuBind"] then
+                            Library.MenuKeybind = tostring(Library.Flags["MenuBind"].Key)
+                        end
                     end
                 })
 
@@ -7367,6 +7372,7 @@ local Library do
         local ConfigsSection = Page:Section({Name = "Configs", Side = 2}) do 
             local ConfigSelected = nil
 
+            -- Сначала создаем элемент и записываем его в переменную
             local ConfigsDropdown = ConfigsSection:Listbox({
                 Flag = "ConfigsList", 
                 Items = { }, 
@@ -7382,7 +7388,6 @@ local Library do
                 Numeric = false,
                 Finished = false,
                 Callback = function(Value)
-                    -- Значение берется из флагов
                 end
             })
 
@@ -7390,14 +7395,14 @@ local Library do
                 Name = "Create",
                 Callback = function()
                     local InputName = Library.Flags["ConfigsName"]
-                    
                     if InputName and InputName ~= "" then
                         if not isfolder(Library.Folders.Configs) then
                             makefolder(Library.Folders.Configs)
                         end
-
                         local FinalName = InputName:find(".json") and InputName or InputName .. ".json"
                         writefile(Library.Folders.Configs .. "/" .. FinalName, Library:GetConfig())
+                        
+                        -- Обновляем список
                         Library:RefreshConfigsList(ConfigsDropdown)
                     end
                 end
@@ -7438,6 +7443,7 @@ local Library do
                     Library:RefreshConfigsList(ConfigsDropdown)
                 end
             })
+            
             if not isfolder(Library.Folders.Configs) then
                 makefolder(Library.Folders.Configs)
             end
