@@ -4,7 +4,6 @@ You can copy the raw code block below and paste it directly into your GitHub rep
 
 ***
 
-```markdown
 # 🎨 CSGO UI Library
 
 > A premium, optimized, and fully customizable UI Library for Roblox, inspired by the Neverlose cheat menu.
