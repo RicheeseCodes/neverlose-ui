@@ -1,4 +1,4 @@
-// Hello :3
+-- Hello :3
 local Library do 
     local Workspace = game:GetService("Workspace")
     local UserInputService = game:GetService("UserInputService")
