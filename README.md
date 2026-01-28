@@ -1,12 +1,6 @@
-Here is the final, polished version of the **README.md**. I have organized it to be cleaner, added a Table of Contents for easier navigation, and ensured all code blocks are syntax-highlighted and commented for clarity.
+# 🎨 "Like Neverlose" Library
 
-You can copy the raw code block below and paste it directly into your GitHub repository.
-
-***
-
-# 🎨 CSGO UI Library
-
-> A premium, optimized, and fully customizable UI Library for Roblox, inspired by the Neverlose cheat menu.
+> A optimized, and fully customizable UI Library for Roblox, inspired by the Neverlose cheat menu.
 
 ![Lua](https://img.shields.io/badge/Language-Lua-blue.svg) ![Platform](https://img.shields.io/badge/Platform-Roblox-red.svg) ![Status](https://img.shields.io/badge/Status-Active-success.svg)
 
