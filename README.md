@@ -20,10 +20,8 @@ A clean and powerful UI library inspired by **Neverlose** aesthetics, designed f
 Load the library using `loadstring`.
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/source.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
 ```
-
-> ⚠️ Make sure to use a **RAW** link (GitHub, Gist, Pastebin).
 
 ---
 
