@@ -1,23 +1,20 @@
-# Neverlose UI
+# 🎨 CSGO UI Library
 
-A clean and powerful UI library inspired by **Neverlose** aesthetics, designed for Roblox scripts. Built for flexibility, configurability, and a modern cheat-style interface.
+> A premium, optimized, and fully customizable UI Library for Roblox, inspired by Neverlose cheat menu.
 
----
-
-## Features
-
-* CS:GO / Neverlose–inspired design
-* Window, pages, sections system
-* Rich UI elements (toggles, sliders, dropdowns, etc.)
-* Built-in **Settings Page** (theme, menu bind, configs)
-* **Global Chat** component (visual)
-* Config & keybind support
+![Lua](https://img.shields.io/badge/Language-Lua-blue.svg) ![Platform](https://img.shields.io/badge/Platform-Roblox-red.svg) ![Status](https://img.shields.io/badge/Status-Active-success.svg)
 
 ---
 
-## Installation
+## ✨ Overview
 
-Load the library using `loadstring`.
+**CSGO UI Library** is a modern Roblox UI framework focused on performance, flexibility, and clean visuals. It provides a full cheat-style interface with advanced configuration support, dynamic UI elements, and a redesigned settings system.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Load the Library
 
 ```lua
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
@@ -25,13 +22,40 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImIns
 
 ---
 
-## 🪟 Creating a Window
+### 2. Setup Directories & Theme
+
+> ⚠️ Recommended to do **before** creating the window to avoid color flickering.
+
+```lua
+local CheatName = "MyProject"
+
+-- Folder setup
+Library.Folders = {
+    Directory = CheatName,
+    Configs = CheatName .. "/Configs",
+    Assets = CheatName .. "/Assets",
+}
+
+-- Theme colors
+local Accent = Color3.fromRGB(0, 116, 224)
+local Gradient = Color3.fromRGB(0, 195, 255)
+
+Library.Theme.Accent = Accent
+Library.Theme.AccentGradient = Gradient
+
+Library:ChangeTheme("Accent", Accent)
+Library:ChangeTheme("AccentGradient", Gradient)
+```
+
+---
+
+### 3. Create Window
 
 ```lua
 local Window = Library:Window({
-    Name = "Cheat Name",
-    SubName = "best cheat",
-    Logo = "120959262762131" -- Image ID (numbers only)
+    Name = "Project Name",
+    SubName = "Best script hub",
+    Logo = "120959262762131" -- rbxassetid (numbers only)
 })
 ```
 
@@ -40,8 +64,11 @@ local Window = Library:Window({
 ## 📑 Pages (Tabs)
 
 ```lua
-local RageTab = Window:Page({Name = "Rage", Icon = "138827881557940", Columns = 2})
-local VisualsTab = Window:Page({Name = "Visuals", Icon = "100050851789190", Columns = 2})
+local CombatTab = Window:Page({
+    Name = "Combat",
+    Icon = "138827881557940",
+    Columns = 2
+})
 ```
 
 * `Columns`: `1` or `2`
@@ -51,11 +78,10 @@ local VisualsTab = Window:Page({Name = "Visuals", Icon = "100050851789190", Colu
 ## 📦 Sections
 
 ```lua
-local MainSection = RageTab:Section({
-    Name = "Main Settings",
-    Description = "Core settings",
-    Icon = "123944728972740",
-    Side = 1 -- 1 = left, 2 = right
+local AimbotSection = CombatTab:Section({
+    Name = "Aimbot",
+    Side = 1, -- 1 = Left, 2 = Right
+    EnableToggle = true -- Allows collapsing
 })
 ```
 
@@ -66,9 +92,9 @@ local MainSection = RageTab:Section({
 ### Toggle
 
 ```lua
-local Toggle = MainSection:Toggle({
-    Name = "Enable Feature",
-    Flag = "FeatureToggle",
+local Toggle = AimbotSection:Toggle({
+    Name = "Enabled",
+    Flag = "AimToggle",
     Default = false,
     Callback = function(Value)
         print(Value)
@@ -82,9 +108,10 @@ local Toggle = MainSection:Toggle({
 
 ```lua
 Toggle:Colorpicker({
-    Flag = "FeatureColor",
+    Flag = "AimColor",
     Default = Color3.fromRGB(255, 0, 0),
-    Alpha = false
+    Alpha = 1,
+    Callback = function(Color, Alpha) end
 })
 ```
 
@@ -92,9 +119,10 @@ Toggle:Colorpicker({
 
 ```lua
 Toggle:Keybind({
-    Flag = "FeatureBind",
+    Flag = "AimBind",
     Default = Enum.KeyCode.E,
-    Mode = "Toggle" -- Toggle / Hold / Always
+    Mode = "Toggle", -- Hold / Toggle / Always
+    Callback = function(State) end
 })
 ```
 
@@ -103,17 +131,15 @@ Toggle:Keybind({
 ### Slider
 
 ```lua
-MainSection:Slider({
-    Name = "WalkSpeed",
-    Flag = "Speed",
-    Min = 16,
-    Max = 200,
-    Default = 16,
+AimbotSection:Slider({
+    Name = "FOV",
+    Flag = "FovSlider",
+    Min = 0,
+    Max = 100,
+    Default = 90,
     Decimals = 1,
-    Suffix = " studs",
-    Callback = function(Value)
-        print(Value)
-    end
+    Suffix = "°",
+    Callback = function(Value) end
 })
 ```
 
@@ -122,8 +148,8 @@ MainSection:Slider({
 ### Button
 
 ```lua
-MainSection:Button({
-    Name = "Execute",
+AimbotSection:Button({
+    Name = "Refresh",
     Callback = function()
         print("Clicked")
     end
@@ -132,15 +158,25 @@ MainSection:Button({
 
 ---
 
-### Dropdown
+### Dropdown (Dynamic)
 
 ```lua
-MainSection:Dropdown({
-    Name = "Target",
-    Flag = "TargetPart",
-    Items = {"Head", "Torso", "Legs"},
-    Default = "Head",
-    Multi = false
+local SkinSelector = AimbotSection:Dropdown({
+    Name = "Select Skin",
+    Flag = "SkinDrop",
+    Items = {"Default"},
+    Default = "Default",
+    Callback = function(Value)
+        print("Selected:", Value)
+    end
+})
+
+-- Dynamic refresh example
+AimbotSection:Button({
+    Name = "Refresh Skins",
+    Callback = function()
+        SkinSelector:Refresh({"Redline", "Asiimov", "Dragon Lore"}, "Redline")
+    end
 })
 ```
 
@@ -149,7 +185,7 @@ MainSection:Dropdown({
 ### Textbox
 
 ```lua
-MainSection:Textbox({
+AimbotSection:Textbox({
     Flag = "Input",
     Placeholder = "Enter text...",
     Finished = true
@@ -161,7 +197,7 @@ MainSection:Textbox({
 ### Listbox
 
 ```lua
-local List = MainSection:Listbox({
+local List = AimbotSection:Listbox({
     Flag = "Configs",
     Items = {"Legit", "Rage", "HvH"},
     Size = 150
@@ -176,17 +212,17 @@ List:Refresh({"A", "B"})
 ### Label
 
 ```lua
-MainSection:Label("Simple text label")
+AimbotSection:Label("Simple text label")
 ```
 
 ---
 
-## Global Chat (Module)
+## 💬 Global Chat Module
 
-Created **inside a Page**, not a Section.
+> Created **inside a Page**, not a Section.
 
 ```lua
-local Chat = RageTab:GlobalChat(1) -- 1 = left, 2 = right
+local Chat = CombatTab:GlobalChat(1) -- 1 = Left, 2 = Right
 
 Chat:SendMessage("rbxassetid://AVATAR_ID", "User", "Hello!", false)
 
@@ -201,42 +237,60 @@ end)
 
 ---
 
-## ⚙️ Settings Page
+## 💧 Watermark
 
-Automatically creates a settings tab (theme, menu key, configs).
+Hidden by default. Can be enabled via Settings Page or script. Fully draggable and optimized.
 
 ```lua
-local KeybindList = Library:KeybindList("Keybinds")
-Library:CreateSettingsPage(Window, KeybindList)
+Library:Watermark({
+    "Cheat Name",
+    "User",
+    1234567890
+})
+
+task.spawn(function()
+    while true do
+        local FPS = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
+        Library:Watermark({
+            "MyCheat",
+            "User",
+            123554105934637,
+            "FPS: " .. FPS
+        })
+        task.wait(0.5)
+    end
+end)
 ```
 
 ---
 
-## 🚀 Full Example
+## ⌨️ Keybind List
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
-
-local Window = Library:Window({
-    Name = "Neverlose.lua",
-    SubName = "Release Build",
-    Logo = "120959262762131"
-})
-
 local KeybindList = Library:KeybindList("Active Binds")
+```
 
-local CombatTab = Window:Page({Name = "Combat", Columns = 2})
+Hidden by default. Can be toggled in Settings.
+
+---
+
+## ⚙️ Settings & Config System
+
+Automatically generates a Settings tab with:
+
+* **Config Manager (Left)** — Create, Save, Load, Delete
+* **UI Settings (Right)** — Theme colors, Watermark toggle, Keybind list toggle, Unload button
+
+```lua
 local SettingsTab = Library:CreateSettingsPage(Window, KeybindList)
+```
 
-local Section = CombatTab:Section({Name = "Aimbot", Side = 1})
+---
 
-Section:Toggle({
-    Name = "Enabled",
-    Flag = "Aimbot",
-    Callback = function(v)
-        print(v)
-    end
-})
+## 🏁 Finalizing
 
+Always call `Init()` at the very end of your script.
+
+```lua
 Window:Init()
 ```
