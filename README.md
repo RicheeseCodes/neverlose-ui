@@ -1,14 +1,36 @@
+Here is the final, polished version of the **README.md**. I have organized it to be cleaner, added a Table of Contents for easier navigation, and ensured all code blocks are syntax-highlighted and commented for clarity.
+
+You can copy the raw code block below and paste it directly into your GitHub repository.
+
+***
+
+```markdown
 # 🎨 CSGO UI Library
 
-> A premium, optimized, and fully customizable UI Library for Roblox, inspired by Neverlose cheat menu.
+> A premium, optimized, and fully customizable UI Library for Roblox, inspired by the Neverlose cheat menu.
 
 ![Lua](https://img.shields.io/badge/Language-Lua-blue.svg) ![Platform](https://img.shields.io/badge/Platform-Roblox-red.svg) ![Status](https://img.shields.io/badge/Status-Active-success.svg)
 
----
-
 ## ✨ Overview
 
-**CSGO UI Library** is a modern Roblox UI framework focused on performance, flexibility, and clean visuals. It provides a full cheat-style interface with advanced configuration support, dynamic UI elements, and a redesigned settings system.
+**CSGO UI Library** is a modern Roblox UI framework focused on performance, flexibility, and clean visuals. It provides a full cheat-style interface with advanced configuration support, dynamic UI elements, draggable widgets, and a redesigned settings system.
+
+---
+
+## 📖 Table of Contents
+
+- [Getting Started](#-getting-started)
+- [Window & Tabs](#-window--tabs)
+- [UI Elements](#-ui-elements)
+  - [Toggle & Addons](#toggle--addons)
+  - [Sliders & Buttons](#sliders--buttons)
+  - [Dropdowns & Lists](#dropdowns--lists)
+  - [Inputs & Labels](#inputs--labels)
+- [Special Modules](#-special-modules)
+  - [Global Chat](#global-chat)
+  - [Watermark](#watermark)
+  - [Keybind List](#keybind-list)
+- [Settings System](#-settings--config-system)
 
 ---
 
@@ -20,68 +42,62 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
 ```
 
----
-
 ### 2. Setup Directories & Theme
 
-> ⚠️ Recommended to do **before** creating the window to avoid color flickering.
+> ⚠️ **Note:** It is recommended to set up the theme **before** creating the window to prevent color flickering on startup.
 
 ```lua
 local CheatName = "MyProject"
 
--- Folder setup
+-- 1. Setup Folders for Configs
 Library.Folders = {
     Directory = CheatName,
     Configs = CheatName .. "/Configs",
     Assets = CheatName .. "/Assets",
 }
 
--- Theme colors
-local Accent = Color3.fromRGB(0, 116, 224)
-local Gradient = Color3.fromRGB(0, 195, 255)
+-- 2. Define Theme Colors
+local Accent = Color3.fromRGB(0, 116, 224)        -- Main Color
+local Gradient = Color3.fromRGB(0, 195, 255)      -- Gradient End Color
 
+-- 3. Apply Theme
 Library.Theme.Accent = Accent
 Library.Theme.AccentGradient = Gradient
-
 Library:ChangeTheme("Accent", Accent)
 Library:ChangeTheme("AccentGradient", Gradient)
 ```
 
 ---
 
-### 3. Create Window
+## 🖥️ Window & Tabs
+
+### Create Window
 
 ```lua
 local Window = Library:Window({
     Name = "Project Name",
     SubName = "Best script hub",
-    Logo = "120959262762131" -- rbxassetid (numbers only)
+    Logo = "120959262762131" -- rbxassetid (Numbers only)
 })
 ```
 
----
-
-## 📑 Pages (Tabs)
+### Create Page (Tab)
 
 ```lua
 local CombatTab = Window:Page({
     Name = "Combat",
-    Icon = "138827881557940",
-    Columns = 2
+    Icon = "138827881557940", -- rbxassetid
+    Columns = 2 -- 1 or 2 columns
 })
 ```
 
-* `Columns`: `1` or `2`
-
----
-
-## 📦 Sections
+### Create Section
 
 ```lua
 local AimbotSection = CombatTab:Section({
     Name = "Aimbot",
-    Side = 1, -- 1 = Left, 2 = Right
-    EnableToggle = true -- Allows collapsing
+    Side = 1, -- 1 = Left Column, 2 = Right Column
+    EnableToggle = true -- Allows the user to collapse the section
 })
 ```
 
@@ -89,7 +105,9 @@ local AimbotSection = CombatTab:Section({
 
 ## 🧩 UI Elements
 
-### Toggle
+### Toggle & Addons
+
+Toggles can have sub-elements like Colorpickers and Keybinds attached to them.
 
 ```lua
 local Toggle = AimbotSection:Toggle({
@@ -97,40 +115,31 @@ local Toggle = AimbotSection:Toggle({
     Flag = "AimToggle",
     Default = false,
     Callback = function(Value)
-        print(Value)
+        print("Toggle:", Value)
     end
 })
-```
 
-#### Toggle Addons
-
-**Colorpicker**
-
-```lua
+-- Add Colorpicker
 Toggle:Colorpicker({
     Flag = "AimColor",
     Default = Color3.fromRGB(255, 0, 0),
-    Alpha = 1,
+    Alpha = 1, -- Transparency (0-1)
     Callback = function(Color, Alpha) end
 })
-```
 
-**Keybind**
-
-```lua
+-- Add Keybind
 Toggle:Keybind({
     Flag = "AimBind",
     Default = Enum.KeyCode.E,
-    Mode = "Toggle", -- Hold / Toggle / Always
+    Mode = "Toggle", -- Options: "Hold", "Toggle", "Always"
     Callback = function(State) end
 })
 ```
 
----
-
-### Slider
+### Sliders & Buttons
 
 ```lua
+-- Slider
 AimbotSection:Slider({
     Name = "FOV",
     Flag = "FovSlider",
@@ -141,26 +150,22 @@ AimbotSection:Slider({
     Suffix = "°",
     Callback = function(Value) end
 })
-```
 
----
-
-### Button
-
-```lua
+-- Button
 AimbotSection:Button({
     Name = "Refresh",
     Callback = function()
-        print("Clicked")
+        print("Button Clicked")
     end
 })
 ```
 
----
+### Dropdowns & Lists
 
-### Dropdown (Dynamic)
+Dropdowns support dynamic refreshing at runtime.
 
 ```lua
+-- Dropdown
 local SkinSelector = AimbotSection:Dropdown({
     Name = "Select Skin",
     Flag = "SkinDrop",
@@ -171,61 +176,53 @@ local SkinSelector = AimbotSection:Dropdown({
     end
 })
 
--- Dynamic refresh example
+-- Dynamic Refresh Example
 AimbotSection:Button({
     Name = "Refresh Skins",
     Callback = function()
+        -- Refresh(NewList, DefaultValue)
         SkinSelector:Refresh({"Redline", "Asiimov", "Dragon Lore"}, "Redline")
     end
 })
-```
 
----
-
-### Textbox
-
-```lua
-AimbotSection:Textbox({
-    Flag = "Input",
-    Placeholder = "Enter text...",
-    Finished = true
-})
-```
-
----
-
-### Listbox
-
-```lua
+-- Listbox (Scrollable list)
 local List = AimbotSection:Listbox({
     Flag = "Configs",
     Items = {"Legit", "Rage", "HvH"},
-    Size = 150
+    Size = 150 -- Height in pixels
 })
 
 List:Add("New Config")
-List:Refresh({"A", "B"})
+```
+
+### Inputs & Labels
+
+```lua
+-- Textbox
+AimbotSection:Textbox({
+    Flag = "Input",
+    Placeholder = "Enter text...",
+    Finished = true -- Only callback when Enter is pressed
+})
+
+-- Label
+AimbotSection:Label("This is a simple text label")
 ```
 
 ---
 
-### Label
+## 🛠️ Special Modules
+
+### Global Chat
+A visual chat interface that attaches to a **Page** (not a Section).
 
 ```lua
-AimbotSection:Label("Simple text label")
-```
+local Chat = CombatTab:GlobalChat(1) -- 1 = Left Side, 2 = Right Side
 
----
-
-## 💬 Global Chat Module
-
-> Created **inside a Page**, not a Section.
-
-```lua
-local Chat = CombatTab:GlobalChat(1) -- 1 = Left, 2 = Right
-
+-- Sending a message programmatically
 Chat:SendMessage("rbxassetid://AVATAR_ID", "User", "Hello!", false)
 
+-- Handling user input
 Chat:OnMessageSendPressed(function()
     local msg = Chat:GetTypedMessage()
     if msg ~= "" then
@@ -235,19 +232,18 @@ Chat:OnMessageSendPressed(function()
 end)
 ```
 
----
-
-## 💧 Watermark
-
-Hidden by default. Can be enabled via Settings Page or script. Fully draggable and optimized.
+### Watermark
+A draggable, auto-resizing status bar. Hidden by default (enable via Settings or Script).
 
 ```lua
+-- Initialize
 Library:Watermark({
     "Cheat Name",
     "User",
-    1234567890
+    1234567890 -- Logo ID
 })
 
+-- Update Loop (Optimized)
 task.spawn(function()
     while true do
         local FPS = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
@@ -262,26 +258,23 @@ task.spawn(function()
 end)
 ```
 
----
-
-## ⌨️ Keybind List
+### Keybind List
+Displays active keybinds. Hidden by default.
 
 ```lua
 local KeybindList = Library:KeybindList("Active Binds")
 ```
 
-Hidden by default. Can be toggled in Settings.
-
 ---
 
 ## ⚙️ Settings & Config System
 
-Automatically generates a Settings tab with:
-
-* **Config Manager (Left)** — Create, Save, Load, Delete
-* **UI Settings (Right)** — Theme colors, Watermark toggle, Keybind list toggle, Unload button
+The library includes a built-in generator for a Settings tab. This automatically creates:
+1.  **Config Manager (Left):** Create, Save, Load, Delete configs.
+2.  **UI Settings (Right):** Theme colors, Watermark toggle, Keybind list toggle, Unload button.
 
 ```lua
+-- Pass the Window and KeybindList to generate the page
 local SettingsTab = Library:CreateSettingsPage(Window, KeybindList)
 ```
 
@@ -289,7 +282,7 @@ local SettingsTab = Library:CreateSettingsPage(Window, KeybindList)
 
 ## 🏁 Finalizing
 
-Always call `Init()` at the very end of your script.
+Always call `Init()` at the very end of your script to apply layouts and load the UI.
 
 ```lua
 Window:Init()
