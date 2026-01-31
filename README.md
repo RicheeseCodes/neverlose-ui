@@ -1,282 +1,274 @@
-# 🎨 "Like Neverlose" Library
+# 💎 "Like Neverlose" UI Library for Roblox
 
-> A optimized, and fully customizable UI Library for Roblox, inspired by the Neverlose cheat menu.
+A modern, highly customizable, and optimized UI Library for Roblox scripts. Featuring a clean aesthetic inspired by Neverlose V2, smooth animations, a robust configuration system, and advanced features like DPI scaling and a draggable event logger.
 
-![Lua](https://img.shields.io/badge/Language-Lua-blue.svg) ![Platform](https://img.shields.io/badge/Platform-Roblox-red.svg) ![Status](https://img.shields.io/badge/Status-Active-success.svg)
+![Lua](https://img.shields.io/badge/Language-Lua-blue) ![Platform](https://img.shields.io/badge/Platform-Roblox-red) ![License](https://img.shields.io/badge/License-MIT-green)
 
-## ✨ Overview
+## ✨ Features
 
-**CSGO UI Library** is a modern Roblox UI framework focused on performance, flexibility, and clean visuals. It provides a full cheat-style interface with advanced configuration support, dynamic UI elements, draggable widgets, and a redesigned settings system.
-
----
-
-## 📖 Table of Contents
-
-- [Getting Started](#-getting-started)
-- [Window & Tabs](#-window--tabs)
-- [UI Elements](#-ui-elements)
-  - [Toggle & Addons](#toggle--addons)
-  - [Sliders & Buttons](#sliders--buttons)
-  - [Dropdowns & Lists](#dropdowns--lists)
-  - [Inputs & Labels](#inputs--labels)
-- [Special Modules](#-special-modules)
-  - [Global Chat](#global-chat)
-  - [Watermark](#watermark)
-  - [Keybind List](#keybind-list)
-- [Settings System](#-settings--config-system)
-
----
+*   **Modern Design:** Clean dark theme with customizable accents and gradients.
+*   **Smooth Animations:** All interactions are tweened for a premium feel.
+*   **DPI Scaling:** Built-in "Menu Scale" support (0.5x to 1.5x) for 4K monitors or small screens.
+*   **Advanced Logger:**
+    *   Draggable log container with "Smart Snapping" to the center of the screen.
+    *   Auto-sizing logs based on text length.
+    *   Stacking animations.
+*   **Nested Elements:** Support for placing Sliders, Dropdowns, and Keybinds *inside* Toggles.
+*   **Config System:** Built-in Save/Load system using `writefile`/`readfile`.
+*   **Element Features:**
+    *   Multi-select Dropdowns with search.
+    *   Colorpickers with Alpha (transparency) support.
+    *   Keybinds with Toggle/Hold/Always modes.
 
 ## 🚀 Getting Started
 
-### 1. Load the Library
+### Installation
+Load the library into your script using `loadstring`.
 
 ```lua
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
 ```
 
-### 2. Setup Directories & Theme
-
-> **Note:** You can "rewrite" default colors using Accent and Gradient below
-
-```lua
-local CheatName = "MyProject"
-
--- 1. Setup Folders for Configs
-Library.Folders = {
-    Directory = CheatName,
-    Configs = CheatName .. "/Configs",
-    Assets = CheatName .. "/Assets",
-}
-
--- 2. Define Theme Colors
-local Accent = Color3.fromRGB(0, 116, 224)        -- Main Color
-local Gradient = Color3.fromRGB(0, 195, 255)      -- Gradient End Color
-
--- 3. Apply Theme
-Library.Theme.Accent = Accent
-Library.Theme.AccentGradient = Gradient
-Library:ChangeTheme("Accent", Accent)
-Library:ChangeTheme("AccentGradient", Gradient)
-```
-
----
-
-## 🖥️ Window & Tabs
-
-### Create Window
+### Basic Setup
+Here is a quick example of how to set up a window, a tab, and a section.
 
 ```lua
 local Window = Library:Window({
-    Name = "Project Name",
-    SubName = "Best script hub",
-    Logo = "120959262762131" -- rbxassetid (Numbers only)
+    Name = "Cheat Name",
+    SubName = "Best script ever",
+    Logo = "123456789", -- Roblox Asset ID
+    MenuKeybind = Enum.KeyCode.End
 })
-```
 
-### Create Page (Tab)
-
-```lua
-local CombatTab = Window:Page({
-    Name = "Combat",
-    Icon = "138827881557940", -- rbxassetid
-    Columns = 2 -- 1 or 2 columns
-})
-```
-
-### Create Section
-
-```lua
-local AimbotSection = CombatTab:Section({
-    Name = "Aimbot",
-    Side = 1, -- 1 = Left Column, 2 = Right Column
-    EnableToggle = true -- Allows the user to collapse the section
-})
+local Page = Window:Page({Name = "Ragebot", Icon = "rbxassetid://..."})
+local Section = Page:Section({Name = "Main Settings", Side = 1}) -- Side 1 (Left) or 2 (Right)
 ```
 
 ---
 
-## 🧩 UI Elements
+## 📚 Documentation & API
 
-### Toggle & Addons
-
-Toggles can have sub-elements like Colorpickers and Keybinds attached to them.
+### 1. Toggles
+Toggles are the core of the library. They support sub-options (nesting).
 
 ```lua
-local Toggle = AimbotSection:Toggle({
-    Name = "Enabled",
-    Flag = "AimToggle",
+local MyToggle = Section:Toggle({
+    Name = "Silent Aim",
+    Flag = "SilentAim", -- Unique identifier for Configs
     Default = false,
     Callback = function(Value)
-        print("Toggle:", Value)
-    end
-})
-
--- Add Colorpicker
-Toggle:Colorpicker({
-    Flag = "AimColor",
-    Default = Color3.fromRGB(255, 0, 0),
-    Alpha = 1, -- Transparency (0-1)
-    Callback = function(Color, Alpha) end
-})
-
--- Add Keybind
-Toggle:Keybind({
-    Flag = "AimBind",
-    Default = Enum.KeyCode.E,
-    Mode = "Toggle", -- Options: "Hold", "Toggle", "Always"
-    Callback = function(State) end
-})
-```
-
-### Sliders & Buttons
-
-```lua
--- Slider
-AimbotSection:Slider({
-    Name = "FOV",
-    Flag = "FovSlider",
-    Min = 0,
-    Max = 100,
-    Default = 90,
-    Decimals = 1,
-    Suffix = "°",
-    Callback = function(Value) end
-})
-
--- Button
-AimbotSection:Button({
-    Name = "Refresh",
-    Callback = function()
-        print("Button Clicked")
+        print("Silent Aim is now:", Value)
     end
 })
 ```
 
-### Dropdowns & Lists
-
-Dropdowns support dynamic refreshing at runtime.
+#### Nested Elements (Sub-Options)
+You can add elements *inside* a toggle. They will appear when the toggle is expanded.
 
 ```lua
--- Dropdown
-local SkinSelector = AimbotSection:Dropdown({
-    Name = "Select Skin",
-    Flag = "SkinDrop",
-    Items = {"Default"},
-    Default = "Default",
+-- Add a Slider inside the Toggle
+MyToggle:Slider({
+    Name = "FOV Radius",
+    Min = 0, Max = 360, Default = 180
+})
+
+-- Add a Dropdown inside the Toggle
+MyToggle:Dropdown({
+    Name = "Hitbox",
+    Items = {"Head", "Torso"},
+    Default = "Head"
+})
+```
+
+### 2. Sliders
+Sliders allow selecting a number within a range.
+
+```lua
+local MySlider = Section:Slider({
+    Name = "Walkspeed",
+    Flag = "WS_Slider",
+    Min = 16,
+    Max = 200,
+    Default = 16,
+    Decimals = 1, -- 0 for integers, 1 for 0.5, etc.
+    Suffix = " studs",
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    end
+})
+```
+
+### 3. Dropdowns
+Dropdowns support single and multi-selection, as well as searching.
+
+```lua
+local MyDropdown = Section:Dropdown({
+    Name = "Target Selection",
+    Flag = "Target_Drop",
+    Items = {"Player", "NPC", "Boss", "Ally"},
+    Default = "Player", -- Use {"Player", "NPC"} for Multi
+    Multi = false, -- Set to true for multiple selection
     Callback = function(Value)
         print("Selected:", Value)
     end
 })
-
--- Dynamic Refresh Example
-AimbotSection:Button({
-    Name = "Refresh Skins",
-    Callback = function()
-        -- Refresh(NewList, DefaultValue)
-        SkinSelector:Refresh({"Redline", "Asiimov", "Dragon Lore"}, "Redline")
-    end
-})
-
--- Listbox (Scrollable list)
-local List = AimbotSection:Listbox({
-    Flag = "Configs",
-    Items = {"Legit", "Rage", "HvH"},
-    Size = 150 -- Height in pixels
-})
-
-List:Add("New Config")
 ```
 
-### Inputs & Labels
+#### Updating Dropdowns
+You can update the list of items or the selected value dynamically.
 
 ```lua
--- Textbox
-AimbotSection:Textbox({
-    Flag = "Input",
-    Placeholder = "Enter text...",
-    Finished = true -- Only callback when Enter is pressed
+-- Refresh the list
+MyDropdown:Refresh({"New Item 1", "New Item 2"}, "New Item 1")
+
+-- Set a specific value programmatically
+MyDropdown:Set("New Item 2")
+```
+
+### 4. Colorpickers & Keybinds
+These can be added as standalone sections or attached to other elements.
+
+```lua
+-- Standalone
+Section:Colorpicker({
+    Name = "ESP Color",
+    Flag = "ESP_Color",
+    Default = Color3.fromRGB(255, 0, 0),
+    Alpha = 1, -- Transparency (0-1)
+    Callback = function(Color, Alpha) ... end
 })
 
--- Label
-AimbotSection:Label("This is a simple text label")
+Section:Keybind({
+    Name = "Triggerbot Key",
+    Flag = "Trigger_Bind",
+    Default = Enum.KeyCode.E,
+    Mode = "Hold", -- "Toggle", "Hold", or "Always"
+    Callback = function(State) ... end
+})
+
+-- Attached to a Toggle
+MyToggle:Colorpicker({ Default = Color3.new(1,1,1) })
+MyToggle:Keybind({ Default = Enum.KeyCode.X })
 ```
 
 ---
 
-## 🛠️ Special Modules
+## 🖥️ Event Logger
 
-### Global Chat
-A visual chat interface that attaches to a **Page** (not a Section).
+The library includes a built-in event logger that appears on the screen. It features a draggable bar that snaps to the center of the screen.
+
+**How to enable:**
+You must enable the logger in your script before sending logs.
 
 ```lua
-local Chat = CombatTab:GlobalChat(1) -- 1 = Left Side, 2 = Right Side
-
--- Sending a message programmatically
-Chat:SendMessage("rbxassetid://AVATAR_ID", "User", "Hello!", false)
-
--- Handling user input
-Chat:OnMessageSendPressed(function()
-    local msg = Chat:GetTypedMessage()
-    if msg ~= "" then
-        Chat:SendMessage("rbxassetid://YOUR_ID", "You", msg, true)
-        Chat:ClearText()
-    end
-end)
+Library.LogsEnabled = true -- Required to show the panel
 ```
 
-### Watermark
-A draggable, auto-resizing status bar. Hidden by default (enable via Settings or Script).
+**Sending Logs:**
+```lua
+-- Library:Log(Text, Duration, Color)
+Library:Log("Config Loaded", 5, Color3.fromRGB(0, 255, 0))
+Library:Log("Target missed", 3, Color3.fromRGB(255, 0, 0))
+```
+
+---
+
+## ⚙️ Settings & Configs
+
+To add the built-in Settings page (which includes Menu Scale, Config Manager, Watermark toggle, etc.), simply call:
 
 ```lua
--- Initialize
-Library:Watermark({
-    "Cheat Name",
-    "User",
-    1234567890 -- Logo ID
+Library:CreateSettingsPage(Window)
+```
+
+### Menu Scale
+The library supports DPI scaling. Users can change this in the Settings page, or you can set it programmatically:
+
+```lua
+-- Values: 0.5, 0.75, 1, 1.25, 1.5
+Library.CurrentScale = 1.25 
+-- You must trigger a refresh on objects if setting manually, 
+-- so it is recommended to use the built-in Settings Page dropdown.
+```
+
+---
+
+## 🔄 Updating Values Programmatically
+
+If you need to change the state of a UI element from your script (not by user click), use the `:Set()` method on the object returned when you created the element.
+
+**Toggle:**
+```lua
+local Toggle = Section:Toggle(...)
+Toggle:Set(true) -- Turns it on
+```
+
+**Slider:**
+```lua
+local Slider = Section:Slider(...)
+Slider:Set(50) -- Sets value to 50
+```
+
+**Dropdown:**
+```lua
+local Dropdown = Section:Dropdown(...)
+Dropdown:Set("Option 1") -- Selects Option 1
+```
+
+---
+
+## 🛡️ Unloading
+
+To safely unload the UI (hide it and stop connections) without triggering anti-cheats (by avoiding `Destroy` on CoreGui), use:
+
+```lua
+Library:Unload()
+```
+
+---
+
+## 📝 Full Example Script
+
+```lua
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
+
+-- Enable Logs
+Library.LogsEnabled = true
+
+local Window = Library:Window({
+    Name = "Project Nova",
+    SubName = "Release Build",
+    Logo = "123456789",
+    MenuKeybind = Enum.KeyCode.RightShift
 })
 
--- Update Loop (Optimized)
-task.spawn(function()
-    while true do
-        local FPS = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
-        Library:Watermark({
-            "MyCheat",
-            "User",
-            123554105934637,
-            "FPS: " .. FPS
-        })
-        task.wait(0.5)
+local MainTab = Window:Page({Name = "Combat", Icon = "rbxassetid://123..."})
+local MainSection = MainTab:Section({Name = "Aimbot", Side = 1})
+
+local AimToggle = MainSection:Toggle({
+    Name = "Enabled",
+    Flag = "AimEnabled",
+    Default = false,
+    Callback = function(v)
+        if v then 
+            Library:Log("Aimbot Enabled", 3)
+        end
     end
-end)
-```
+})
 
-### Keybind List
-Displays active keybinds. Hidden by default.
+-- Nested Slider
+AimToggle:Slider({
+    Name = "FOV",
+    Min = 0, Max = 180, Default = 90
+})
 
-```lua
-local KeybindList = Library:KeybindList("Active Binds")
-```
+-- Nested Dropdown
+AimToggle:Dropdown({
+    Name = "Hitbox",
+    Items = {"Head", "Torso", "Legs"},
+    Default = "Head"
+})
 
----
-
-## ⚙️ Settings & Config System
-
-The library includes a built-in generator for a Settings tab. This automatically creates:
-1.  **Config Manager (Left):** Create, Save, Load, Delete configs.
-2.  **UI Settings (Right):** Theme colors, Watermark toggle, Keybind list toggle, Unload button.
-
-```lua
--- Pass the Window and KeybindList to generate the page
-local SettingsTab = Library:CreateSettingsPage(Window, KeybindList)
-```
-
----
-
-## 🏁 Finalizing
-
-Always call `Init()` at the very end of your script to apply layouts and load the UI.
-
-```lua
-Window:Init()
+-- Create Settings Page (Configs, Scale, etc.)
+Library:CreateSettingsPage(Window)
 ```
