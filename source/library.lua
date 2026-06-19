@@ -2600,12 +2600,13 @@ local Library do
                 })
 
                 -- Close button (X) - rightmost
-                Items["TopbarClose"] = Instances:Create("ImageButton", {
+                Items["TopbarClose"] = Instances:Create("TextButton", {
                     Parent = Items["Topbar"].Instance,
                     Name = "Close",
-                    Image = "rbxassetid://130510492706892",
-                    ImageColor3 = FromRGB(240, 240, 240),
-                    ImageTransparency = 0.8,
+                    Text = "",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(0, 0, 0),
+                    TextSize = 14,
                     AnchorPoint = Vector2New(1, 0.5),
                     Position = UDim2New(1, -12, 0.5, 0),
                     Size = UDim2New(0, 14, 0, 14),
@@ -2614,15 +2615,31 @@ local Library do
                     BorderSizePixel = 0,
                     AutoButtonColor = false,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarClose"]:AddToTheme({ImageColor3 = "Text"})
+                })
 
-                -- Minimize button (resize icon) - second from right
-                Items["TopbarMinimize"] = Instances:Create("ImageButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "ChangeSize",
-                    Image = "rbxassetid://10137941941",
+                Items["TopbarCloseIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarClose"].Instance,
+                    Name = "\0",
+                    Image = "rbxassetid://130510492706892",
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
+                    Size = UDim2New(1, 0, 1, 0),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    ZIndex = 7,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarCloseIcon"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Minimize button (resize icon) - second from right
+                Items["TopbarMinimize"] = Instances:Create("TextButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "ChangeSize",
+                    Text = "",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(0, 0, 0),
+                    TextSize = 14,
                     AnchorPoint = Vector2New(1, 0.5),
                     Position = UDim2New(1, -38, 0.5, 0),
                     Size = UDim2New(0, 14, 0, 14),
@@ -2631,15 +2648,31 @@ local Library do
                     BorderSizePixel = 0,
                     AutoButtonColor = false,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarMinimize"]:AddToTheme({ImageColor3 = "Text"})
+                })
 
-                -- Unload button (vertical sliders icon) - third from right
-                Items["TopbarUnload"] = Instances:Create("ImageButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "Unload",
-                    Image = "rbxassetid://10137832201",
+                Items["TopbarMinimizeIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarMinimize"].Instance,
+                    Name = "\0",
+                    Image = "rbxassetid://10137941941",
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
+                    Size = UDim2New(1, 0, 1, 0),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    ZIndex = 7,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarMinimizeIcon"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Unload button (vertical sliders icon) - third from right
+                Items["TopbarUnload"] = Instances:Create("TextButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Unload",
+                    Text = "",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(0, 0, 0),
+                    TextSize = 14,
                     AnchorPoint = Vector2New(1, 0.5),
                     Position = UDim2New(1, -64, 0.5, 0),
                     Size = UDim2New(0, 14, 0, 14),
@@ -2648,15 +2681,31 @@ local Library do
                     BorderSizePixel = 0,
                     AutoButtonColor = false,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarUnload"]:AddToTheme({ImageColor3 = "Text"})
+                })
 
-                -- Search button (magnifying glass) - fourth from right
-                Items["TopbarSearch"] = Instances:Create("ImageButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "Search",
-                    Image = "rbxassetid://80503127983237",
+                Items["TopbarUnloadIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarUnload"].Instance,
+                    Name = "\0",
+                    Image = "rbxassetid://10137832201",
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
+                    Size = UDim2New(1, 0, 1, 0),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    ZIndex = 7,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarUnloadIcon"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Search button (magnifying glass) - fourth from right
+                Items["TopbarSearch"] = Instances:Create("TextButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Search",
+                    Text = "",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(0, 0, 0),
+                    TextSize = 14,
                     AnchorPoint = Vector2New(1, 0.5),
                     Position = UDim2New(1, -90, 0.5, 0),
                     Size = UDim2New(0, 14, 0, 14),
@@ -2665,7 +2714,22 @@ local Library do
                     BorderSizePixel = 0,
                     AutoButtonColor = false,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarSearch"]:AddToTheme({ImageColor3 = "Text"})
+                })
+
+                Items["TopbarSearchIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarSearch"].Instance,
+                    Name = "\0",
+                    Image = "rbxassetid://80503127983237",
+                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageTransparency = 0.8,
+                    Size = UDim2New(1, 0, 1, 0),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    ZIndex = 7,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarSearchIcon"]:AddToTheme({ImageColor3 = "Text"})
 
                 -- Search Overlay (slides in below topbar like Rayfield)
                 Items["SearchOverlay"] = Instances:Create("Frame", {
@@ -2727,8 +2791,7 @@ local Library do
                     ZIndex = 11,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255),
-                    Interactable = false
+                    BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["SearchInput"]:AddToTheme({TextColor3 = "Text"})
 
                 -- Unload Panel (appears from nowhere when unload icon is clicked)
@@ -2800,12 +2863,14 @@ local Library do
 
                 -- ========== TOPBAR BUTTON HOVER EFFECTS (Rayfield-style) ==========
                 local topbarButtons = {Items["TopbarSearch"], Items["TopbarUnload"], Items["TopbarMinimize"], Items["TopbarClose"]}
-                for _, btn in ipairs(topbarButtons) do
+                local topbarIcons = {Items["TopbarSearchIcon"], Items["TopbarUnloadIcon"], Items["TopbarMinimizeIcon"], Items["TopbarCloseIcon"]}
+                for i, btn in ipairs(topbarButtons) do
+                    local icon = topbarIcons[i]
                     btn:Connect("MouseEnter", function()
-                        btn:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0})
+                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0})
                     end)
                     btn:Connect("MouseLeave", function()
-                        btn:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
+                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
                     end)
                 end
 
@@ -2819,7 +2884,6 @@ local Library do
                     Items["SearchOverlayStroke"].Instance.Transparency = 1
                     Items["SearchOverlay"].Instance.Size = UDim2New(1, 0, 0, 80)
                     Items["SearchOverlay"].Instance.Position = UDim2New(0.5, 0, 0, 70)
-                    Items["SearchInput"].Instance.Interactable = true
                     Items["SearchOverlay"].Instance.Visible = true
 
                     Items["SearchInput"].Instance:CaptureFocus()
@@ -2840,7 +2904,6 @@ local Library do
                     Items["SearchInput"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1})
 
                     Items["SearchInput"].Instance.Text = ""
-                    Items["SearchInput"].Instance.Interactable = false
 
                     task.delay(0.4, function()
                         if not searchOpen then
@@ -2852,7 +2915,7 @@ local Library do
                 -- ========== MINIMIZE / MAXIMIZE FUNCTIONS (Rayfield exact animations) ==========
                 local function MinimiseWindow()
                     Debounce = true
-                    Items["TopbarMinimize"].Instance.Image = "rbxassetid://11036884234"
+                    Items["TopbarMinimizeIcon"].Instance.Image = "rbxassetid://11036884234"
 
                     task.spawn(closeSearch)
 
@@ -2876,7 +2939,7 @@ local Library do
 
                 local function MaximiseWindow()
                     Debounce = true
-                    Items["TopbarMinimize"].Instance.Image = "rbxassetid://10137941941"
+                    Items["TopbarMinimizeIcon"].Instance.Image = "rbxassetid://10137941941"
 
                     Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 1})
                     Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
@@ -2906,8 +2969,8 @@ local Library do
                     Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 1})
                     Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 1})
 
-                    for _, btn in ipairs(topbarButtons) do
-                        btn:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 1})
+                    for _, icon in ipairs(topbarIcons) do
+                        icon:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 1})
                     end
 
                     task.wait(0.5)
@@ -2930,8 +2993,8 @@ local Library do
                         task.spawn(MaximiseWindow)
                     end
 
-                    for _, btn in ipairs(topbarButtons) do
-                        btn:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
+                    for _, icon in ipairs(topbarIcons) do
+                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
                     end
 
                     Items["Content"].Instance.Visible = true
