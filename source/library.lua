@@ -2284,7 +2284,7 @@ local Library do
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(0.5, 0.5),
-                    BackgroundTransparency = Window.HideHeader and 0 or 0.12,
+                    BackgroundTransparency = Window.HideHeader and 0 or 0.05,
                     Position = UDim2New(0.5519999861717224, 0, 0.5, 0),
                     Size = UDim2New(0, 677, 0, 644),
                     ZIndex = 2,
@@ -2494,7 +2494,7 @@ local Library do
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255),
-                    Visible = not Window.HideHeader
+                    Visible = false
                 }) 
 
                 Instances:Create("UIGradient", {
@@ -2522,7 +2522,7 @@ local Library do
                     ZIndex = 2,
                     TextSize = 16,
                     BackgroundColor3 = FromRGB(255, 255, 255),
-                    Visible = not Window.HideHeader
+                    Visible = false
                 })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
                 
                 Items["SubTitle"] = Instances:Create("TextLabel", {
@@ -2541,16 +2541,146 @@ local Library do
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255),
-                    Visible = not Window.HideHeader
+                    Visible = false
                 })  Items["SubTitle"]:AddToTheme({TextColor3 = "Text"})
+
+                Items["Topbar"] = Instances:Create("Frame", {
+                    Parent = Items["MainFrame"].Instance, Name = "Topbar",
+                    BorderColor3 = FromRGB(0,0,0), BackgroundTransparency = 0.05,
+                    Position = UDim2New(0,0,0,0), Size = UDim2New(1,0,0,45),
+                    ZIndex = 5, BorderSizePixel = 0, BackgroundColor3 = FromRGB(20,18,22),
+                    Visible = not Window.HideHeader
+                })  Items["Topbar"]:AddToTheme({BackgroundColor3 = "Background"})
+                Instances:Create("Frame", {
+                    Parent = Items["Topbar"].Instance, Name = "Line",
+                    Size = UDim2New(1,0,0,1), Position = UDim2New(0,0,1,0),
+                    BorderSizePixel = 0, BackgroundTransparency = 0.85,
+                    BackgroundColor3 = FromRGB(255,255,255), ZIndex = 6
+                })
+                Items["TopbarTitle"] = Instances:Create("TextLabel", {
+                    Parent = Items["Topbar"].Instance, FontFace = Library.Font,
+                    TextColor3 = FromRGB(240,240,240), Text = Window.Name,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Size = UDim2New(0.5,0,1,0), BackgroundTransparency = 1,
+                    Position = UDim2New(0,16,0,0), ZIndex = 6, TextSize = 15,
+                    BorderSizePixel = 0, BackgroundColor3 = FromRGB(255,255,255)
+                })  Items["TopbarTitle"]:AddToTheme({TextColor3 = "Text"})
+                Items["TopbarClose"] = Instances:Create("TextButton", {
+                    Parent = Items["Topbar"].Instance, Text = "", AutoButtonColor = false,
+                    AnchorPoint = Vector2New(1,0.5), Position = UDim2New(1,-16,0.5,0),
+                    Size = UDim2New(0,26,0,26), BackgroundTransparency = 1,
+                    BorderSizePixel = 0, ZIndex = 6
+                })
+                Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarClose"].Instance, ImageColor3 = FromRGB(160,160,160),
+                    Size = UDim2New(0,12,0,12), AnchorPoint = Vector2New(0.5,0.5),
+                    Position = UDim2New(0.5,0,0.5,0), Image = "rbxassetid://130510492706892",
+                    BackgroundTransparency = 1, ZIndex = 7, BorderSizePixel = 0
+                }):AddToTheme({ImageColor3 = "Text"})
+                Items["TopbarSettings"] = Instances:Create("TextButton", {
+                    Parent = Items["Topbar"].Instance, Text = "", AutoButtonColor = false,
+                    AnchorPoint = Vector2New(1,0.5), Position = UDim2New(1,-50,0.5,0),
+                    Size = UDim2New(0,26,0,26), BackgroundTransparency = 1,
+                    BorderSizePixel = 0, ZIndex = 6
+                })
+                Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarSettings"].Instance, ImageColor3 = FromRGB(160,160,160),
+                    Size = UDim2New(0,15,0,15), AnchorPoint = Vector2New(0.5,0.5),
+                    Position = UDim2New(0.5,0,0.5,0), Image = "rbxassetid://122669828593160",
+                    BackgroundTransparency = 1, ZIndex = 7, BorderSizePixel = 0
+                }):AddToTheme({ImageColor3 = "Text"})
+                Items["TopbarSearch"] = Instances:Create("TextButton", {
+                    Parent = Items["Topbar"].Instance, Text = "", AutoButtonColor = false,
+                    AnchorPoint = Vector2New(1,0.5), Position = UDim2New(1,-84,0.5,0),
+                    Size = UDim2New(0,26,0,26), BackgroundTransparency = 1,
+                    BorderSizePixel = 0, ZIndex = 6
+                })
+                Instances:Create("ImageLabel", {
+                    Parent = Items["TopbarSearch"].Instance, ImageColor3 = FromRGB(160,160,160),
+                    Size = UDim2New(0,16,0,16), AnchorPoint = Vector2New(0.5,0.5),
+                    Position = UDim2New(0.5,0,0.5,0), Image = "rbxassetid://86725535583498",
+                    BackgroundTransparency = 1, ZIndex = 7, BorderSizePixel = 0
+                }):AddToTheme({ImageColor3 = "Text"})
+                Items["SearchOverlay"] = Instances:Create("Frame", {
+                    Parent = Items["MainFrame"].Instance, Name = "SearchOverlay",
+                    AnchorPoint = Vector2New(0.5,0), BackgroundColor3 = FromRGB(240,240,240),
+                    BackgroundTransparency = 1, Position = UDim2New(0.5,0,0,50),
+                    Size = UDim2New(1,-30,0,32), ZIndex = 10, BorderSizePixel = 0, Visible = false
+                })  Items["SearchOverlay"]:AddToTheme({BackgroundColor3 = "Text"})
+                Instances:Create("UICorner", {Parent = Items["SearchOverlay"].Instance, CornerRadius = UDimNew(0,6)})
+                Items["SearchStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["SearchOverlay"].Instance, Color = FromRGB(60,60,65),
+                    Thickness = 1, Transparency = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                })
+                Items["SearchIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["SearchOverlay"].Instance, ImageColor3 = FromRGB(180,180,180),
+                    ImageTransparency = 1, Size = UDim2New(0,14,0,14),
+                    AnchorPoint = Vector2New(0,0.5), Position = UDim2New(0,10,0.5,0),
+                    Image = "rbxassetid://86725535583498", BackgroundTransparency = 1, ZIndex = 11,
+                    BorderSizePixel = 0
+                })  Items["SearchIcon"]:AddToTheme({ImageColor3 = "Text"})
+                Items["SearchInput"] = Instances:Create("TextBox", {
+                    Parent = Items["SearchOverlay"].Instance, FontFace = Library.Font,
+                    TextColor3 = FromRGB(240,240,240), TextTransparency = 1,
+                    PlaceholderText = "Search elements...", PlaceholderColor3 = FromRGB(140,140,140),
+                    Text = "", TextXAlignment = Enum.TextXAlignment.Left,
+                    Size = UDim2New(1,-35,1,0), Position = UDim2New(0,30,0,0),
+                    BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 11,
+                    TextSize = 13, ClearTextOnFocus = false
+                })  Items["SearchInput"]:AddToTheme({TextColor3 = "Text"})
+
+                local SearchOpen = false
+                local function openSearch()
+                    SearchOpen = true
+                    Items["SearchOverlay"].Instance.BackgroundTransparency = 1
+                    Items["SearchStroke"].Instance.Transparency = 1
+                    Items["SearchIcon"].Instance.ImageTransparency = 1
+                    Items["SearchInput"].Instance.TextTransparency = 1
+                    Items["SearchOverlay"].Instance.Size = UDim2New(1,0,0,50)
+                    Items["SearchOverlay"].Instance.Position = UDim2New(0.5,0,0,55)
+                    Items["SearchOverlay"].Instance.Visible = true
+                    Items["SearchInput"].Instance:CaptureFocus()
+                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Position = UDim2New(0.5,0,0,50), BackgroundTransparency = 0.92, Size = UDim2New(1,-30,0,32)})
+                    Items["SearchStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 0.7})
+                    Items["SearchInput"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0.1})
+                    Items["SearchIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.4})
+                end
+                local function closeSearch()
+                    SearchOpen = false
+                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 1, Size = UDim2New(1,-50,0,28)})
+                    Items["SearchStroke"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Transparency = 1})
+                    Items["SearchInput"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1})
+                    Items["SearchIcon"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 1})
+                    task.delay(0.25, function() if not SearchOpen then Items["SearchOverlay"].Instance.Visible = false end end)
+                    Items["SearchInput"].Instance.Text = ""
+                    for _, Page in Window.Pages do for _, Section in Page.Sections do for _, Element in Section.Elements do
+                        if Element.Items and Element.Items["Frame"] then Element.Items["Frame"].Instance.Visible = true end
+                    end end end
+                end
+                Items["TopbarSearch"]:Connect("MouseButton1Down", function()
+                    if SearchOpen then closeSearch() else openSearch() end
+                end)
+                Items["SearchInput"]:Connect("FocusLost", function()
+                    if #Items["SearchInput"].Instance.Text == 0 and SearchOpen then task.wait(0.12) closeSearch() end
+                end)
+                Library:Connect(Items["SearchInput"].Instance:GetPropertyChangedSignal("Text"), function()
+                    local Query = string.lower(Items["SearchInput"].Instance.Text)
+                    for _, Page in Window.Pages do for _, Section in Page.Sections do for _, Element in Section.Elements do
+                        if Element.Items and Element.Items["Frame"] and Element.Name then
+                            Element.Items["Frame"].Instance.Visible = (Query == "" or string.find(string.lower(Element.Name), Query, 1, true) ~= nil)
+                        end
+                    end end end
+                end)
+                Items["TopbarClose"]:Connect("MouseButton1Down", function() Library:Unload() end)
+
 
                 Items["Content"] = Instances:Create("Frame", {
                     Parent = Items["MainFrame"].Instance,
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     BackgroundTransparency = 0.75,
-                    Position = Window.HideHeader and UDim2New(0, 0, 0, 0) or UDim2New(0, 0, 0, 55),
-                    Size = Window.HideHeader and UDim2New(1, 0, 1, 0) or UDim2New(1, 0, 1, -55),
+                    Position = Window.HideHeader and UDim2New(0, 0, 0, 0) or UDim2New(0, 0, 0, 45),
+                    Size = Window.HideHeader and UDim2New(1, 0, 1, 0) or UDim2New(1, 0, 1, -45),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
@@ -2572,7 +2702,7 @@ local Library do
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(27, 25, 29),
-                    Visible = not Window.HideHeader
+                    Visible = false
                 })  Items["CloseButton"]:AddToTheme({BackgroundColor3 = "Element"})
                 
                 Instances:Create("UICorner", {
@@ -2849,7 +2979,7 @@ local Library do
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(27, 25, 29),
-                    Visible = not Window.HideHeader
+                    Visible = false
                 })  Items["SettingsButton"]:AddToTheme({BackgroundColor3 = "Element"})
                 
                 Instances:Create("UICorner", {
