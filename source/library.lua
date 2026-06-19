@@ -475,7 +475,7 @@ local Library do
             local StartPosition = nil 
             local StartSize = nil
             
-            local EdgeThickness = 2
+            local EdgeThickness = 6
 
             local MakeEdge = function(Name, Position, Size)
                 local Button = Instances:Create("TextButton", {
@@ -2270,7 +2270,8 @@ local Library do
                 Name = Data.Name or Data.name or "Window",
                 SubName = Data.SubName or Data.subname or "Fine-tuning for sure wins",
                 Logo = Data.Logo or Data.logo or "1l20959262762131",
-                
+                HideHeader = Data.HideHeader or false,
+
                 Pages = { },
                 Items = { },
                 IsOpen = false,
@@ -2283,7 +2284,7 @@ local Library do
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(0.5, 0.5),
-                    BackgroundTransparency = 0.12,
+                    BackgroundTransparency = Window.HideHeader and 0 or 0.12,
                     Position = UDim2New(0.5519999861717224, 0, 0.5, 0),
                     Size = UDim2New(0, 677, 0, 644),
                     ZIndex = 2,
@@ -2300,7 +2301,9 @@ local Library do
                 end
 
                 Items["MainFrame"]:MakeResizeable(Vector2New(Items["MainFrame"].Instance.AbsoluteSize.X, Items["MainFrame"].Instance.AbsoluteSize.Y), Vector2New(9999, 9999), OriginalSizes)
-                Library:MakeBlurred(Items["MainFrame"], Window)
+                if not Window.HideHeader then
+                    Library:MakeBlurred(Items["MainFrame"], Window)
+                end
                 
                 Items["LeftTabs"] = Instances:Create("Frame", {
                     Parent = Items["MainFrame"].Instance,
@@ -2308,14 +2311,16 @@ local Library do
                     Visible = true,
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(1, 0),
-                    BackgroundTransparency = 0.15,
+                    BackgroundTransparency = Window.HideHeader and 0 or 0.15,
                     Size = UDim2New(0, 225, 1, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
                 })  Items["LeftTabs"]:AddToTheme({BackgroundColor3 = "Background"})
 
-                Library:MakeBlurred(Items["LeftTabs"], Window)
+                if not Window.HideHeader then
+                    Library:MakeBlurred(Items["LeftTabs"], Window)
+                end
 
                 local Gui = Items["MainFrame"].Instance
 
@@ -2488,7 +2493,8 @@ local Library do
                     Position = UDim2New(0, 12, 0, 12),
                     ZIndex = 2,
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    BackgroundColor3 = FromRGB(255, 255, 255),
+                    Visible = not Window.HideHeader
                 }) 
 
                 Instances:Create("UIGradient", {
@@ -2515,7 +2521,8 @@ local Library do
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 16,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    BackgroundColor3 = FromRGB(255, 255, 255),
+                    Visible = not Window.HideHeader
                 })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
                 
                 Items["SubTitle"] = Instances:Create("TextLabel", {
@@ -2533,7 +2540,8 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    BackgroundColor3 = FromRGB(255, 255, 255),
+                    Visible = not Window.HideHeader
                 })  Items["SubTitle"]:AddToTheme({TextColor3 = "Text"})
 
                 Items["Content"] = Instances:Create("Frame", {
@@ -2541,8 +2549,8 @@ local Library do
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     BackgroundTransparency = 0.75,
-                    Position = UDim2New(0, 0, 0, 55),
-                    Size = UDim2New(1, 0, 1, -55),
+                    Position = Window.HideHeader and UDim2New(0, 0, 0, 0) or UDim2New(0, 0, 0, 55),
+                    Size = Window.HideHeader and UDim2New(1, 0, 1, 0) or UDim2New(1, 0, 1, -55),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
@@ -2563,7 +2571,8 @@ local Library do
                     Size = UDim2New(0, 32, 0, 32),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(27, 25, 29)
+                    BackgroundColor3 = FromRGB(27, 25, 29),
+                    Visible = not Window.HideHeader
                 })  Items["CloseButton"]:AddToTheme({BackgroundColor3 = "Element"})
                 
                 Instances:Create("UICorner", {
@@ -2611,17 +2620,19 @@ local Library do
                     CornerRadius = UDimNew(0, 7)
                 })
 
-                Instances:Create("UICorner", {
-                    Parent = Items["MainFrame"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 4)
-                })      
+                if not Window.HideHeader then
+                    Instances:Create("UICorner", {
+                        Parent = Items["MainFrame"].Instance,
+                        Name = "\0",
+                        CornerRadius = UDimNew(0, 4)
+                    })
 
-                Instances:Create("UICorner", {
-                    Parent = Items["LeftTabs"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 4)
-                })      
+                    Instances:Create("UICorner", {
+                        Parent = Items["LeftTabs"].Instance,
+                        Name = "\0",
+                        CornerRadius = UDimNew(0, 4)
+                    })
+                end      
                 
                 do
                     Items["LeftBottomPixels"] = Instances:Create("Frame", {
@@ -2634,7 +2645,8 @@ local Library do
                         Size = UDim2New(0, 5, 0, 5),
                         ZIndex = 2,
                         BorderSizePixel = 0,
-                        BackgroundColor3 = FromRGB(255, 255, 255)
+                        BackgroundColor3 = FromRGB(255, 255, 255),
+                        Visible = not Window.HideHeader
                     })
                     
                     Items["___1"] = Instances:Create("Frame", {
@@ -2721,7 +2733,8 @@ local Library do
                         Size = UDim2New(0, 5, 0, 5),
                         ZIndex = 2,
                         BorderSizePixel = 0,
-                        BackgroundColor3 = FromRGB(255, 255, 255)
+                        BackgroundColor3 = FromRGB(255, 255, 255),
+                        Visible = not Window.HideHeader
                     })
                     
                     Items["___7"] = Instances:Create("Frame", {
@@ -2835,7 +2848,8 @@ local Library do
                     Size = UDim2New(0, 32, 0, 32),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(27, 25, 29)
+                    BackgroundColor3 = FromRGB(27, 25, 29),
+                    Visible = not Window.HideHeader
                 })  Items["SettingsButton"]:AddToTheme({BackgroundColor3 = "Element"})
                 
                 Instances:Create("UICorner", {
