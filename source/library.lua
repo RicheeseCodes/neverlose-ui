@@ -4088,9 +4088,15 @@ local Library do
                 end
             end)
 
-            Window:SetCenter()
-            task.wait()
-            Window:SetOpen(true)
+            local ok, err = pcall(function()
+                Window:SetCenter()
+                task.wait()
+                Window:SetOpen(true)
+            end)
+            if not ok then
+                warn("[NeverloseUI] SetOpen error:", err)
+                Items["MainFrame"].Instance.Visible = true
+            end
             return setmetatable(Window, Library)
         end
 
@@ -8328,5 +8334,6 @@ local Library do
     end
 end
 
+warn("[NeverloseUI] Library loaded successfully")
 getgenv().Library = Library
 return Library
