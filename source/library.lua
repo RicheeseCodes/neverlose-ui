@@ -2284,7 +2284,7 @@ local Library do
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(0.5, 0.5),
-                    BackgroundTransparency = Window.HideHeader and 0 or 0.05,
+                    BackgroundTransparency = Window.HideHeader and 0 or 0.12,
                     Position = UDim2New(0.5519999861717224, 0, 0.5, 0),
                     Size = UDim2New(0, 677, 0, 644),
                     ZIndex = 2,
@@ -2524,7 +2524,7 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255),
                     Visible = false
                 })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
-                
+
                 Items["SubTitle"] = Instances:Create("TextLabel", {
                     Parent = Items["MainFrame"].Instance,
                     Name = "\0",
@@ -2544,143 +2544,535 @@ local Library do
                     Visible = false
                 })  Items["SubTitle"]:AddToTheme({TextColor3 = "Text"})
 
+                -- ========== RAYFIELD-STYLE TOPBAR ==========
+                local Minimised = false
+                local Hidden = false
+                local Debounce = false
+                local searchOpen = false
+                local OriginalMainSize = Items["MainFrame"].Instance.Size
+
                 Items["Topbar"] = Instances:Create("Frame", {
-                    Parent = Items["MainFrame"].Instance, Name = "Topbar",
-                    BorderColor3 = FromRGB(0,0,0), BackgroundTransparency = 0.05,
-                    Position = UDim2New(0,0,0,0), Size = UDim2New(1,0,0,45),
-                    ZIndex = 5, BorderSizePixel = 0, BackgroundColor3 = FromRGB(20,18,22),
-                    Visible = not Window.HideHeader
+                    Parent = Items["MainFrame"].Instance,
+                    Name = "Topbar",
+                    BackgroundTransparency = 0,
+                    Size = UDim2New(1, 0, 0, 45),
+                    Position = UDim2New(0, 0, 0, 0),
+                    ZIndex = 5,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(27, 25, 29)
                 })  Items["Topbar"]:AddToTheme({BackgroundColor3 = "Background"})
-                Instances:Create("Frame", {
-                    Parent = Items["Topbar"].Instance, Name = "Line",
-                    Size = UDim2New(1,0,0,1), Position = UDim2New(0,0,1,0),
-                    BorderSizePixel = 0, BackgroundTransparency = 0.85,
-                    BackgroundColor3 = FromRGB(255,255,255), ZIndex = 6
-                })
+
+                Items["TopbarDivider"] = Instances:Create("Frame", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Divider",
+                    BackgroundTransparency = 0,
+                    Size = UDim2New(1, 0, 0, 1),
+                    Position = UDim2New(0, 0, 1, -1),
+                    ZIndex = 5,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(40, 38, 42)
+                })  Items["TopbarDivider"]:AddToTheme({BackgroundColor3 = "Element"})
+
                 Items["TopbarTitle"] = Instances:Create("TextLabel", {
-                    Parent = Items["Topbar"].Instance, FontFace = Library.Font,
-                    TextColor3 = FromRGB(240,240,240), Text = Window.Name,
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Title",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(240, 240, 240),
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    Text = Window.Name,
+                    TextSize = 16,
                     TextXAlignment = Enum.TextXAlignment.Left,
-                    Size = UDim2New(0.5,0,1,0), BackgroundTransparency = 1,
-                    Position = UDim2New(0,16,0,0), ZIndex = 6, TextSize = 15,
-                    BorderSizePixel = 0, BackgroundColor3 = FromRGB(255,255,255)
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    Size = UDim2New(0, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    Position = UDim2New(0, 15, 0, 0),
+                    ZIndex = 5,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["TopbarTitle"]:AddToTheme({TextColor3 = "Text"})
-                Items["TopbarClose"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance, Text = "", AutoButtonColor = false,
-                    AnchorPoint = Vector2New(1,0.5), Position = UDim2New(1,-16,0.5,0),
-                    Size = UDim2New(0,26,0,26), BackgroundTransparency = 1,
-                    BorderSizePixel = 0, ZIndex = 6
+
+                Items["TopbarUIStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "UIStroke",
+                    Color = FromRGB(60, 58, 62),
+                    Transparency = 1,
+                    Thickness = 1
                 })
-                Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarClose"].Instance, ImageColor3 = FromRGB(160,160,160),
-                    Size = UDim2New(0,12,0,12), AnchorPoint = Vector2New(0.5,0.5),
-                    Position = UDim2New(0.5,0,0.5,0), Image = "rbxassetid://130510492706892",
-                    BackgroundTransparency = 1, ZIndex = 7, BorderSizePixel = 0
-                }):AddToTheme({ImageColor3 = "Text"})
-                Items["TopbarSettings"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance, Text = "", AutoButtonColor = false,
-                    AnchorPoint = Vector2New(1,0.5), Position = UDim2New(1,-50,0.5,0),
-                    Size = UDim2New(0,26,0,26), BackgroundTransparency = 1,
-                    BorderSizePixel = 0, ZIndex = 6
-                })
-                Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarSettings"].Instance, ImageColor3 = FromRGB(160,160,160),
-                    Size = UDim2New(0,15,0,15), AnchorPoint = Vector2New(0.5,0.5),
-                    Position = UDim2New(0.5,0,0.5,0), Image = "rbxassetid://122669828593160",
-                    BackgroundTransparency = 1, ZIndex = 7, BorderSizePixel = 0
-                }):AddToTheme({ImageColor3 = "Text"})
-                Items["TopbarSearch"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance, Text = "", AutoButtonColor = false,
-                    AnchorPoint = Vector2New(1,0.5), Position = UDim2New(1,-84,0.5,0),
-                    Size = UDim2New(0,26,0,26), BackgroundTransparency = 1,
-                    BorderSizePixel = 0, ZIndex = 6
-                })
-                Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarSearch"].Instance, ImageColor3 = FromRGB(160,160,160),
-                    Size = UDim2New(0,16,0,16), AnchorPoint = Vector2New(0.5,0.5),
-                    Position = UDim2New(0.5,0,0.5,0), Image = "rbxassetid://86725535583498",
-                    BackgroundTransparency = 1, ZIndex = 7, BorderSizePixel = 0
-                }):AddToTheme({ImageColor3 = "Text"})
+
+                -- Close button (X) - rightmost
+                Items["TopbarClose"] = Instances:Create("ImageButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Close",
+                    Image = "rbxassetid://130510492706892",
+                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageTransparency = 0.8,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, -12, 0.5, 0),
+                    Size = UDim2New(0, 14, 0, 14),
+                    ZIndex = 6,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarClose"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Minimize button (resize icon) - second from right
+                Items["TopbarMinimize"] = Instances:Create("ImageButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "ChangeSize",
+                    Image = "rbxassetid://10137941941",
+                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageTransparency = 0.8,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, -38, 0.5, 0),
+                    Size = UDim2New(0, 14, 0, 14),
+                    ZIndex = 6,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarMinimize"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Unload button (vertical sliders icon) - third from right
+                Items["TopbarUnload"] = Instances:Create("ImageButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Unload",
+                    Image = "rbxassetid://10137832201",
+                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageTransparency = 0.8,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, -64, 0.5, 0),
+                    Size = UDim2New(0, 14, 0, 14),
+                    ZIndex = 6,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarUnload"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Search button (magnifying glass) - fourth from right
+                Items["TopbarSearch"] = Instances:Create("ImageButton", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "Search",
+                    Image = "rbxassetid://80503127983237",
+                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageTransparency = 0.8,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, -90, 0.5, 0),
+                    Size = UDim2New(0, 14, 0, 14),
+                    ZIndex = 6,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["TopbarSearch"]:AddToTheme({ImageColor3 = "Text"})
+
+                -- Search Overlay (slides in below topbar like Rayfield)
                 Items["SearchOverlay"] = Instances:Create("Frame", {
-                    Parent = Items["MainFrame"].Instance, Name = "SearchOverlay",
-                    AnchorPoint = Vector2New(0.5,0), BackgroundColor3 = FromRGB(240,240,240),
-                    BackgroundTransparency = 1, Position = UDim2New(0.5,0,0,50),
-                    Size = UDim2New(1,-30,0,32), ZIndex = 10, BorderSizePixel = 0, Visible = false
-                })  Items["SearchOverlay"]:AddToTheme({BackgroundColor3 = "Text"})
-                Instances:Create("UICorner", {Parent = Items["SearchOverlay"].Instance, CornerRadius = UDimNew(0,6)})
-                Items["SearchStroke"] = Instances:Create("UIStroke", {
-                    Parent = Items["SearchOverlay"].Instance, Color = FromRGB(60,60,65),
-                    Thickness = 1, Transparency = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                    Parent = Items["MainFrame"].Instance,
+                    Name = "Search",
+                    BackgroundTransparency = 1,
+                    Size = UDim2New(1, 0, 0, 80),
+                    Position = UDim2New(0.5, 0, 0, 70),
+                    AnchorPoint = Vector2New(0.5, 0),
+                    ZIndex = 10,
+                    BorderSizePixel = 0,
+                    Visible = false,
+                    BackgroundColor3 = FromRGB(40, 38, 42)
                 })
-                Items["SearchIcon"] = Instances:Create("ImageLabel", {
-                    Parent = Items["SearchOverlay"].Instance, ImageColor3 = FromRGB(180,180,180),
-                    ImageTransparency = 1, Size = UDim2New(0,14,0,14),
-                    AnchorPoint = Vector2New(0,0.5), Position = UDim2New(0,10,0.5,0),
-                    Image = "rbxassetid://86725535583498", BackgroundTransparency = 1, ZIndex = 11,
-                    BorderSizePixel = 0
-                })  Items["SearchIcon"]:AddToTheme({ImageColor3 = "Text"})
+
+                Items["SearchOverlayStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["SearchOverlay"].Instance,
+                    Name = "UIStroke",
+                    Color = FromRGB(60, 58, 62),
+                    Transparency = 1,
+                    Thickness = 1
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["SearchOverlay"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 6)
+                })
+
+                Items["SearchOverlayIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["SearchOverlay"].Instance,
+                    Name = "Search",
+                    Image = "rbxassetid://80503127983237",
+                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageTransparency = 1,
+                    Size = UDim2New(0, 14, 0, 14),
+                    Position = UDim2New(0, 10, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    ZIndex = 11,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["SearchOverlayIcon"]:AddToTheme({ImageColor3 = "Text"})
+
                 Items["SearchInput"] = Instances:Create("TextBox", {
-                    Parent = Items["SearchOverlay"].Instance, FontFace = Library.Font,
-                    TextColor3 = FromRGB(240,240,240), TextTransparency = 1,
-                    PlaceholderText = "Search elements...", PlaceholderColor3 = FromRGB(140,140,140),
-                    Text = "", TextXAlignment = Enum.TextXAlignment.Left,
-                    Size = UDim2New(1,-35,1,0), Position = UDim2New(0,30,0,0),
-                    BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 11,
-                    TextSize = 13, ClearTextOnFocus = false
+                    Parent = Items["SearchOverlay"].Instance,
+                    Name = "Input",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(240, 240, 240),
+                    PlaceholderText = "Search elements...",
+                    PlaceholderColor3 = FromRGB(150, 150, 150),
+                    Text = "",
+                    TextSize = 14,
+                    TextTransparency = 1,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    ClearTextOnFocus = false,
+                    Size = UDim2New(1, -35, 1, 0),
+                    Position = UDim2New(0, 30, 0, 0),
+                    ZIndex = 11,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255),
+                    Interactable = false
                 })  Items["SearchInput"]:AddToTheme({TextColor3 = "Text"})
 
-                local SearchOpen = false
-                local function openSearch()
-                    SearchOpen = true
-                    Items["SearchOverlay"].Instance.BackgroundTransparency = 1
-                    Items["SearchStroke"].Instance.Transparency = 1
-                    Items["SearchIcon"].Instance.ImageTransparency = 1
-                    Items["SearchInput"].Instance.TextTransparency = 1
-                    Items["SearchOverlay"].Instance.Size = UDim2New(1,0,0,50)
-                    Items["SearchOverlay"].Instance.Position = UDim2New(0.5,0,0,55)
-                    Items["SearchOverlay"].Instance.Visible = true
-                    Items["SearchInput"].Instance:CaptureFocus()
-                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Position = UDim2New(0.5,0,0,50), BackgroundTransparency = 0.92, Size = UDim2New(1,-30,0,32)})
-                    Items["SearchStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 0.7})
-                    Items["SearchInput"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0.1})
-                    Items["SearchIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.4})
-                end
-                local function closeSearch()
-                    SearchOpen = false
-                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 1, Size = UDim2New(1,-50,0,28)})
-                    Items["SearchStroke"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Transparency = 1})
-                    Items["SearchInput"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1})
-                    Items["SearchIcon"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 1})
-                    task.delay(0.25, function() if not SearchOpen then Items["SearchOverlay"].Instance.Visible = false end end)
-                    Items["SearchInput"].Instance.Text = ""
-                    for _, Page in Window.Pages do for _, Section in Page.Sections do for _, Element in Section.Elements do
-                        if Element.Items and Element.Items["Frame"] then Element.Items["Frame"].Instance.Visible = true end
-                    end end end
-                end
-                Items["TopbarSearch"]:Connect("MouseButton1Down", function()
-                    if SearchOpen then closeSearch() else openSearch() end
-                end)
-                Items["SearchInput"]:Connect("FocusLost", function()
-                    if #Items["SearchInput"].Instance.Text == 0 and SearchOpen then task.wait(0.12) closeSearch() end
-                end)
-                Library:Connect(Items["SearchInput"].Instance:GetPropertyChangedSignal("Text"), function()
-                    local Query = string.lower(Items["SearchInput"].Instance.Text)
-                    for _, Page in Window.Pages do for _, Section in Page.Sections do for _, Element in Section.Elements do
-                        if Element.Items and Element.Items["Frame"] and Element.Name then
-                            Element.Items["Frame"].Instance.Visible = (Query == "" or string.find(string.lower(Element.Name), Query, 1, true) ~= nil)
-                        end
-                    end end end
-                end)
-                Items["TopbarClose"]:Connect("MouseButton1Down", function() Library:Unload() end)
+                -- Unload Panel (appears from nowhere when unload icon is clicked)
+                local UnloadPanelOpen = false
+                Items["UnloadPanel"] = Instances:Create("Frame", {
+                    Parent = Items["MainFrame"].Instance,
+                    Name = "UnloadPanel",
+                    BackgroundTransparency = 0,
+                    Size = UDim2New(0, 200, 0, 80),
+                    Position = UDim2New(1, -12, 0, 50),
+                    AnchorPoint = Vector2New(1, 0),
+                    ZIndex = 15,
+                    BorderSizePixel = 0,
+                    Visible = false,
+                    BackgroundColor3 = FromRGB(30, 28, 32)
+                })  Items["UnloadPanel"]:AddToTheme({BackgroundColor3 = "Background"})
 
+                Instances:Create("UICorner", {
+                    Parent = Items["UnloadPanel"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 8)
+                })
+
+                Items["UnloadPanelStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["UnloadPanel"].Instance,
+                    Name = "UIStroke",
+                    Color = FromRGB(60, 58, 62),
+                    Transparency = 0,
+                    Thickness = 1
+                })
+
+                Items["UnloadPanelTitle"] = Instances:Create("TextLabel", {
+                    Parent = Items["UnloadPanel"].Instance,
+                    Name = "Title",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(240, 240, 240),
+                    Text = "Unload Menu",
+                    TextSize = 14,
+                    Size = UDim2New(1, 0, 0, 30),
+                    Position = UDim2New(0, 0, 0, 5),
+                    ZIndex = 16,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["UnloadPanelTitle"]:AddToTheme({TextColor3 = "Text"})
+
+                Items["UnloadConfirmBtn"] = Instances:Create("TextButton", {
+                    Parent = Items["UnloadPanel"].Instance,
+                    Name = "Confirm",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(255, 255, 255),
+                    Text = "Confirm Unload",
+                    TextSize = 13,
+                    AutoButtonColor = false,
+                    Size = UDim2New(1, -20, 0, 28),
+                    Position = UDim2New(0, 10, 0, 40),
+                    AnchorPoint = Vector2New(0, 0),
+                    ZIndex = 16,
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 0.2,
+                    BackgroundColor3 = FromRGB(200, 60, 60)
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["UnloadConfirmBtn"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 6)
+                })
+
+                -- ========== TOPBAR BUTTON HOVER EFFECTS (Rayfield-style) ==========
+                local topbarButtons = {Items["TopbarSearch"], Items["TopbarUnload"], Items["TopbarMinimize"], Items["TopbarClose"]}
+                for _, btn in ipairs(topbarButtons) do
+                    btn:Connect("MouseEnter", function()
+                        btn:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0})
+                    end)
+                    btn:Connect("MouseLeave", function()
+                        btn:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
+                    end)
+                end
+
+                -- ========== SEARCH FUNCTIONS (Rayfield exact animations) ==========
+                local function openSearch()
+                    searchOpen = true
+
+                    Items["SearchOverlay"].Instance.BackgroundTransparency = 1
+                    Items["SearchOverlayIcon"].Instance.ImageTransparency = 1
+                    Items["SearchInput"].Instance.TextTransparency = 1
+                    Items["SearchOverlayStroke"].Instance.Transparency = 1
+                    Items["SearchOverlay"].Instance.Size = UDim2New(1, 0, 0, 80)
+                    Items["SearchOverlay"].Instance.Position = UDim2New(0.5, 0, 0, 70)
+                    Items["SearchInput"].Instance.Interactable = true
+                    Items["SearchOverlay"].Instance.Visible = true
+
+                    Items["SearchInput"].Instance:CaptureFocus()
+
+                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Position = UDim2New(0.5, 0, 0, 57), BackgroundTransparency = 0.1})
+                    Items["SearchOverlayStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 0.2})
+                    Items["SearchInput"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0})
+                    Items["SearchOverlayIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.5})
+                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, -35, 0, 35)})
+                end
+
+                local function closeSearch()
+                    searchOpen = false
+
+                    Items["SearchOverlay"]:Tween(TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 1, Size = UDim2New(1, -55, 0, 30)})
+                    Items["SearchOverlayIcon"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 1})
+                    Items["SearchOverlayStroke"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Transparency = 1})
+                    Items["SearchInput"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1})
+
+                    Items["SearchInput"].Instance.Text = ""
+                    Items["SearchInput"].Instance.Interactable = false
+
+                    task.delay(0.4, function()
+                        if not searchOpen then
+                            Items["SearchOverlay"].Instance.Visible = false
+                        end
+                    end)
+                end
+
+                -- ========== MINIMIZE / MAXIMIZE FUNCTIONS (Rayfield exact animations) ==========
+                local function MinimiseWindow()
+                    Debounce = true
+                    Items["TopbarMinimize"].Instance.Image = "rbxassetid://11036884234"
+
+                    task.spawn(closeSearch)
+
+                    Items["TopbarUIStroke"].Instance.Transparency = 0
+
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 0})
+
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X - 5, 0, 45)})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X - 5, 0, 45)})
+
+                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 0)})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, 225, 0, 0)})
+
+                    task.wait(0.3)
+                    Items["Content"].Instance.Visible = false
+                    Items["LeftTabs"].Instance.Visible = false
+                    task.wait(0.2)
+                    Debounce = false
+                end
+
+                local function MaximiseWindow()
+                    Debounce = true
+                    Items["TopbarMinimize"].Instance.Image = "rbxassetid://10137941941"
+
+                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 1})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = OriginalMainSize})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 45)})
+
+                    Items["Content"].Instance.Visible = true
+                    Items["LeftTabs"].Instance.Visible = true
+
+                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 1, -45)})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, 225, 1, 0)})
+
+                    task.wait(0.5)
+                    Debounce = false
+                end
+
+                -- ========== HIDE / UNHIDE FUNCTIONS (Rayfield exact animations) ==========
+                local function HideWindow()
+                    Debounce = true
+
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X, 0, 0)})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X, 0, 45)})
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 1})
+                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 1})
+
+                    for _, btn in ipairs(topbarButtons) do
+                        btn:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 1})
+                    end
+
+                    task.wait(0.5)
+                    Items["MainFrame"].Instance.Visible = false
+                    Debounce = false
+                end
+
+                local function UnhideWindow()
+                    Debounce = true
+                    Items["MainFrame"].Instance.Visible = true
+
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = OriginalMainSize})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 45)})
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = Window.HideHeader and 0 or 0.12})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0})
+
+                    if Minimised then
+                        task.spawn(MaximiseWindow)
+                    end
+
+                    for _, btn in ipairs(topbarButtons) do
+                        btn:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
+                    end
+
+                    Items["Content"].Instance.Visible = true
+                    Items["LeftTabs"].Instance.Visible = true
+
+                    task.wait(0.5)
+                    Minimised = false
+                    Debounce = false
+                end
+
+                -- ========== BUTTON CLICK HANDLERS ==========
+
+                -- Search button
+                Items["TopbarSearch"]:Connect("MouseButton1Click", function()
+                    task.spawn(function()
+                        if searchOpen then
+                            closeSearch()
+                        else
+                            openSearch()
+                        end
+                    end)
+                end)
+
+                -- Search input text changed - live filter elements
+                Library:Connect(Items["SearchInput"].Instance:GetPropertyChangedSignal("Text"), function()
+                    local searchText = Items["SearchInput"].Instance.Text
+                    if #searchText > 0 then
+                        for _, page in pairs(Window.Pages) do
+                            if page.Items then
+                                for _, element in pairs(page.Items) do
+                                    if element.Instance and element.Instance:IsA("GuiObject") then
+                                        local nameToCheck = element.Instance.Name or ""
+                                        if typeof(nameToCheck) == "string" and string.lower(nameToCheck):find(string.lower(searchText), 1, true) then
+                                            element.Instance.Visible = true
+                                        else
+                                            element.Instance.Visible = false
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        for _, page in pairs(Window.Pages) do
+                            if page.Items then
+                                for _, element in pairs(page.Items) do
+                                    if element.Instance and element.Instance:IsA("GuiObject") then
+                                        element.Instance.Visible = true
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end)
+
+                -- Search focus lost - close if empty (Rayfield behavior)
+                Library:Connect(Items["SearchInput"].Instance.FocusLost, function(enterPressed)
+                    if #Items["SearchInput"].Instance.Text == 0 and searchOpen then
+                        task.wait(0.12)
+                        closeSearch()
+                    end
+                end)
+
+                -- Minimize button
+                Items["TopbarMinimize"]:Connect("MouseButton1Click", function()
+                    if Debounce then return end
+                    if Minimised then
+                        Minimised = false
+                        MaximiseWindow()
+                    else
+                        Minimised = true
+                        MinimiseWindow()
+                    end
+                end)
+
+                -- Close button (Hide with keybind to unhide)
+                Items["TopbarClose"]:Connect("MouseButton1Click", function()
+                    if Debounce then return end
+                    if Hidden then
+                        Hidden = false
+                        UnhideWindow()
+                    else
+                        Hidden = true
+                        HideWindow()
+                    end
+                end)
+
+                -- Keybind to toggle hide/unhide (RightControl like Rayfield)
+                Library:Connect(UserInputService.InputBegan, function(input, processed)
+                    if input.KeyCode == Enum.KeyCode.RightControl and not processed then
+                        if Debounce then return end
+                        if Hidden then
+                            Hidden = false
+                            UnhideWindow()
+                        else
+                            Hidden = true
+                            HideWindow()
+                        end
+                    end
+                end)
+
+                -- Unload button - toggle unload panel
+                Items["TopbarUnload"]:Connect("MouseButton1Click", function()
+                    if UnloadPanelOpen then
+                        UnloadPanelOpen = false
+                        Items["UnloadPanel"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 200, 0, 0), BackgroundTransparency = 1})
+                        task.delay(0.3, function()
+                            if not UnloadPanelOpen then
+                                Items["UnloadPanel"].Instance.Visible = false
+                            end
+                        end)
+                    else
+                        UnloadPanelOpen = true
+                        Items["UnloadPanel"].Instance.Visible = true
+                        Items["UnloadPanel"].Instance.Size = UDim2New(0, 200, 0, 0)
+                        Items["UnloadPanel"].Instance.BackgroundTransparency = 1
+                        Items["UnloadPanel"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, 200, 0, 80), BackgroundTransparency = 0})
+                    end
+                end)
+
+                -- Unload confirm button
+                Items["UnloadConfirmBtn"]:Connect("MouseButton1Click", function()
+                    Library:Unload()
+                end)
+
+                Items["UnloadConfirmBtn"]:Connect("MouseEnter", function()
+                    Items["UnloadConfirmBtn"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0, BackgroundColor3 = FromRGB(230, 70, 70)})
+                end)
+
+                Items["UnloadConfirmBtn"]:Connect("MouseLeave", function()
+                    Items["UnloadConfirmBtn"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0.2, BackgroundColor3 = FromRGB(200, 60, 60)})
+                end)
+
+                -- ========== END TOPBAR ==========
 
                 Items["Content"] = Instances:Create("Frame", {
                     Parent = Items["MainFrame"].Instance,
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     BackgroundTransparency = 0.75,
-                    Position = Window.HideHeader and UDim2New(0, 0, 0, 0) or UDim2New(0, 0, 0, 45),
-                    Size = Window.HideHeader and UDim2New(1, 0, 1, 0) or UDim2New(1, 0, 1, -45),
+                    Position = UDim2New(0, 0, 0, 45),
+                    Size = UDim2New(1, 0, 1, -45),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
