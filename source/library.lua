@@ -2312,7 +2312,8 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(1, 0),
                     BackgroundTransparency = Window.HideHeader and 0 or 0.15,
-                    Size = UDim2New(0, 225, 1, 0),
+                    Position = UDim2New(0, 0, 0, 45),
+                    Size = UDim2New(0, 225, 1, -45),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
@@ -2555,8 +2556,8 @@ local Library do
                     Parent = Items["MainFrame"].Instance,
                     Name = "Topbar",
                     BackgroundTransparency = 0,
-                    Size = UDim2New(1, 0, 0, 45),
-                    Position = UDim2New(0, 0, 0, 0),
+                    Size = UDim2New(1, 225, 0, 45),
+                    Position = UDim2New(0, -225, 0, 0),
                     ZIndex = 5,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
@@ -2913,6 +2914,8 @@ local Library do
                 end
 
                 -- ========== MINIMIZE / MAXIMIZE FUNCTIONS (Rayfield exact animations) ==========
+                local OriginalMainWidth = OriginalMainSize.X.Offset
+
                 local function MinimiseWindow()
                     Debounce = true
                     Items["TopbarMinimizeIcon"].Instance.Image = "rbxassetid://11036884234"
@@ -2920,15 +2923,14 @@ local Library do
                     task.spawn(closeSearch)
 
                     Items["TopbarUIStroke"].Instance.Transparency = 0
+                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 0})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
 
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 0})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 225, 0, 0), BackgroundTransparency = 1})
+                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 0, 0)})
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X - 5, 0, 45)})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X - 5, 0, 45)})
-
-                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 0)})
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, 225, 0, 0)})
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45), Position = UDim2New(0, 0, 0, 0)})
 
                     task.wait(0.3)
                     Items["Content"].Instance.Visible = false
@@ -2941,17 +2943,17 @@ local Library do
                     Debounce = true
                     Items["TopbarMinimizeIcon"].Instance.Image = "rbxassetid://10137941941"
 
-                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 1})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0})
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = OriginalMainSize})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 45)})
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = OriginalMainSize})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0)})
 
                     Items["Content"].Instance.Visible = true
                     Items["LeftTabs"].Instance.Visible = true
 
-                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 1, -45)})
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, 225, 1, 0)})
+                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 1, -45)})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 225, 1, -45), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
 
                     task.wait(0.5)
                     Debounce = false
@@ -2961,16 +2963,17 @@ local Library do
                 local function HideWindow()
                     Debounce = true
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X, 0, 0)})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(0, Items["MainFrame"].Instance.AbsoluteSize.X, 0, 45)})
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 1})
-                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Transparency = 1})
+                    task.spawn(closeSearch)
+
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 30, 0, 0), BackgroundTransparency = 1})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 30, 0, 45), Position = UDim2New(0, 0, 0, 0), BackgroundTransparency = 1})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1})
+                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
 
                     for _, icon in ipairs(topbarIcons) do
-                        icon:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 1})
+                        icon:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1})
                     end
 
                     task.wait(0.5)
@@ -2982,23 +2985,22 @@ local Library do
                     Debounce = true
                     Items["MainFrame"].Instance.Visible = true
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = OriginalMainSize})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 45)})
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = Window.HideHeader and 0 or 0.12})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
-                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0})
+                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = OriginalMainSize, BackgroundTransparency = Window.HideHeader and 0 or 0.12})
+                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0), BackgroundTransparency = 0})
+                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0})
+                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0})
 
                     if Minimised then
                         task.spawn(MaximiseWindow)
                     end
 
                     for _, icon in ipairs(topbarIcons) do
-                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
+                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8})
                     end
 
                     Items["Content"].Instance.Visible = true
                     Items["LeftTabs"].Instance.Visible = true
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = Window.HideHeader and 0 or 0.15})
 
                     task.wait(0.5)
                     Minimised = false
