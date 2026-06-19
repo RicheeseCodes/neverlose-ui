@@ -2290,8 +2290,8 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(1, 0),
                     BackgroundTransparency = Window.HideHeader and 0 or 0.15,
-                    Position = UDim2New(0, 0, 0, 45),
-                    Size = UDim2New(0, 225, 1, -45),
+                    Position = UDim2New(0, 0, 0, 44),
+                    Size = UDim2New(0, 225, 1, -44),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
@@ -2963,7 +2963,7 @@ local Library do
                     Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 0})
                     Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
 
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 225, 0, 0), BackgroundTransparency = 1})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
                     Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 0, 0)})
 
                     Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
@@ -2990,7 +2990,7 @@ local Library do
                     Items["LeftTabs"].Instance.Visible = true
 
                     Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 1, -45)})
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 225, 1, -45), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
+                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 225, 1, -44), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
 
                     task.wait(0.5)
                     Debounce = false
@@ -3199,8 +3199,8 @@ local Library do
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     BackgroundTransparency = 0.75,
-                    Position = UDim2New(0, 0, 0, 45),
-                    Size = UDim2New(1, 0, 1, -45),
+                    Position = UDim2New(0, 0, 0, 44),
+                    Size = UDim2New(1, 0, 1, -44),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
@@ -3273,12 +3273,6 @@ local Library do
                 if not Window.HideHeader then
                     Instances:Create("UICorner", {
                         Parent = Items["MainFrame"].Instance,
-                        Name = "\0",
-                        CornerRadius = UDimNew(0, 4)
-                    })
-
-                    Instances:Create("UICorner", {
-                        Parent = Items["LeftTabs"].Instance,
                         Name = "\0",
                         CornerRadius = UDimNew(0, 4)
                     })
