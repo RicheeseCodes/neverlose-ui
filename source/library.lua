@@ -2253,6 +2253,7 @@ local Library do
                 Pages = { },
                 Items = { },
                 IsOpen = false,
+                SettingsPageOpen = false,
                 CurrentAlignment = "LeftTabs"
             }
 
@@ -2774,130 +2775,7 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["SearchInput"]:AddToTheme({TextColor3 = "Text"})
 
-                -- Settings Panel (slides in when settings icon is clicked)
-                local SettingsPanelOpen = false
-                Items["SettingsPanel"] = Instances:Create("Frame", {
-                    Parent = Items["MainFrame"].Instance,
-                    Name = "SettingsPanel",
-                    BackgroundTransparency = 1,
-                    Size = UDim2New(0, 220, 0, 0),
-                    Position = UDim2New(1, -12, 0, 50),
-                    AnchorPoint = Vector2New(1, 0),
-                    ZIndex = 15,
-                    BorderSizePixel = 0,
-                    Visible = false,
-                    BackgroundColor3 = FromRGB(30, 28, 32)
-                })  Items["SettingsPanel"]:AddToTheme({BackgroundColor3 = "Background"})
-
-                Instances:Create("UICorner", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
-                })
-
-                Items["SettingsPanelStroke"] = Instances:Create("UIStroke", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "UIStroke",
-                    Color = FromRGB(60, 58, 62),
-                    Transparency = 0,
-                    Thickness = 1
-                })
-
-                Items["SettingsTitle"] = Instances:Create("TextLabel", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "Title",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(240, 240, 240),
-                    Text = "Menu Settings",
-                    TextSize = 14,
-                    Size = UDim2New(1, 0, 0, 28),
-                    Position = UDim2New(0, 0, 0, 8),
-                    ZIndex = 16,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["SettingsTitle"]:AddToTheme({TextColor3 = "Text"})
-
-                Items["KeybindLabel"] = Instances:Create("TextLabel", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "KeybindLabel",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(200, 200, 200),
-                    Text = "Toggle Keybind",
-                    TextSize = 12,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    Size = UDim2New(0.5, -10, 0, 24),
-                    Position = UDim2New(0, 12, 0, 40),
-                    ZIndex = 16,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["KeybindLabel"]:AddToTheme({TextColor3 = "Text"})
-
-                Items["KeybindBtn"] = Instances:Create("TextButton", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "KeybindBtn",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(240, 240, 240),
-                    Text = "K",
-                    TextSize = 12,
-                    AutoButtonColor = false,
-                    AnchorPoint = Vector2New(1, 0),
-                    Size = UDim2New(0, 50, 0, 24),
-                    Position = UDim2New(1, -12, 0, 40),
-                    ZIndex = 16,
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 0.5,
-                    BackgroundColor3 = FromRGB(50, 48, 54)
-                })
-
-                Instances:Create("UICorner", {
-                    Parent = Items["KeybindBtn"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 5)
-                })
-
-                Instances:Create("UIStroke", {
-                    Parent = Items["KeybindBtn"].Instance,
-                    Name = "UIStroke",
-                    Color = FromRGB(70, 68, 74),
-                    Transparency = 0.5,
-                    Thickness = 1
-                })
-
-                Items["SettingsDivider"] = Instances:Create("Frame", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "Divider",
-                    Size = UDim2New(1, -24, 0, 1),
-                    Position = UDim2New(0, 12, 0, 72),
-                    ZIndex = 16,
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 0.7,
-                    BackgroundColor3 = FromRGB(60, 58, 62)
-                })
-
-                Items["UnloadBtn"] = Instances:Create("TextButton", {
-                    Parent = Items["SettingsPanel"].Instance,
-                    Name = "Unload",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(255, 255, 255),
-                    Text = "Unload Menu",
-                    TextSize = 13,
-                    AutoButtonColor = false,
-                    Size = UDim2New(1, -24, 0, 28),
-                    Position = UDim2New(0, 12, 0, 82),
-                    AnchorPoint = Vector2New(0, 0),
-                    ZIndex = 16,
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 0.2,
-                    BackgroundColor3 = FromRGB(200, 60, 60)
-                })
-
-                Instances:Create("UICorner", {
-                    Parent = Items["UnloadBtn"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 6)
-                })
+                -- Settings Page (shown in content area when settings icon is clicked)
 
                 -- ========== TOPBAR BUTTON HOVER EFFECTS (Rayfield-style) ==========
                 local topbarButtons = {Items["TopbarSearch"], Items["TopbarSettings"], Items["TopbarMinimize"], Items["TopbarClose"]}
@@ -3134,30 +3012,257 @@ local Library do
                     end
                 end)
 
-                -- Settings button - toggle settings panel
-                local function openSettingsPanel()
-                    SettingsPanelOpen = true
-                    Items["SettingsPanel"].Instance.Visible = true
-                    Items["SettingsPanel"].Instance.Size = UDim2New(0, 220, 0, 0)
-                    Items["SettingsPanel"].Instance.BackgroundTransparency = 1
-                    Items["SettingsPanel"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 220, 0, 120), BackgroundTransparency = 0})
+                -- Settings page handlers are set up after Content frame below
+
+                -- ========== END TOPBAR ==========
+
+                Items["Content"] = Instances:Create("Frame", {
+                    Parent = Items["MainFrame"].Instance,
+                    Name = "\0",
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    BackgroundTransparency = 0.75,
+                    Position = UDim2New(0, 0, 0, 44),
+                    Size = UDim2New(1, 0, 1, -44),
+                    ZIndex = 2,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(27, 25, 29)
+                })  Items["Content"]:AddToTheme({BackgroundColor3 = "Background"})
+
+                -- ========== SETTINGS PAGE (in content area) ==========
+                Items["SettingsPage"] = Instances:Create("Frame", {
+                    Parent = Items["Content"].Instance,
+                    Name = "SettingsPage",
+                    BackgroundTransparency = 1,
+                    Size = UDim2New(1, 0, 1, 0),
+                    Position = UDim2New(0, 0, 0, 0),
+                    ZIndex = 3,
+                    BorderSizePixel = 0,
+                    Visible = false,
+                    BackgroundColor3 = FromRGB(27, 25, 29)
+                })
+
+                Instances:Create("UIPadding", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "\0",
+                    PaddingTop = UDimNew(0, 30),
+                    PaddingBottom = UDimNew(0, 20),
+                    PaddingLeft = UDimNew(0, 30),
+                    PaddingRight = UDimNew(0, 30)
+                })
+
+                Items["SettingsTitle"] = Instances:Create("TextLabel", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "Title",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(240, 240, 240),
+                    Text = "Menu Settings",
+                    TextSize = 18,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Size = UDim2New(1, 0, 0, 24),
+                    Position = UDim2New(0, 0, 0, 0),
+                    ZIndex = 4,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["SettingsTitle"]:AddToTheme({TextColor3 = "Text"})
+
+                Items["SettingsDesc"] = Instances:Create("TextLabel", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "Desc",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(160, 160, 160),
+                    Text = "Configure your menu preferences",
+                    TextSize = 12,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Size = UDim2New(1, 0, 0, 16),
+                    Position = UDim2New(0, 0, 0, 28),
+                    ZIndex = 4,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["SettingsDesc"]:AddToTheme({TextColor3 = "SubText"})
+
+                Items["SettingsDivider1"] = Instances:Create("Frame", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "Divider1",
+                    Size = UDim2New(1, 0, 0, 1),
+                    Position = UDim2New(0, 0, 0, 54),
+                    ZIndex = 4,
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 0.85,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })
+
+                -- Toggle Keybind row
+                Items["KeybindRow"] = Instances:Create("Frame", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "KeybindRow",
+                    BackgroundTransparency = 0.85,
+                    Size = UDim2New(1, 0, 0, 44),
+                    Position = UDim2New(0, 0, 0, 68),
+                    ZIndex = 4,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(40, 38, 44)
+                })  Items["KeybindRow"]:AddToTheme({BackgroundColor3 = "Section Background 2"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["KeybindRow"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 8)
+                })
+
+                Items["KeybindLabel"] = Instances:Create("TextLabel", {
+                    Parent = Items["KeybindRow"].Instance,
+                    Name = "Label",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(220, 220, 220),
+                    Text = "Toggle Keybind",
+                    TextSize = 13,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Size = UDim2New(0.6, 0, 1, 0),
+                    Position = UDim2New(0, 14, 0, 0),
+                    ZIndex = 5,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["KeybindLabel"]:AddToTheme({TextColor3 = "Text"})
+
+                Items["KeybindBtn"] = Instances:Create("TextButton", {
+                    Parent = Items["KeybindRow"].Instance,
+                    Name = "KeybindBtn",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(240, 240, 240),
+                    Text = "K",
+                    TextSize = 12,
+                    AutoButtonColor = false,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Size = UDim2New(0, 60, 0, 28),
+                    Position = UDim2New(1, -10, 0.5, 0),
+                    ZIndex = 5,
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 0.5,
+                    BackgroundColor3 = FromRGB(50, 48, 54)
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["KeybindBtn"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 6)
+                })
+
+                Items["KeybindBtnStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["KeybindBtn"].Instance,
+                    Name = "UIStroke",
+                    Color = FromRGB(70, 68, 74),
+                    Transparency = 0.5,
+                    Thickness = 1
+                })
+
+                Items["SettingsDivider2"] = Instances:Create("Frame", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "Divider2",
+                    Size = UDim2New(1, 0, 0, 1),
+                    Position = UDim2New(0, 0, 0, 126),
+                    ZIndex = 4,
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 0.85,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })
+
+                -- Unload button
+                Items["UnloadBtn"] = Instances:Create("TextButton", {
+                    Parent = Items["SettingsPage"].Instance,
+                    Name = "Unload",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(255, 255, 255),
+                    Text = "Unload Menu",
+                    TextSize = 13,
+                    AutoButtonColor = false,
+                    Size = UDim2New(1, 0, 0, 36),
+                    Position = UDim2New(0, 0, 0, 140),
+                    ZIndex = 5,
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 0.2,
+                    BackgroundColor3 = FromRGB(200, 60, 60)
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["UnloadBtn"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 8)
+                })
+
+                -- Settings page open/close functions
+                local function openSettingsPage()
+                    Window.SettingsPageOpen = true
+                    for _, page in pairs(Window.Pages) do
+                        if page.Active then
+                            page._wasActive = true
+                            page:Turn(false)
+                        end
+                    end
+                    Items["SettingsPage"].Instance.Visible = true
+                    Items["SettingsPage"].Instance.Position = UDim2New(0, 0, 0, 30)
+                    Items["SettingsTitle"].Instance.TextTransparency = 1
+                    Items["SettingsDesc"].Instance.TextTransparency = 1
+                    Items["KeybindLabel"].Instance.TextTransparency = 1
+                    Items["KeybindBtn"].Instance.TextTransparency = 1
+                    Items["KeybindBtn"].Instance.BackgroundTransparency = 1
+                    Items["KeybindRow"].Instance.BackgroundTransparency = 1
+                    Items["UnloadBtn"].Instance.TextTransparency = 1
+                    Items["UnloadBtn"].Instance.BackgroundTransparency = 1
+                    Items["SettingsDivider1"].Instance.BackgroundTransparency = 1
+                    Items["SettingsDivider2"].Instance.BackgroundTransparency = 1
+                    Items["KeybindBtnStroke"].Instance.Transparency = 1
+
+                    local tweenIn = TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+                    Items["SettingsPage"]:Tween(tweenIn, {Position = UDim2New(0, 0, 0, 0)})
+                    Items["SettingsTitle"]:Tween(tweenIn, {TextTransparency = 0})
+                    Items["SettingsDesc"]:Tween(tweenIn, {TextTransparency = 0.35})
+                    Items["KeybindLabel"]:Tween(tweenIn, {TextTransparency = 0})
+                    Items["KeybindBtn"]:Tween(tweenIn, {TextTransparency = 0, BackgroundTransparency = 0.5})
+                    Items["KeybindRow"]:Tween(tweenIn, {BackgroundTransparency = 0.85})
+                    Items["UnloadBtn"]:Tween(tweenIn, {TextTransparency = 0, BackgroundTransparency = 0.2})
+                    Items["SettingsDivider1"]:Tween(tweenIn, {BackgroundTransparency = 0.85})
+                    Items["SettingsDivider2"]:Tween(tweenIn, {BackgroundTransparency = 0.85})
+                    Items["KeybindBtnStroke"]:Tween(tweenIn, {Transparency = 0.5})
                 end
 
-                local function closeSettingsPanel()
-                    SettingsPanelOpen = false
-                    Items["SettingsPanel"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2New(0, 220, 0, 0), BackgroundTransparency = 1})
+                local function closeSettingsPage()
+                    Window.SettingsPageOpen = false
+                    local tweenOut = TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                    Items["SettingsTitle"]:Tween(tweenOut, {TextTransparency = 1})
+                    Items["SettingsDesc"]:Tween(tweenOut, {TextTransparency = 1})
+                    Items["KeybindLabel"]:Tween(tweenOut, {TextTransparency = 1})
+                    Items["KeybindBtn"]:Tween(tweenOut, {TextTransparency = 1, BackgroundTransparency = 1})
+                    Items["KeybindRow"]:Tween(tweenOut, {BackgroundTransparency = 1})
+                    Items["UnloadBtn"]:Tween(tweenOut, {TextTransparency = 1, BackgroundTransparency = 1})
+                    Items["SettingsDivider1"]:Tween(tweenOut, {BackgroundTransparency = 1})
+                    Items["SettingsDivider2"]:Tween(tweenOut, {BackgroundTransparency = 1})
+                    Items["KeybindBtnStroke"]:Tween(tweenOut, {Transparency = 1})
+                    Items["SettingsPage"]:Tween(tweenOut, {Position = UDim2New(0, 0, 0, 30)})
                     task.delay(0.3, function()
-                        if not SettingsPanelOpen then
-                            Items["SettingsPanel"].Instance.Visible = false
+                        if not Window.SettingsPageOpen then
+                            Items["SettingsPage"].Instance.Visible = false
+                            for _, page in pairs(Window.Pages) do
+                                if page._wasActive then
+                                    page._wasActive = nil
+                                    page:Turn(true)
+                                    break
+                                end
+                            end
                         end
                     end)
                 end
 
+                Window.CloseSettingsPage = closeSettingsPage
+
                 Items["TopbarSettings"]:Connect("MouseButton1Click", function()
-                    if SettingsPanelOpen then
-                        closeSettingsPanel()
+                    if Debounce then return end
+                    if Window.SettingsPageOpen then
+                        closeSettingsPage()
                     else
-                        openSettingsPanel()
+                        openSettingsPage()
                     end
                 end)
 
@@ -3191,20 +3296,6 @@ local Library do
                 Items["UnloadBtn"]:Connect("MouseLeave", function()
                     Items["UnloadBtn"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.2, BackgroundColor3 = FromRGB(200, 60, 60)})
                 end)
-
-                -- ========== END TOPBAR ==========
-
-                Items["Content"] = Instances:Create("Frame", {
-                    Parent = Items["MainFrame"].Instance,
-                    Name = "\0",
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    BackgroundTransparency = 0.75,
-                    Position = UDim2New(0, 0, 0, 44),
-                    Size = UDim2New(1, 0, 1, -44),
-                    ZIndex = 2,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(27, 25, 29)
-                })  Items["Content"]:AddToTheme({BackgroundColor3 = "Background"})
 
                 Items["CloseButton"] = Instances:Create("TextButton", {
                     Parent = Items["MainFrame"].Instance,
@@ -4500,7 +4591,15 @@ local Library do
             end
 
             Items["Inactive"]:Connect("MouseButton1Down", function()
-                for Index, Value in Page.Window.Pages do 
+                if Page.Window.SettingsPageOpen then
+                    Page.Window.SettingsPageOpen = false
+                    Page.Window.Items["SettingsPage"].Instance.Visible = false
+                    for _, p in Page.Window.Pages do
+                        p._wasActive = nil
+                    end
+                end
+
+                for Index, Value in Page.Window.Pages do
                     if Value == Page and Page.Active then
                         return
                     end
