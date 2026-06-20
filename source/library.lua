@@ -7080,8 +7080,25 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
-                -- Text parented directly to the button, no accent dot/bar.
-                -- Left-aligned with 10px padding so it sits properly in the box.
+                -- Selection indicator (crimson dot) on the LEFT.
+                -- Selected: fully opaque. Unselected: dim (0.6 transparency).
+                local OptionDot = Instances:Create("Frame", {
+                    Parent = OptionButton.Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 6, 0, 6),
+                    Position = UDim2New(0, 12, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70),
+                    BackgroundTransparency = 0.6,
+                })  OptionDot:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UICorner", {
+                    Parent = OptionDot.Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(1, 0)
+                })
+
                 local OptionText = Instances:Create("TextLabel", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
@@ -7089,11 +7106,11 @@ local Library do
                     TextColor3 = FromRGB(234, 234, 240),
                     TextTransparency = 0.4,
                     Text = Option,
-                    Size = UDim2New(1, -20, 0, 15),
+                    Size = UDim2New(1, -32, 0, 15),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 10, 0.5, 0),
+                    Position = UDim2New(0, 26, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     TextXAlignment = Enum.TextXAlignment.Left,
                     TextSize = 14,
@@ -7104,16 +7121,17 @@ local Library do
                     Button = OptionButton,
                     Name = Option,
                     OptionText = OptionText,
+                    OptionDot = OptionDot,
                     Selected = false
                 }
 
                 function OptionData:Toggle(Value)
                     if Value == "Active" then
-                        -- Selected: text fully white (no background, no bars)
                         OptionText:Tween(nil, {TextTransparency = 0})
+                        OptionDot:Tween(nil, {BackgroundTransparency = 0})
                     else
-                        -- Deselect: text back to dim (unless hovered, then keep bright)
                         OptionText:Tween(nil, {TextTransparency = OptionData.Hovering and 0 or 0.4})
+                        OptionDot:Tween(nil, {BackgroundTransparency = 0.6})
                     end
                 end
 
@@ -8063,7 +8081,7 @@ local Library do
                 Items = Data.Items or Data.items or { "One", "Two", "Three" },
                 Default = Data.Default or Data.default or nil,
                 Callback = Data.Callback or Data.callback or function() end,
-                Size = Data.Size or Data.size or 125,
+                Size = Data.Size or Data.size or 220,
                 Multi = Data.Multi or Data.multi or false,
 
                 Value = { },
@@ -8071,7 +8089,7 @@ local Library do
                 IsOpen = false
             }
 
-            local Items = { } do 
+            local Items = { } do
                 Items["Listbox"] = Instances:Create("Frame", {
                     Parent = Dropdown.Section.Items["Content"].Instance,
                     Name = "\0",
@@ -8282,15 +8300,58 @@ local Library do
                     Text = "",
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 24),
+                    Size = UDim2New(1, 0, 0, 26),
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
-                -- Text parented directly to the button, no accent dot/bar.
-                -- Left-aligned with 10px padding so it sits properly in the box.
+                -- Checkbox-style indicator on the LEFT.
+                -- Selected: filled crimson box. Unselected: outlined box.
+                local OptionBox = Instances:Create("Frame", {
+                    Parent = OptionButton.Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 12, 0, 12),
+                    Position = UDim2New(0, 10, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(35, 35, 50),
+                    BackgroundTransparency = 0,
+                    ZIndex = 2,
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = OptionBox.Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 3)
+                })
+
+                local OptionBoxStroke = Instances:Create("UIStroke", {
+                    Parent = OptionBox.Instance,
+                    Name = "\0",
+                    Color = FromRGB(70, 70, 90),
+                    Transparency = 0.2,
+                    Thickness = 1,
+                })
+
+                local OptionBoxFill = Instances:Create("Frame", {
+                    Parent = OptionBox.Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 0, 0, 0),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70),
+                    ZIndex = 3,
+                })  OptionBoxFill:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UICorner", {
+                    Parent = OptionBoxFill.Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 3)
+                })
+
                 local OptionText = Instances:Create("TextLabel", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
@@ -8298,14 +8359,14 @@ local Library do
                     TextColor3 = FromRGB(234, 234, 240),
                     TextTransparency = 0.4,
                     Text = Option,
-                    Size = UDim2New(1, -20, 0, 15),
+                    Size = UDim2New(1, -38, 0, 15),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 10, 0.5, 0),
+                    Position = UDim2New(0, 32, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     TextXAlignment = Enum.TextXAlignment.Left,
-                    TextSize = 14,
+                    TextSize = 13,
                     ZIndex = 2,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  OptionText:AddToTheme({TextColor3 = "Text"})
@@ -8314,17 +8375,23 @@ local Library do
                     Button = OptionButton,
                     Name = Option,
                     OptionText = OptionText,
+                    OptionBox = OptionBox,
+                    OptionBoxFill = OptionBoxFill,
+                    OptionBoxStroke = OptionBoxStroke,
                     IsSearching = false,
                     Selected = false
                 }
 
                 function OptionData:Toggle(Value)
+                    local TWEEN_FAST = TweenInfo.new(0.22, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
                     if Value == "Active" then
-                        -- Selected: text fully white (no background, no bars)
                         OptionText:Tween(nil, {TextTransparency = 0})
+                        OptionBoxFill:Tween(TWEEN_FAST, {Size = UDim2New(1, 0, 1, 0)})
+                        OptionBoxStroke:Tween(TWEEN_FAST, {Color = Library.Theme.Accent, Transparency = 0})
                     else
-                        -- Deselect: text back to dim (unless hovered, then keep bright)
                         OptionText:Tween(nil, {TextTransparency = OptionData.Hovering and 0 or 0.4})
+                        OptionBoxFill:Tween(TWEEN_FAST, {Size = UDim2New(0, 0, 0, 0)})
+                        OptionBoxStroke:Tween(TWEEN_FAST, {Color = FromRGB(70, 70, 90), Transparency = 0.2})
                     end
                 end
 
