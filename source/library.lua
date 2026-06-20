@@ -2579,6 +2579,26 @@ local Library do
                     CornerRadius = UDimNew(0, 10)
                 })
 
+                -- CornerRepair: squares off the topbar's BOTTOM corners so they
+                -- meet the sidebar/content flush with no rounded notches.
+                -- (Same technique Rayfield uses — "Topbar.CornerRepair")
+                Items["TopbarCornerRepair"] = Instances:Create("Frame", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "\0",
+                    BackgroundTransparency = 0,
+                    BorderSizePixel = 0,
+                    Size = UDim2New(1, 0, 0, 10),
+                    Position = UDim2New(0, 0, 1, -10),
+                    ZIndex = 4,
+                    BackgroundColor3 = FromRGB(27, 25, 29)
+                })  Items["TopbarCornerRepair"]:AddToTheme({BackgroundColor3 = "Background"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["TopbarCornerRepair"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 0)
+                })
+
                 Items["TopbarDivider"] = Instances:Create("Frame", {
                     Parent = Items["Topbar"].Instance,
                     Name = "Divider",
