@@ -8103,14 +8103,31 @@ local Library do
                 Items["Listbox"] = Instances:Create("Frame", {
                     Parent = Dropdown.Section.Items["Content"].Instance,
                     Name = "\0",
-                    BackgroundTransparency = 1,
+                    BackgroundTransparency = 0,
                     Size = UDim2New(1, 0, 0, Dropdown.Size),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    ClipsDescendants = true,
+                    BackgroundColor3 = FromRGB(24, 24, 34)
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Listbox"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 6)
+                })
+
+                Instances:Create("UIStroke", {
+                    Parent = Items["Listbox"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(55, 55, 75),
+                    Transparency = 0.3,
+                    Thickness = 1,
                 })
                 
+                -- Search bar: plain rectangular, no rounded corners,
+                -- with a single bottom divider that separates it from the list
                 Items["Search"] = Instances:Create("TextBox", {
                     Parent = Items["Listbox"].Instance,
                     Name = "\0",
@@ -8120,44 +8137,42 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
                     ZIndex = 2,
-                    Size = UDim2New(1, 0, 0, 28),
+                    Size = UDim2New(1, 0, 0, 30),
                     BorderSizePixel = 0,
                     PlaceholderColor3 = FromRGB(140, 140, 155),
                     TextXAlignment = Enum.TextXAlignment.Left,
                     PlaceholderText = "Search...",
                     TextSize = 13,
-                    BackgroundColor3 = FromRGB(30, 30, 42)
+                    BackgroundColor3 = FromRGB(24, 24, 34)
                 })  Items["Search"]:AddToTheme({TextColor3 = "Text"})
-                
-                Instances:Create("UICorner", {
-                    Parent = Items["Search"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
-                })
-
-                Instances:Create("UIStroke", {
-                    Parent = Items["Search"].Instance,
-                    Name = "\0",
-                    Color = FromRGB(55, 55, 75),
-                    Transparency = 0.3,
-                    Thickness = 1,
-                })
 
                 Instances:Create("UIPadding", {
                     Parent = Items["Search"].Instance,
                     Name = "\0",
                     PaddingTop = UDimNew(0, 4),
-                    PaddingLeft = UDimNew(0, 8)
+                    PaddingLeft = UDimNew(0, 12)
+                })
+
+                -- Thin divider between search and list area
+                Items["SearchDivider"] = Instances:Create("Frame", {
+                    Parent = Items["Listbox"].Instance,
+                    Name = "\0",
+                    BackgroundTransparency = 0.5,
+                    BackgroundColor3 = FromRGB(55, 55, 75),
+                    Size = UDim2New(1, 0, 0, 1),
+                    Position = UDim2New(0, 0, 0, 30),
+                    BorderSizePixel = 0,
+                    ZIndex = 3,
                 })
 
                 Items["Background"] = Instances:Create("Frame", {
                     Parent = Items["Listbox"].Instance,
                     Name = "\0",
                     Active = true,
-                    Size = UDim2New(1, 0, 1, -32),
+                    Size = UDim2New(1, 0, 1, -31),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Position = UDim2New(0, 0, 0, 32),
-                    BackgroundColor3 = FromRGB(30, 30, 42),
+                    Position = UDim2New(0, 0, 0, 31),
+                    BackgroundColor3 = FromRGB(24, 24, 34),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                 })
@@ -8165,32 +8180,20 @@ local Library do
                 Items["Holder"] = Instances:Create("ScrollingFrame", {
                     Parent = Items["Background"].Instance,
                     Name = "\0",
-                    ScrollBarImageColor3 = FromRGB(70, 70, 88),
+                    ScrollBarImageColor3 = FromRGB(0, 0, 0),
+                    ScrollBarImageTransparency = 1,
                     Active = true,
                     AutomaticCanvasSize = Enum.AutomaticSize.Y,
-                    ScrollBarThickness = 2,
-                    Size = UDim2New(1, -4, 1, -8),
+                    ScrollBarThickness = 0,
+                    ScrollingDirection = Enum.ScrollingDirection.Y,
+                    Size = UDim2New(1, 0, 1, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Position = UDim2New(0, 0, 0, 4),
+                    Position = UDim2New(0, 0, 0, 0),
                     BackgroundColor3 = FromRGB(27, 26, 29),
                     ZIndex = 2,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
                     CanvasSize = UDim2New(0, 0, 0, 0)
-                })
-                
-                Instances:Create("UICorner", {
-                    Parent = Items["Background"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
-                })
-
-                Instances:Create("UIStroke", {
-                    Parent = Items["Background"].Instance,
-                    Name = "\0",
-                    Color = FromRGB(55, 55, 75),
-                    Transparency = 0.3,
-                    Thickness = 1,
                 })
                 
                 Instances:Create("UIListLayout", {
