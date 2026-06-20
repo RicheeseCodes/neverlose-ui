@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `b4d3558` — Remove dropdown/listbox '|' bars and background highlight — text-only hover glow
+**Last commit:** `0e30e14` — Fix hover state sticking after dropdown close — reset Hovering flag
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Z code (GLM-5.2): Fix hover state sticking after dropdown close — reset Hovering flag (`0e30e14`)
 
 - **[2026-06-21]** Z code (GLM-5.2): Remove dropdown/listbox '|' bars and background highlight — text-only hover glow (`b4d3558`)
 
