@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `77ab0b5` — Smoother minimize/open animations + centralized topbar icons
+**Last commit:** `3dc689e` — Fix blur ghost, bigger Rayfield icons + hover pulse, smoother minimize
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Claude Opus 4.7: Fix blur ghost, bigger Rayfield icons + hover pulse, smoother minimize (`3dc689e`)
 
 - **[2026-06-20]** Claude Opus 4.7: Smoother minimize/open animations + centralized topbar icons (`77ab0b5`)
 
