@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `a42367a` — Remove old Neverlose pixel frames causing visible '2 dots' artifact
+**Last commit:** `a29fd32` — Remove MainFrame UICorner — fixes '2 dots' in minimized pill
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Remove MainFrame UICorner — fixes '2 dots' in minimized pill (`a29fd32`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Remove old Neverlose pixel frames causing visible '2 dots' artifact (`a42367a`)
 
