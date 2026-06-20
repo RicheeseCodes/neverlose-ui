@@ -15,9 +15,21 @@
 5. ✅ Check **"⚠️ HANDOFF NOTE"** section below for any open work
 
 After you finish ANY change:
-1. Commit and push (`git push fork main`)
-2. Update **"📍 CURRENT STATE"** section below with what you did
-3. Update **"⚠️ HANDOFF NOTE"** if there's anything the next AI must know
+1. Commit with a `Co-Authored-By: <your-model-name> <noreply@example.com>` trailer
+2. Push to fork (`git push fork main`)
+3. **The post-commit hook auto-updates this file** (last commit, last AI, log entry)
+4. Only manually edit **"⚠️ HANDOFF NOTE"** if leaving in-progress work
+5. Only manually edit **"📍 CURRENT STATE"** if "what works / pending" changed
+
+### 🔄 AUTO-COORDINATION SYSTEM
+
+This repo has a git post-commit hook (`.githooks/post-commit`) that automatically:
+- Updates "Last commit" + "Last AI" + "Date" in this file
+- Prepends a new line to the AI Coordination Log
+
+**First-time setup on a new machine:** `bash setup-hooks.sh`
+
+**To brief a new AI quickly:** Run `./brief.sh | pbcopy` and paste to them.
 
 ---
 

@@ -1,0 +1,54 @@
+#!/bin/bash
+# Nemesis AI Coordination Hook — auto-updates NEMESIS.md after every commit.
+# This means whatever AI commits gets logged automatically. No discipline required.
+
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SYNC_FILE="$REPO_ROOT/NEMESIS.md"
+
+if [ ! -f "$SYNC_FILE" ]; then
+    exit 0
+fi
+
+# Get commit info
+HASH=$(git rev-parse --short HEAD)
+SUBJECT=$(git log -1 --pretty=%s)
+DATE=$(git log -1 --pretty=%cd --date=short)
+BODY=$(git log -1 --pretty=%b)
+
+# Extract AI identity from Co-Authored-By line, fallback to "Manual" if none
+AI=$(echo "$BODY" | grep -i "Co-Authored-By" | head -1 | sed -E 's/.*Co-Authored-By: ([^<]+).*/\1/' | xargs)
+if [ -z "$AI" ]; then
+    AUTHOR=$(git log -1 --pretty=%an)
+    AI="Manual ($AUTHOR)"
+fi
+
+# Update "Last commit" + "Last AI" + "Date" in CURRENT STATE
+TMP=$(mktemp)
+awk -v hash="$HASH" -v subject="$SUBJECT" -v ai="$AI" -v date="$DATE" '
+    /^\*\*Last commit:\*\*/ { print "**Last commit:** `" hash "` — " subject; next }
+    /^\*\*Last AI to touch this:\*\*/ { print "**Last AI to touch this:** " ai; next }
+    /^\*\*Date:\*\* / && !date_done { print "**Date:** " date; date_done=1; next }
+    { print }
+' "$SYNC_FILE" > "$TMP" && mv "$TMP" "$SYNC_FILE"
+
+# Prepend a new line to the AI Coordination Log
+LOG_ENTRY="- **[$DATE]** $AI: $SUBJECT (\`$HASH\`)"
+
+awk -v entry="$LOG_ENTRY" '
+    /^> \*Each AI logs ONE LINE/ {
+        print
+        getline
+        print
+        print ""
+        print entry
+        next
+    }
+    { print }
+' "$SYNC_FILE" > "$TMP" && mv "$TMP" "$SYNC_FILE"
+
+# Stage the NEMESIS.md change as part of NEXT commit (amend would change hash, so we leave it for next commit)
+git add NEMESIS.md 2>/dev/null || true
+
+echo "[Nemesis] NEMESIS.md auto-updated for commit $HASH"
