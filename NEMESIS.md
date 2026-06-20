@@ -60,9 +60,9 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `920c37e` — Fix notification text position and overflow
+**Last commit:** `7a5c145` — Fix notification layout bug that broke rendering (removed UIListLayout)
 **Last AI to touch this:** Z code (GLM-5.2)
-**Date:** 2026-06-20
+**Date:** 2026-06-21
 
 ### What works right now:
 - ✅ Nemesis crimson theme (Accent RGB 230,57,70)
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Z code (GLM-5.2): Fix notification layout bug that broke rendering (removed UIListLayout) (`7a5c145`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Fix notification text position and overflow (`920c37e`)
 
