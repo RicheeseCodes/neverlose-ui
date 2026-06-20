@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `19317ad` — Disable glass blur effect entirely — was creating visible halo outline
+**Last commit:** `f32afb9` — Fix close flicker + smoother minimize + better search icon
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Claude Opus 4.7: Fix close flicker + smoother minimize + better search icon (`f32afb9`)
 
 - **[2026-06-20]** Claude Opus 4.7: Disable glass blur effect entirely — was creating visible halo outline (`19317ad`)
 
