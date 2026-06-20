@@ -7089,17 +7089,17 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
-                -- Selection indicator (crimson dot) on the LEFT.
-                -- Selected: fully opaque. Unselected: dim (0.6 transparency).
+                -- Selection indicator (crimson dot) — ONLY visible when selected.
+                -- Neverlose-style: unselected items show no dot at all.
                 local OptionDot = Instances:Create("Frame", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
-                    Size = UDim2New(0, 6, 0, 6),
-                    Position = UDim2New(0, 12, 0.5, 0),
-                    AnchorPoint = Vector2New(0, 0.5),
+                    Size = UDim2New(0, 0, 0, 0),
+                    Position = UDim2New(0, 14, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(230, 57, 70),
-                    BackgroundTransparency = 0.6,
+                    BackgroundTransparency = 0,
                 })  OptionDot:AddToTheme({BackgroundColor3 = "Accent"})
 
                 Instances:Create("UICorner", {
@@ -7135,12 +7135,13 @@ local Library do
                 }
 
                 function OptionData:Toggle(Value)
+                    local TW_DOT = TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
                     if Value == "Active" then
                         OptionText:Tween(nil, {TextTransparency = 0})
-                        OptionDot:Tween(nil, {BackgroundTransparency = 0})
+                        OptionDot:Tween(TW_DOT, {Size = UDim2New(0, 6, 0, 6)})
                     else
                         OptionText:Tween(nil, {TextTransparency = OptionData.Hovering and 0 or 0.4})
-                        OptionDot:Tween(nil, {BackgroundTransparency = 0.6})
+                        OptionDot:Tween(TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 0, 0, 0)})
                     end
                 end
 
