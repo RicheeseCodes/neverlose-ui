@@ -6567,6 +6567,13 @@ local Library do
                 Library.Flags[Slider.Flag] = Slider.Value
 
                 local ratio = (Slider.Value - Slider.Min) / (Slider.Max - Slider.Min)
+                -- Clamp fill to a minimum of 5px so it never collapses to zero
+                -- (Rayfield pattern — the fill is always at least visible).
+                local trackWidth = Items["RealSlider"].Instance.AbsoluteSize.X
+                local fillWidth = ratio * trackWidth
+                if fillWidth < 5 and ratio > 0 then
+                    ratio = 5 / trackWidth
+                end
                 Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New(ratio, 0, 1, 0)})
                 Items["Value"].Instance.Text = StringFormat("%s%s", Slider.Value, Slider.Suffix)
 
@@ -6604,8 +6611,8 @@ local Library do
                 if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                     Slider.Sliding = true
 
-                    -- Drag feedback: thumb scales up, value text fully bright
-                    Items["Icon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2New(0, 18, 0, 18)})
+                    -- Drag feedback: thumb scales up, fills with accent crimson, value text fully bright
+                    Items["Icon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2New(0, 18, 0, 18), BackgroundColor3 = Library.Theme.Accent})
                     Items["Value"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint), {TextTransparency = 0})
 
                     local SizeX = (Input.Position.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
@@ -6621,8 +6628,8 @@ local Library do
                         if Input.UserInputState == Enum.UserInputState.End then
                             Slider.Sliding = false
 
-                            -- Reset thumb size on release
-                            Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2New(0, 14, 0, 14)})
+                            -- Reset thumb size + color on release
+                            Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2New(0, 14, 0, 14), BackgroundColor3 = FromRGB(255, 255, 255)})
                             Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
 
                             InputChanged:Disconnect()
@@ -7066,9 +7073,15 @@ local Library do
                     Size = UDim2New(1, 0, 0, 20),
                     BorderSizePixel = 0,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    BackgroundColor3 = FromRGB(30, 16, 40)
+                })  OptionButton:AddToTheme({BackgroundColor3 = "DropdownSelected"})
+
+                Instances:Create("UICorner", {
+                    Parent = OptionButton.Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 4)
                 })
-                
+
                 local OptionAccent = Instances:Create("Frame", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
@@ -7090,10 +7103,11 @@ local Library do
                 }):AddToTheme({Color = function()
                     return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
                 end})
-                
+
                 Instances:Create("UICorner", {
                     Parent = OptionAccent.Instance,
-                    Name = "\0"
+                    Name = "\0",
+                    CornerRadius = UDimNew(1, 0)
                 })
                 
                 local OptionText = Instances:Create("TextLabel", {
@@ -7126,11 +7140,30 @@ local Library do
                     if Value == "Active" then
                         OptionText:Tween(nil, {TextTransparency = 0, Position = UDim2New(0, 15, 0.5, 0)})
                         OptionAccent:Tween(nil, {BackgroundTransparency = 0})
+                        -- Selected row: fade in the DropdownSelected background fill
+                        OptionButton:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0.4})
                     else
                         OptionText:Tween(nil, {TextTransparency = 0.3, Position = UDim2New(0, 0, 0.5, 0)})
                         OptionAccent:Tween(nil, {BackgroundTransparency = 1})
+                        -- Deselect: hide the row background (unless it's being hovered)
+                        OptionButton:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = OptionData.Hovering and 0.6 or 1})
                     end
                 end
+
+                -- Hover feedback: subtle row highlight on MouseEnter
+                OptionData.Hovering = false
+                OptionButton:OnHover(function()
+                    OptionData.Hovering = true
+                    if not OptionData.Selected then
+                        OptionButton:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0.6})
+                    end
+                end)
+                OptionButton:OnHoverLeave(function()
+                    OptionData.Hovering = false
+                    if not OptionData.Selected then
+                        OptionButton:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                    end
+                end)
 
                 function OptionData:RefreshPosition(Bool)
                     -- Cool open animation: rows pop in from BELOW with Back easing
@@ -8302,9 +8335,15 @@ local Library do
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    BackgroundColor3 = FromRGB(30, 16, 40)
+                })  OptionButton:AddToTheme({BackgroundColor3 = "DropdownSelected"})
+
+                Instances:Create("UICorner", {
+                    Parent = OptionButton.Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 4)
                 })
-                
+
                 local OptionAccent = Instances:Create("Frame", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
@@ -8317,7 +8356,7 @@ local Library do
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  --OptionAccent:AddToTheme({BackgroundColor3 = "Accent"})
-                
+
                 Instances:Create("UIGradient", {
                     Parent = OptionAccent.Instance,
                     Name = "\0",
@@ -8327,10 +8366,11 @@ local Library do
                 }):AddToTheme({Color = function()
                     return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
                 end})
-                
+
                 Instances:Create("UICorner", {
                     Parent = OptionAccent.Instance,
-                    Name = "\0"
+                    Name = "\0",
+                    CornerRadius = UDimNew(1, 0)
                 })
                 
                 local OptionText = Instances:Create("TextLabel", {
@@ -8365,11 +8405,30 @@ local Library do
                     if Value == "Active" then
                         OptionText:Tween(nil, {TextTransparency = 0, Position = UDim2New(0, 15, 0.5, 0)})
                         OptionAccent:Tween(nil, {BackgroundTransparency = 0})
+                        -- Selected row: fade in the DropdownSelected background fill
+                        OptionButton:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0.4})
                     else
                         OptionText:Tween(nil, {TextTransparency = 0.3, Position = UDim2New(0, 0, 0.5, 0)})
                         OptionAccent:Tween(nil, {BackgroundTransparency = 1})
+                        -- Deselect: hide the row background (unless it's being hovered)
+                        OptionButton:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = OptionData.Hovering and 0.6 or 1})
                     end
                 end
+
+                -- Hover feedback: subtle row highlight on MouseEnter
+                OptionData.Hovering = false
+                OptionButton:OnHover(function()
+                    OptionData.Hovering = true
+                    if not OptionData.Selected then
+                        OptionButton:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 0.6})
+                    end
+                end)
+                OptionButton:OnHoverLeave(function()
+                    OptionData.Hovering = false
+                    if not OptionData.Selected then
+                        OptionButton:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                    end
+                end)
 
                 function OptionData:Search(Bool)
                     Library:Thread(function()
