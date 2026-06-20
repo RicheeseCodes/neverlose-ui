@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `114a43e` — Fix topbar bottom corners — add CornerRepair to square them off
+**Last commit:** `35f6a19` — Fix minimized topbar corners — fade CornerRepair in/out with minimize
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Fix minimized topbar corners — fade CornerRepair in/out with minimize (`35f6a19`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Fix topbar bottom corners — add CornerRepair to square them off (`114a43e`)
 
