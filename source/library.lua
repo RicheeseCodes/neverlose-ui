@@ -2544,6 +2544,19 @@ local Library do
                 local OriginalMainSize = Items["MainFrame"].Instance.Size
                 local ToggleKeybind = Enum.KeyCode.K
 
+                -- ════════════════════════════════════════════════════════════════
+                -- TOPBAR ICON CONFIG — swap these for centralicons.com IDs anytime.
+                -- Format: any valid Roblox asset ID like "rbxassetid://12345"
+                -- Browse icons: https://centralicons.com/
+                -- ════════════════════════════════════════════════════════════════
+                local Icons = {
+                    Search        = "rbxassetid://10709769456",  -- Lucide search (clean magnifier)
+                    Settings      = "rbxassetid://10734950309",  -- Lucide settings (gear)
+                    Minimize      = "rbxassetid://10734898355",  -- Lucide chevron-down
+                    MinimizeAlt   = "rbxassetid://10734897930",  -- Lucide chevron-up (shown while minimised)
+                    Close         = "rbxassetid://10747384394",  -- Lucide x (close)
+                }
+
                 Items["Topbar"] = Instances:Create("Frame", {
                     Parent = Items["MainFrame"].Instance,
                     Name = "Topbar",
@@ -2613,7 +2626,7 @@ local Library do
                 Items["TopbarCloseIcon"] = Instances:Create("ImageLabel", {
                     Parent = Items["TopbarClose"].Instance,
                     Name = "\0",
-                    Image = "rbxassetid://10137832201",
+                    Image = Icons.Close,
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
                     Size = UDim2New(1, 0, 1, 0),
@@ -2646,7 +2659,7 @@ local Library do
                 Items["TopbarMinimizeIcon"] = Instances:Create("ImageLabel", {
                     Parent = Items["TopbarMinimize"].Instance,
                     Name = "\0",
-                    Image = "rbxassetid://10137941941",
+                    Image = Icons.Minimize,
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
                     Size = UDim2New(1, 0, 1, 0),
@@ -2679,7 +2692,7 @@ local Library do
                 Items["TopbarSettingsIcon"] = Instances:Create("ImageLabel", {
                     Parent = Items["TopbarSettings"].Instance,
                     Name = "\0",
-                    Image = "rbxassetid://80503127983237",
+                    Image = Icons.Settings,
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
                     Size = UDim2New(1, 0, 1, 0),
@@ -2712,7 +2725,7 @@ local Library do
                 Items["TopbarSearchIcon"] = Instances:Create("ImageLabel", {
                     Parent = Items["TopbarSearch"].Instance,
                     Name = "\0",
-                    Image = "rbxassetid://6031763426",
+                    Image = Icons.Search,
                     ImageColor3 = FromRGB(240, 240, 240),
                     ImageTransparency = 0.8,
                     Size = UDim2New(1, 0, 1, 0),
@@ -2843,95 +2856,129 @@ local Library do
                 -- ========== MINIMIZE / MAXIMIZE FUNCTIONS (Rayfield exact animations) ==========
                 local OriginalMainWidth = OriginalMainSize.X.Offset
 
+                -- ════════════════════════════════════════════════════════════════
+                -- MINIMIZE / MAXIMIZE — synchronized clean animation
+                -- All tweens share the same TweenInfo so they finish together.
+                -- No mid-animation Visible toggles. No task.wait blocking the
+                -- caller for state changes.
+                -- ════════════════════════════════════════════════════════════════
+                local MIN_TWEEN = TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                local MAX_TWEEN = TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+
                 local function MinimiseWindow()
                     Debounce = true
-                    Items["TopbarMinimizeIcon"].Instance.Image = "rbxassetid://11036884234"
+                    Items["TopbarMinimizeIcon"].Instance.Image = Icons.MinimizeAlt
 
                     task.spawn(closeSearch)
 
-                    Items["TopbarUIStroke"].Instance.Transparency = 0
-                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 0})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                    -- Topbar stays visually anchored, just collapse below it
+                    Items["TopbarDivider"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
 
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
-                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 0, 0)})
+                    -- Sidebar slides closed horizontally (left→right wipe)
+                    Items["LeftTabs"]:Tween(MIN_TWEEN, {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45), Position = UDim2New(0, 0, 0, 0)})
+                    -- Content collapses from bottom
+                    Items["Content"]:Tween(MIN_TWEEN, {Size = UDim2New(1, 0, 0, 0)})
 
-                    task.wait(0.3)
-                    Items["Content"].Instance.Visible = false
-                    Items["LeftTabs"].Instance.Visible = false
-                    task.wait(0.2)
-                    Debounce = false
+                    -- MainFrame shrinks to just the topbar height + width adjusts
+                    Items["MainFrame"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
+                    Items["Topbar"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45), Position = UDim2New(0, 0, 0, 0)})
+
+                    -- Hide non-topbar pieces AFTER animation finishes
+                    task.delay(MIN_TWEEN.Time, function()
+                        if Minimised then
+                            Items["Content"].Instance.Visible = false
+                            Items["LeftTabs"].Instance.Visible = false
+                        end
+                        Debounce = false
+                    end)
                 end
 
                 local function MaximiseWindow()
                     Debounce = true
-                    Items["TopbarMinimizeIcon"].Instance.Image = "rbxassetid://10137941941"
+                    Items["TopbarMinimizeIcon"].Instance.Image = Icons.Minimize
 
-                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0})
-
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = OriginalMainSize})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0)})
-
+                    -- Make hidden pieces visible BEFORE animation starts
                     Items["Content"].Instance.Visible = true
                     Items["LeftTabs"].Instance.Visible = true
 
-                    Items["Content"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 1, -45)})
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 225, 1, -44), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
+                    Items["TopbarDivider"]:Tween(MAX_TWEEN, {BackgroundTransparency = 0})
 
-                    task.wait(0.5)
-                    Debounce = false
+                    Items["MainFrame"]:Tween(MAX_TWEEN, {Size = OriginalMainSize})
+                    Items["Topbar"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0)})
+
+                    Items["Content"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 0, 1, -45)})
+                    Items["LeftTabs"]:Tween(MAX_TWEEN, {Size = UDim2New(0, 225, 1, -44), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
+
+                    task.delay(MAX_TWEEN.Time, function()
+                        Debounce = false
+                    end)
                 end
 
-                -- ========== HIDE / UNHIDE FUNCTIONS (Rayfield exact animations) ==========
+                -- ════════════════════════════════════════════════════════════════
+                -- HIDE / UNHIDE — clean fade with subtle scale-down
+                -- Feels like Rayfield: everything fades together, slight scale,
+                -- no flashes or jitters. Visible toggle only at very end.
+                -- ════════════════════════════════════════════════════════════════
+                local HIDE_TWEEN = TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                local SHOW_TWEEN = TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+
+                local function FadeAllDescendants(targetVisible)
+                    -- Walks every descendant of MainFrame and fades transparency
+                    -- properties to either 1 (hidden) or their saved value (visible)
+                    local descendants = Items["MainFrame"].Instance:GetDescendants()
+                    table.insert(descendants, Items["MainFrame"].Instance)
+                    for _, inst in ipairs(descendants) do
+                        local props = Tween:GetProperty(inst)
+                        if props then
+                            if type(props) == "table" then
+                                for _, p in ipairs(props) do
+                                    Tween:FadeItem(inst, p, targetVisible, HIDE_TWEEN.Time)
+                                end
+                            else
+                                Tween:FadeItem(inst, props, targetVisible, HIDE_TWEEN.Time)
+                            end
+                        end
+                    end
+                end
+
                 local function HideWindow()
                     Debounce = true
-
                     task.spawn(closeSearch)
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 30, 0, 0), BackgroundTransparency = 1})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(0, OriginalMainWidth - 30, 0, 45), Position = UDim2New(0, 0, 0, 0), BackgroundTransparency = 1})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
-                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1})
-                    Items["TopbarUIStroke"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1})
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                    -- Subtle scale-down adds polish (Rayfield does this)
+                    local currentSize = Items["MainFrame"].Instance.Size
+                    local shrunkSize = UDim2New(
+                        currentSize.X.Scale, math.floor(currentSize.X.Offset * 0.95),
+                        currentSize.Y.Scale, math.floor(currentSize.Y.Offset * 0.95)
+                    )
+                    Items["MainFrame"]:Tween(HIDE_TWEEN, {Size = shrunkSize})
 
-                    for _, icon in ipairs(topbarIcons) do
-                        icon:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1})
-                    end
+                    -- Fade ALL descendants together
+                    FadeAllDescendants(false)
 
-                    task.wait(0.5)
-                    Items["MainFrame"].Instance.Visible = false
-                    Debounce = false
+                    task.delay(HIDE_TWEEN.Time + 0.05, function()
+                        if Hidden then
+                            Items["MainFrame"].Instance.Visible = false
+                            Items["MainFrame"].Instance.Size = currentSize
+                        end
+                        Debounce = false
+                    end)
                 end
 
                 local function UnhideWindow()
                     Debounce = true
                     Items["MainFrame"].Instance.Visible = true
 
-                    Items["MainFrame"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = OriginalMainSize, BackgroundTransparency = Window.HideHeader and 0 or 0.12})
-                    Items["Topbar"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0), BackgroundTransparency = 0})
-                    Items["TopbarDivider"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0})
-                    Items["TopbarTitle"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0})
+                    -- Scale back up to original
+                    Items["MainFrame"]:Tween(SHOW_TWEEN, {Size = Minimised and UDim2New(0, OriginalMainWidth - 5, 0, 45) or OriginalMainSize})
 
-                    if Minimised then
-                        task.spawn(MaximiseWindow)
-                    end
+                    -- Fade all descendants back to their saved transparencies
+                    FadeAllDescendants(true)
 
-                    for _, icon in ipairs(topbarIcons) do
-                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8})
-                    end
-
-                    Items["Content"].Instance.Visible = true
-                    Items["LeftTabs"].Instance.Visible = true
-                    Items["LeftTabs"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = Window.HideHeader and 0 or 0.15})
-
-                    task.wait(0.5)
-                    Minimised = false
-                    Debounce = false
+                    task.delay(SHOW_TWEEN.Time, function()
+                        Debounce = false
+                    end)
                 end
 
                 -- ========== BUTTON CLICK HANDLERS ==========
