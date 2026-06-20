@@ -2899,6 +2899,15 @@ local Library do
                         if Minimised then
                             Items["Content"].Instance.Visible = false
                             Items["LeftTabs"].Instance.Visible = false
+                            -- Hide corner repairs so the pill's rounded corners
+                            -- are fully visible (transparency fade isn't enough —
+                            -- they'd still clip/block the rounded edge while fading)
+                            if Items["TopbarCornerRepair"] then
+                                Items["TopbarCornerRepair"].Instance.Visible = false
+                            end
+                            if Items["BottomCornerRepair"] then
+                                Items["BottomCornerRepair"].Instance.Visible = false
+                            end
                         end
                         Debounce = false
                     end)
@@ -2911,6 +2920,13 @@ local Library do
                     -- Make hidden pieces visible BEFORE animation starts
                     Items["Content"].Instance.Visible = true
                     Items["LeftTabs"].Instance.Visible = true
+                    -- Restore corner repairs (they flatten the full menu's bottom)
+                    if Items["TopbarCornerRepair"] then
+                        Items["TopbarCornerRepair"].Instance.Visible = true
+                    end
+                    if Items["BottomCornerRepair"] then
+                        Items["BottomCornerRepair"].Instance.Visible = true
+                    end
 
                     -- Phase 1: geometry expands
                     Items["TopbarDivider"]:Tween(MAX_TWEEN, {BackgroundTransparency = 0})
