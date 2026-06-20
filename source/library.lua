@@ -6808,18 +6808,26 @@ local Library do
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 25, 29)
                 })  Items["OptionHolder"]:AddToTheme({BackgroundColor3 = "Background"})
-                
+
                 Instances:Create("UIStroke", {
                     Parent = Items["OptionHolder"].Instance,
                     Name = "\0",
                     Color = FromRGB(35, 33, 38),
                     ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                 }):AddToTheme({Color = "Outline"})
-                
+
                 Instances:Create("UICorner", {
                     Parent = Items["OptionHolder"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 5)
+                    CornerRadius = UDimNew(0, 8)
+                })
+
+                -- UIScale + UIOrigin allow a pop animation that doesn't fight
+                -- the RenderStepped position/size tracker
+                Items["OptionHolderScale"] = Instances:Create("UIScale", {
+                    Parent = Items["OptionHolder"].Instance,
+                    Name = "\0",
+                    Scale = 1,
                 })
                 
                 Items["Holder"] = Instances:Create("ScrollingFrame", {
@@ -6899,19 +6907,27 @@ local Library do
 
                 Debounce = true 
 
-                if Dropdown.IsOpen then 
+                if Dropdown.IsOpen then
                     Items["OptionHolder"].Instance.Visible = true
                     Items["OptionHolder"].Instance.Parent = Library.Holder.Instance
 
+                    -- Pop-in: start slightly smaller + spring to full size
+                    Items["OptionHolderScale"].Instance.Scale = 0.88
+                    Items["OptionHolderScale"]:Tween(
+                        TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+                        {Scale = 1}
+                    )
+
                     Items["ArrowIcon"]:Tween(nil, {Rotation = 180, ImageColor3 = FromRGB(255, 255, 255)})
                     Items["Gradient"].Instance.Enabled = true
-                    
+
+                    -- Faster cascading row reveal (0.025s stagger vs 0.05s)
                     Library:Thread(function()
-                        for Index, Value in Dropdown.OptionsWithIndexes do 
+                        for Index, Value in Dropdown.OptionsWithIndexes do
                             task.spawn(function()
                                 Value:RefreshPosition(true)
                             end)
-                            task.wait(0.05)
+                            task.wait(0.025)
                         end
                     end)
                     
@@ -6947,6 +6963,12 @@ local Library do
 
                     Items["ArrowIcon"]:Tween(nil, {Rotation = 0, ImageColor3 = FromRGB(141, 141, 150)})
                     Items["Gradient"].Instance.Enabled = false
+
+                    -- Snap back smaller as the panel closes
+                    Items["OptionHolderScale"]:Tween(
+                        TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+                        {Scale = 0.92}
+                    )
                 end
 
                 local Descendants = Items["OptionHolder"].Instance:GetDescendants()
@@ -7111,19 +7133,22 @@ local Library do
                 end
 
                 function OptionData:RefreshPosition(Bool)
-                    if Bool then 
+                    -- Cool open animation: rows pop in from BELOW with Back easing
+                    -- instead of the old 1s horizontal slide.
+                    local OPEN_TWEEN = TweenInfo.new(0.32, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+                    if Bool then
                         if OptionData.Selected then
-                            OptionAccent:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0.5, 0)})
-                            OptionText:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 15, 0.5, 0)})
+                            OptionAccent:Tween(OPEN_TWEEN, {Position = UDim2New(0, 0, 0.5, 0)})
+                            OptionText:Tween(OPEN_TWEEN, {Position = UDim2New(0, 15, 0.5, 0)})
                         else
-                            OptionText:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0.5, 0)})
+                            OptionText:Tween(OPEN_TWEEN, {Position = UDim2New(0, 0, 0.5, 0)})
                         end
                     else
                         if OptionData.Selected then
-                            OptionAccent.Instance.Position = UDim2New(0, 30, 0.5, 0)
-                            OptionText.Instance.Position = UDim2New(0, 45, 0.5, 0)
+                            OptionAccent.Instance.Position = UDim2New(0, 0, 1.6, 0)
+                            OptionText.Instance.Position = UDim2New(0, 15, 1.6, 0)
                         else
-                            OptionText.Instance.Position = UDim2New(0, 30, 0.5, 0)
+                            OptionText.Instance.Position = UDim2New(0, 0, 1.6, 0)
                         end
                     end
 
