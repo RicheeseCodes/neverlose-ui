@@ -2127,25 +2127,27 @@ local Library do
                     BackgroundTransparency = 1,
                     BorderColor3 = FromRGB(0, 0, 0),
                     BorderSizePixel = 0,
-                    AutomaticSize = Enum.AutomaticSize.XY,
-                    BackgroundColor3 = FromRGB(27, 25, 29)
-                })
+                    AutomaticSize = Enum.AutomaticSize.Y,
+                    Size = UDim2New(0, 0, 0, 0),
+                    BackgroundColor3 = FromRGB(25, 25, 25)
+                })  Items["Notification"]:AddToTheme({BackgroundColor3 = "Background"})
 
+                -- Rayfield-exact: stroke is TextColor-tinted (not outline), very subtle
                 Items["NotifStroke"] = Instances:Create("UIStroke", {
                     Parent = Items["Notification"].Instance,
                     Name = "UIStroke",
-                    Color = FromRGB(34, 34, 46),
+                    Color = FromRGB(234, 234, 240),
                     Transparency = 1,
                     Thickness = 1
-                })  Items["NotifStroke"]:AddToTheme({Color = "Outline"})
+                })  Items["NotifStroke"]:AddToTheme({Color = "Text"})
 
                 Instances:Create("UIPadding", {
                     Parent = Items["Notification"].Instance,
                     Name = "\0",
-                    PaddingTop = UDimNew(0, 10),
-                    PaddingBottom = UDimNew(0, 10),
-                    PaddingRight = UDimNew(0, 12),
-                    PaddingLeft = UDimNew(0, 40)
+                    PaddingTop = UDimNew(0, 12),
+                    PaddingBottom = UDimNew(0, 12),
+                    PaddingRight = UDimNew(0, 20),
+                    PaddingLeft = UDimNew(0, 60)
                 })
 
                 Instances:Create("UICorner", {
@@ -2154,17 +2156,18 @@ local Library do
                     CornerRadius = UDimNew(0, 8)
                 })
 
+                -- Rayfield-exact icon: 32x32, 20px from left, vertically centered
                 Items["Icon"] = Instances:Create("ImageLabel", {
                     Parent = Items["Notification"].Instance,
                     Name = "\0",
-                    ImageColor3 = FromRGB(240, 240, 240),
+                    ImageColor3 = FromRGB(234, 234, 240),
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(0, 0.5),
-                    Image = Data.Icon and ("rbxassetid://"..Data.Icon) or "",
+                    Image = Data.Icon and ("rbxassetid://"..Data.Icon) or "rbxassetid://77891951053543",
                     ImageTransparency = 1,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, -28, 0.5, 0),
-                    Size = UDim2New(0, 20, 0, 20),
+                    Position = UDim2New(0, 20, 0.5, 0),
+                    Size = UDim2New(0, 32, 0, 32),
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Icon"]:AddToTheme({ImageColor3 = "Text"})
@@ -2173,15 +2176,16 @@ local Library do
                     Parent = Items["Notification"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
-                    TextColor3 = FromRGB(255, 255, 255),
+                    TextColor3 = FromRGB(234, 234, 240),
                     TextTransparency = 1,
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = Data.Title or "Notification",
                     BackgroundTransparency = 1,
-                    Size = UDim2New(0, 0, 0, 15),
+                    Size = UDim2New(1, 0, 0, 16),
                     BorderSizePixel = 0,
-                    AutomaticSize = Enum.AutomaticSize.XY,
-                    TextSize = 14,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    TextSize = 15,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2189,75 +2193,63 @@ local Library do
                     Parent = Items["Notification"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
-                    TextColor3 = FromRGB(255, 255, 255),
+                    TextColor3 = FromRGB(234, 234, 240),
                     TextTransparency = 1,
                     Text = Data.Description or "",
-                    Size = UDim2New(0, 0, 0, 15),
+                    Size = UDim2New(1, 0, 0, 14),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 0, 0, 20),
+                    Position = UDim2New(0, 0, 0, 18),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    AutomaticSize = Enum.AutomaticSize.XY,
-                    TextSize = 14,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextWrapped = true,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    TextSize = 13,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Description"]:AddToTheme({TextColor3 = "Text"})
-
-                Items["Accent"] = Instances:Create("Frame", {
-                    Parent = Items["Notification"].Instance,
-                    Name = "\0",
-                    Position = UDim2New(0, -28, 1, 4),
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    Size = UDim2New(0, 0, 0, 3),
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })
-
-                Instances:Create("UICorner", {
-                    Parent = Items["Accent"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(1, 0)
-                })
-
-                Instances:Create("UIGradient", {
-                    Parent = Items["Accent"].Instance,
-                    Name = "\0",
-                    Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(255, 255, 255)), RGBSequenceKeypoint(1, FromRGB(143, 143, 143))}
-                }):AddToTheme({Color = function()
-                    return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
-                end})
             end
 
-            local Size = Items["Notification"].Instance.AbsoluteSize
-            Items["Notification"].Instance.Size = UDim2New(0, 0, 0, 0)
-
-            task.wait(0.1)
-            Items["Notification"].Instance.AutomaticSize = Enum.AutomaticSize.Y
+            -- Target width: 280px (Rayfield-ish fixed width), height auto-grows
+            local TARGET_W = 280
+            Items["Notification"].Instance.Size = UDim2New(0, TARGET_W, 0, 0)
 
             Library:Thread(function()
-                Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(0, math.max(Size.X, 200), 0, Size.Y)})
+                -- ENTER — Rayfield-exact stagger
+                -- 1. Grow (0.6 Exponential) to full height (title 16 + 18 gap + desc + 24 padding)
+                local descHeight = Items["Description"].Instance.TextBounds.Y
+                local targetH = math.max(16 + 18 + descHeight + 24, 60)
+                Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(0, TARGET_W, 0, targetH)})
 
                 task.wait(0.15)
-                Items["Notification"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.15})
+                -- 2. Background + title together
+                Items["Notification"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45})
                 Items["Title"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
 
                 task.wait(0.05)
+                -- 3. Icon
                 Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
 
                 task.wait(0.05)
-                Items["Description"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
-                Items["NotifStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.5})
-                Items["Accent"]:Tween(TweenInfo.new(Data.Duration or 5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Size = UDim2New(1, 40, 0, 3)})
+                -- 4. Description + stroke together
+                Items["Description"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35})
+                Items["NotifStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95})
 
-                task.wait(Data.Duration or 5)
+                -- HOLD — Rayfield computes duration from text length if not given
+                local waitDuration = Data.Duration or math.min(math.max((#(Data.Description or "") * 0.1) + 2.5, 3), 10)
+                task.wait(waitDuration)
 
+                -- EXIT — Rayfield-exact: everything fades simultaneously, then shrink
                 Items["Notification"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
                 Items["NotifStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 1})
                 Items["Title"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1})
                 Items["Description"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1})
                 Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1})
 
-                Items["Notification"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 0, 0, 0)})
-                task.wait(0.5)
+                -- Shrink (1s Exponential) — Rayfield shrinks width by 90px, height to 0
+                Items["Notification"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2New(0, TARGET_W - 90, 0, 0)})
+
+                task.wait(1)
+                Items["Notification"].Instance.Visible = false
                 Items["Notification"]:Clean()
             end)
         end
