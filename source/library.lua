@@ -6006,12 +6006,23 @@ local Library do
                 end 
             end
 
+            -- Hover: text fully bright + subtle knob pulse
+            Items["Toggle"]:OnHover(function()
+                Items["Text"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0})
+                Items["SwitchStroke"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {Transparency = Toggle.Value and 0.1 or 0.3})
+            end)
+
+            Items["Toggle"]:OnHoverLeave(function()
+                Items["Text"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = Toggle.Value and 0 or 0.2})
+                Items["SwitchStroke"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {Transparency = Toggle.Value and 0.3 or 0.5})
+            end)
+
             Items["Toggle"]:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
+                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                     if Items["SettingsIcon"] and Library:IsMouseOverFrame(Items["SettingsIcon"]) then
-                        return 
+                        return
                     end
-                    
+
                     Toggle:Set(not Toggle.Value)
                 end
             end)
@@ -6101,10 +6112,10 @@ local Library do
                 Items["BoxStroke"] = Instances:Create("UIStroke", {
                     Parent = Items["Box"].Instance,
                     Name = "\0",
-                    Color = FromRGB(65, 63, 75),
+                    Color = FromRGB(34, 34, 46),
                     Transparency = 0.4,
                     Thickness = 1.2
-                })
+                })  Items["BoxStroke"]:AddToTheme({Color = "Outline"})
 
                 Items["Fill"] = Instances:Create("Frame", {
                     Parent = Items["Box"].Instance,
@@ -6140,14 +6151,18 @@ local Library do
                 })
 
                 Items["Checkbox"]:OnHover(function()
+                    Items["Text"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0})
                     if not Checkbox.Value then
-                        Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.2})
+                        Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.1})
+                        Items["Box"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.ElementHover})
                     end
                 end)
 
                 Items["Checkbox"]:OnHoverLeave(function()
                     if not Checkbox.Value then
+                        Items["Text"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
                         Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.4})
+                        Items["Box"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Element})
                     end
                 end)
             end
@@ -6168,7 +6183,7 @@ local Library do
                 else
                     Items["Fill"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 0, 0, 0)})
                     Items["CheckIcon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint), {Size = UDim2New(0, 0, 0, 0), ImageTransparency = 1})
-                    Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Color = FromRGB(65, 63, 75), Transparency = 0.4})
+                    Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Color = Library.Theme.Outline, Transparency = 0.4})
                     Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
                 end
 
@@ -6233,10 +6248,10 @@ local Library do
                 Items["ButtonStroke"] = Instances:Create("UIStroke", {
                     Parent = Items["Button"].Instance,
                     Name = "\0",
-                    Color = FromRGB(55, 53, 59),
+                    Color = FromRGB(34, 34, 46),
                     Transparency = 0.5,
                     Thickness = 1
-                })
+                })  Items["ButtonStroke"]:AddToTheme({Color = "Outline"})
 
                 Items["Accent"] = Instances:Create("Frame", {
                     Parent = Items["Button"].Instance,
@@ -6304,13 +6319,15 @@ local Library do
                 end
 
                 Items["Button"]:OnHover(function()
-                    Items["Button"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = FromRGB(45, 43, 49)})
+                    Items["Button"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.ElementHover})
                     Items["ButtonStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.2})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
                 end)
 
                 Items["Button"]:OnHoverLeave(function()
                     Items["Button"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Element})
                     Items["ButtonStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.5})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.15})
                 end)
             end
 
@@ -6560,11 +6577,30 @@ local Library do
                 Slider:Set(Slider.Value - Slider.Decimals)
             end)
 
-            local InputChanged 
-            
+            -- Hover feedback: thumb pulses up, value text brightens
+            Items["RealSlider"]:OnHover(function()
+                if not Slider.Sliding then
+                    Items["Icon"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 16, 0, 16)})
+                    Items["Value"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0.1})
+                end
+            end)
+
+            Items["RealSlider"]:OnHoverLeave(function()
+                if not Slider.Sliding then
+                    Items["Icon"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 14, 0, 14)})
+                    Items["Value"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
+                end
+            end)
+
+            local InputChanged
+
             Items["RealSlider"]:Connect("InputBegan", function(Input)
                 if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                     Slider.Sliding = true
+
+                    -- Drag feedback: thumb scales up, value text fully bright
+                    Items["Icon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2New(0, 18, 0, 18)})
+                    Items["Value"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint), {TextTransparency = 0})
 
                     local SizeX = (Input.Position.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
                     local Value = ((Slider.Max - Slider.Min) * SizeX) + Slider.Min
@@ -6578,6 +6614,10 @@ local Library do
                     InputChanged = Input.Changed:Connect(function()
                         if Input.UserInputState == Enum.UserInputState.End then
                             Slider.Sliding = false
+
+                            -- Reset thumb size on release
+                            Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2New(0, 14, 0, 14)})
+                            Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
 
                             InputChanged:Disconnect()
                             InputChanged = nil
@@ -6689,10 +6729,10 @@ local Library do
                 Items["DropdownStroke"] = Instances:Create("UIStroke", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
-                    Color = FromRGB(55, 53, 59),
+                    Color = FromRGB(34, 34, 46),
                     Transparency = 0.5,
                     Thickness = 1
-                })
+                })  Items["DropdownStroke"]:AddToTheme({Color = "Outline"})
 
                 Items["Value"] = Instances:Create("TextLabel", {
                     Parent = Items["RealDropdown"].Instance,
@@ -6823,20 +6863,22 @@ local Library do
             end
 
             Items["RealDropdown"]:OnHover(function()
-                if Dropdown.IsOpen then
-                    return 
-                end
+                if Dropdown.IsOpen then return end
 
-                Items["ArrowIcon"]:Tween(nil, {ImageColor3 = FromRGB(255, 255, 255)})
+                Items["RealDropdown"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.ElementHover})
+                Items["DropdownStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.2})
+                Items["ArrowIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageColor3 = FromRGB(255, 255, 255)})
+                Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
                 Items["Gradient"].Instance.Enabled = true
             end)
 
             Items["RealDropdown"]:OnHoverLeave(function()
-                if Dropdown.IsOpen then
-                    return 
-                end
+                if Dropdown.IsOpen then return end
 
-                Items["ArrowIcon"]:Tween(nil, {ImageColor3 = FromRGB(141, 141, 150)})
+                Items["RealDropdown"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Element})
+                Items["DropdownStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5})
+                Items["ArrowIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageColor3 = FromRGB(160, 160, 170)})
+                Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
                 Items["Gradient"].Instance.Enabled = false
             end)
 
