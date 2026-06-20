@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `afc47d9` — Listbox checkbox: add white checkmark + bigger box
+**Last commit:** `4415b44` — Dropdown: shorter box (95px) + left-flowing layout
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Dropdown: shorter box (95px) + left-flowing layout (`4415b44`)
 
 - **[2026-06-21]** Claude Opus 4.7: Listbox checkbox: add white checkmark + bigger box (`afc47d9`)
 
