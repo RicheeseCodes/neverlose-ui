@@ -8309,16 +8309,16 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
-                -- Checkbox-style indicator on the LEFT.
-                -- Selected: filled crimson box. Unselected: outlined box.
+                -- Checkbox indicator on the LEFT — outlined box that fills
+                -- crimson with a white checkmark when selected.
                 local OptionBox = Instances:Create("Frame", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
-                    Size = UDim2New(0, 12, 0, 12),
+                    Size = UDim2New(0, 16, 0, 16),
                     Position = UDim2New(0, 10, 0.5, 0),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(35, 35, 50),
+                    BackgroundColor3 = FromRGB(28, 28, 40),
                     BackgroundTransparency = 0,
                     ZIndex = 2,
                 })
@@ -8326,7 +8326,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = OptionBox.Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 3)
+                    CornerRadius = UDimNew(0, 4)
                 })
 
                 local OptionBoxStroke = Instances:Create("UIStroke", {
@@ -8334,7 +8334,7 @@ local Library do
                     Name = "\0",
                     Color = FromRGB(70, 70, 90),
                     Transparency = 0.2,
-                    Thickness = 1,
+                    Thickness = 1.2,
                 })
 
                 local OptionBoxFill = Instances:Create("Frame", {
@@ -8351,7 +8351,23 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = OptionBoxFill.Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 3)
+                    CornerRadius = UDimNew(0, 4)
+                })
+
+                -- Checkmark icon — scales in from center when selected
+                local OptionCheck = Instances:Create("ImageLabel", {
+                    Parent = OptionBox.Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 0, 0, 0),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Image = "rbxassetid://121760666525660",
+                    ImageColor3 = FromRGB(255, 255, 255),
+                    BackgroundTransparency = 1,
+                    ImageTransparency = 1,
+                    ZIndex = 4,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
                 local OptionText = Instances:Create("TextLabel", {
@@ -8361,11 +8377,11 @@ local Library do
                     TextColor3 = FromRGB(234, 234, 240),
                     TextTransparency = 0.4,
                     Text = Option,
-                    Size = UDim2New(1, -38, 0, 15),
+                    Size = UDim2New(1, -42, 0, 15),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 32, 0.5, 0),
+                    Position = UDim2New(0, 36, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     TextXAlignment = Enum.TextXAlignment.Left,
                     TextSize = 13,
@@ -8380,20 +8396,24 @@ local Library do
                     OptionBox = OptionBox,
                     OptionBoxFill = OptionBoxFill,
                     OptionBoxStroke = OptionBoxStroke,
+                    OptionCheck = OptionCheck,
                     IsSearching = false,
                     Selected = false
                 }
 
                 function OptionData:Toggle(Value)
                     local TWEEN_FAST = TweenInfo.new(0.22, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                    local TWEEN_CHECK = TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
                     if Value == "Active" then
                         OptionText:Tween(nil, {TextTransparency = 0})
                         OptionBoxFill:Tween(TWEEN_FAST, {Size = UDim2New(1, 0, 1, 0)})
                         OptionBoxStroke:Tween(TWEEN_FAST, {Color = Library.Theme.Accent, Transparency = 0})
+                        OptionCheck:Tween(TWEEN_CHECK, {Size = UDim2New(0, 10, 0, 10), ImageTransparency = 0})
                     else
                         OptionText:Tween(nil, {TextTransparency = OptionData.Hovering and 0 or 0.4})
                         OptionBoxFill:Tween(TWEEN_FAST, {Size = UDim2New(0, 0, 0, 0)})
                         OptionBoxStroke:Tween(TWEEN_FAST, {Color = FromRGB(70, 70, 90), Transparency = 0.2})
+                        OptionCheck:Tween(TWEEN_FAST, {Size = UDim2New(0, 0, 0, 0), ImageTransparency = 1})
                     end
                 end
 
