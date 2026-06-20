@@ -2465,17 +2465,17 @@ local Library do
                 Instances:Create("UIListLayout", {
                     Parent = Items["LeftTabs"].Instance,
                     Name = "\0",
-                    Padding = UDimNew(0, 12),
+                    Padding = UDimNew(0, 4),
                     SortOrder = Enum.SortOrder.LayoutOrder
                 })
-                
+
                 Instances:Create("UIPadding", {
                     Parent = Items["LeftTabs"].Instance,
                     Name = "\0",
-                    PaddingTop = UDimNew(0, 15),
-                    PaddingBottom = UDimNew(0, 15),
-                    PaddingRight = UDimNew(0, 12),
-                    PaddingLeft = UDimNew(0, 12)
+                    PaddingTop = UDimNew(0, 10),
+                    PaddingBottom = UDimNew(0, 10),
+                    PaddingRight = UDimNew(0, 10),
+                    PaddingLeft = UDimNew(0, 10)
                 })
 
                 Items["Logo"] = Instances:Create("ImageLabel", {
@@ -4488,67 +4488,68 @@ local Library do
 
             local Debounce = false
 
+            -- Per-page fade tracking — like Window._fadeSaves but for tab switching
+            Page._fadeSaves = {}
+
+            local function fadePageTree(targetVisible, speed)
+                local list = Items["Page"].Instance:GetDescendants()
+                table.insert(list, Items["Page"].Instance)
+                for _, inst in ipairs(list) do
+                    local props = Tween:GetProperty(inst)
+                    if not props then continue end
+
+                    local plist = type(props) == "table" and props or {props}
+                    for _, p in ipairs(plist) do
+                        Page._fadeSaves[inst] = Page._fadeSaves[inst] or {}
+                        if targetVisible then
+                            local saved = Page._fadeSaves[inst][p]
+                            if saved ~= nil then
+                                TweenService:Create(inst, TweenInfo.new(speed, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {[p] = saved}):Play()
+                            end
+                        else
+                            if Page._fadeSaves[inst][p] == nil then
+                                Page._fadeSaves[inst][p] = inst[p]
+                            end
+                            TweenService:Create(inst, TweenInfo.new(speed, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {[p] = 1}):Play()
+                        end
+                    end
+                end
+            end
+
             function Page:Turn(Bool)
-                if Debounce then 
-                    return 
-                end
+                -- No debounce — spam-clicking just immediately retargets.
+                -- Tweens cancel naturally because TweenService:Create reuses the instance.
+                if Page.Active == Bool then return end
+                Page.Active = Bool
 
-                Page.Active = Bool 
-                
-                Debounce = true
-                Items["Page"].Instance.Visible = Bool 
-                Items["Page"].Instance.Parent = Bool and Page.Window.Items["Content"].Instance or Library.UnusedHolder.Instance
+                if Bool then
+                    -- Sidebar tab styling — accent bar + icon/text full brightness
+                    Items["AccentBar"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 3, 0, 18)})
+                    Items["Icon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0})
+                    Items["Text"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0})
 
-                if Page.Active then
-                    Items["AccentBar"]:Tween(TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 3, 0, 18)})
-                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
-                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
-                    Items["Page"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 0)})
+                    -- Show page: reparent + start slightly offset, slide in
+                    Items["Page"].Instance.Parent = Page.Window.Items["Content"].Instance
+                    Items["Page"].Instance.Visible = true
+                    Items["Page"].Instance.Position = UDim2New(0, 0, 0, 15)
+                    TweenService:Create(Items["Page"].Instance, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 0)}):Play()
 
-                    for Index, Value in Page.Sections do
-                        task.spawn(function()
-                            Value:TweenElements(true)
-                        end)
-                    end
+                    fadePageTree(true, 0.25)
                 else
-                    Items["AccentBar"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 3, 0, 0)})
-                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5})
-                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
-                    Items["Page"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 60)})
-                end
+                    -- Sidebar tab — accent bar collapses + icon/text dim
+                    Items["AccentBar"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 3, 0, 0)})
+                    Items["Icon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0.5})
+                    Items["Text"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0.3})
 
-                local AllInstances = Items["Page"].Instance:GetDescendants()
-                TableInsert(AllInstances, Items["Page"].Instance)
-                
-                local NewTween 
-
-                for Index, Value in AllInstances do 
-                    local TransparencyProperty = Tween:GetProperty(Value)
-
-                    if not TransparencyProperty then 
-                        continue
-                    end
-
-                    if type(TransparencyProperty) == "table" then 
-                        for _, Property in TransparencyProperty do 
-                            NewTween = Tween:FadeItem(Value, Property, Bool, Library.FadeSpeed)
+                    -- Fade everything out then hide
+                    fadePageTree(false, 0.2)
+                    task.delay(0.21, function()
+                        if not Page.Active then
+                            Items["Page"].Instance.Visible = false
+                            Items["Page"].Instance.Parent = Library.UnusedHolder.Instance
                         end
-                    else
-                        NewTween = Tween:FadeItem(Value, TransparencyProperty, Bool, Library.FadeSpeed)
-                    end
+                    end)
                 end
-
-                Library:Connect(NewTween.Tween.Completed, function()
-                    Debounce = false
-
-                    if not Page.Active then 
-                        for Index, Value in Page.Sections do 
-                            task.spawn(function()
-                                Value:TweenElements(false, true)
-                            end)   
-                        end
-                    end
-                end)
             end
 
             Items["Inactive"]:Connect("MouseButton1Down", function()
