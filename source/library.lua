@@ -2777,6 +2777,15 @@ local Library do
                     Items["SearchInput"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 1})
 
                     Items["SearchInput"].Instance.Text = ""
+                    -- Restore all sidebar tabs to visible after closing search
+                    if Window.Pages then
+                        for _, page in pairs(Window.Pages) do
+                            local tabBtn = page.Items and page.Items["Inactive"]
+                            if tabBtn and tabBtn.Instance then
+                                tabBtn.Instance.Visible = true
+                            end
+                        end
+                    end
 
                     task.delay(0.4, function()
                         if not searchOpen then
@@ -2971,41 +2980,50 @@ local Library do
                 end)
 
                 -- Search input text changed - live filter elements
-                Library:Connect(Items["SearchInput"].Instance:GetPropertyChangedSignal("Text"), function()
-                    local searchText = Items["SearchInput"].Instance.Text
-                    if #searchText > 0 then
-                        for _, page in pairs(Window.Pages) do
-                            if page.Items then
-                                for _, element in pairs(page.Items) do
-                                    if element.Instance and element.Instance:IsA("GuiObject") then
-                                        local nameToCheck = element.Instance.Name or ""
-                                        if typeof(nameToCheck) == "string" and string.lower(nameToCheck):find(string.lower(searchText), 1, true) then
-                                            element.Instance.Visible = true
-                                        else
-                                            element.Instance.Visible = false
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    else
-                        for _, page in pairs(Window.Pages) do
-                            if page.Items then
-                                for _, element in pairs(page.Items) do
-                                    if element.Instance and element.Instance:IsA("GuiObject") then
-                                        element.Instance.Visible = true
-                                    end
-                                end
-                            end
+                -- ════════════════════════════════════════════════════════════
+                -- SEARCH FILTER — filters sidebar TAB BUTTONS by Page.Name.
+                -- (Previous impl incorrectly iterated page.Items content elements.)
+                -- The tab button is page.Items["Inactive"]; its label text lives
+                -- in page.Items["Text"].Instance.Text (= Page.Name at creation).
+                -- ════════════════════════════════════════════════════════════
+                local function applySearchFilter(query)
+                    query = (query or ""):lower()
+                    for _, page in pairs(Window.Pages) do
+                        local tabBtn = page.Items and page.Items["Inactive"]
+                        local label  = page.Items and page.Items["Text"]
+                        if tabBtn and tabBtn.Instance then
+                            local pageName = (label and label.Instance and label.Instance.Text) or page.Name or ""
+                            local match = #query == 0 or string.find(string.lower(pageName), query, 1, true) ~= nil
+                            tabBtn.Instance.Visible = match
                         end
                     end
+                end
+
+                Library:Connect(Items["SearchInput"].Instance:GetPropertyChangedSignal("Text"), function()
+                    applySearchFilter(Items["SearchInput"].Instance.Text)
                 end)
 
-                -- Search focus lost - close if empty (Rayfield behavior)
+                -- Reset tab visibility when the search overlay closes
                 Library:Connect(Items["SearchInput"].Instance.FocusLost, function(enterPressed)
                     if #Items["SearchInput"].Instance.Text == 0 and searchOpen then
                         task.wait(0.12)
                         closeSearch()
+                    end
+                    -- Enter on a single remaining match jumps to it (Rayfield-like nicety)
+                    if enterPressed then
+                        local visiblePages = {}
+                        for _, page in pairs(Window.Pages) do
+                            local tabBtn = page.Items and page.Items["Inactive"]
+                            if tabBtn and tabBtn.Instance and tabBtn.Instance.Visible then
+                                table.insert(visiblePages, page)
+                            end
+                        end
+                        if #visiblePages == 1 and visiblePages[1].Turn then
+                            for _, p in pairs(Window.Pages) do
+                                p:Turn(p == visiblePages[1])
+                            end
+                            task.spawn(closeSearch)
+                        end
                     end
                 end)
 
@@ -4208,15 +4226,9 @@ local Library do
                 end
             end)
 
-            local ok, err = pcall(function()
-                Window:SetCenter()
-                task.wait()
-                Window:SetOpen(true)
-            end)
-            if not ok then
-                warn("[Nemesis] SetOpen error:", err)
-                Items["MainFrame"].Instance.Visible = true
-            end
+            Window:SetCenter()
+            task.wait()
+            Window:SetOpen(true)
             return setmetatable(Window, Library)
         end
 
@@ -8656,6 +8668,5 @@ local Library do
     end
 end
 
-warn("[Nemesis] Library loaded successfully")
 getgenv().Library = Library
 return Library
