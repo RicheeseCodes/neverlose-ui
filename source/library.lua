@@ -2572,6 +2572,13 @@ local Library do
                     BackgroundColor3 = FromRGB(27, 25, 29)
                 })  Items["Topbar"]:AddToTheme({BackgroundColor3 = "Background"})
 
+                -- UICorner on Topbar so the minimized state keeps rounded corners
+                Instances:Create("UICorner", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 10)
+                })
+
                 Items["TopbarDivider"] = Instances:Create("Frame", {
                     Parent = Items["Topbar"].Instance,
                     Name = "Divider",
@@ -3393,9 +3400,9 @@ local Library do
                     Instances:Create("UICorner", {
                         Parent = Items["MainFrame"].Instance,
                         Name = "\0",
-                        CornerRadius = UDimNew(0, 4)
+                        CornerRadius = UDimNew(0, 10)
                     })
-                end      
+                end
                 
                 do
                     Items["LeftBottomPixels"] = Instances:Create("Frame", {
@@ -4426,6 +4433,8 @@ local Library do
             }
 
             local Items = { } do
+                -- Tab button is now just a hit-area — NO background card.
+                -- Active state shown only via the red accent bar + brighter text.
                 Items["Inactive"] = Instances:Create("TextButton", {
                     Parent = Page.Window.Items["LeftTabs"].Instance,
                     Name = "\0",
@@ -4439,13 +4448,7 @@ local Library do
                     Size = UDim2New(1, -16, 0, 36),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(22, 22, 30)
-                })  Items["Inactive"]:AddToTheme({BackgroundColor3 = "Section Background 2"})
-
-                Instances:Create("UICorner", {
-                    Parent = Items["Inactive"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
+                    BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
                 -- Nemesis: thicker accent bar with rounded ends (4px wide)
@@ -4569,15 +4572,18 @@ local Library do
                     Page.ColumnsData[Index] = NewColumn
                 end
 
+                -- Hover: subtle text/icon brightening, no background fill
                 Items["Inactive"]:OnHover(function()
                     if not Page.Active then
-                        Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.85})
+                        Items["Text"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0.05})
+                        Items["Icon"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {ImageTransparency = 0.1})
                     end
                 end)
 
                 Items["Inactive"]:OnHoverLeave(function()
                     if not Page.Active then
-                        Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                        Items["Text"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
+                        Items["Icon"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5})
                     end
                 end)
 
@@ -4598,7 +4604,6 @@ local Library do
                 Items["Page"].Instance.Parent = Bool and Page.Window.Items["Content"].Instance or Library.UnusedHolder.Instance
 
                 if Page.Active then
-                    Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.75})
                     Items["AccentBar"]:Tween(TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 3, 0, 18)})
                     Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
                     Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
@@ -4610,10 +4615,9 @@ local Library do
                         end)
                     end
                 else
-                    Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
                     Items["AccentBar"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 3, 0, 0)})
-                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.3})
-                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
+                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
                     Items["Page"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 60)})
                 end
 
