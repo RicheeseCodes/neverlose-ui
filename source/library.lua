@@ -6955,8 +6955,9 @@ local Library do
                     Library.OpenFrames[Dropdown] = Dropdown 
                 else
                     if not Dropdown.IsOpen then
-                        for Index, Value in Dropdown.OptionsWithIndexes do 
+                        for Index, Value in Dropdown.OptionsWithIndexes do
                             task.spawn(function()
+                                Value.Hovering = false
                                 Value:RefreshPosition(false)
                             end)
                         end
