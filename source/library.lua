@@ -2050,7 +2050,7 @@ local Library do
                     Text = "",
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 20),
+                    Size = UDim2New(1, 0, 0, 24),
                     BorderSizePixel = 0,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255)
@@ -6693,7 +6693,7 @@ local Library do
                     Parent = Dropdown.Section.Items["Content"].Instance,
                     Name = "\0",
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 28),
+                    Size = UDim2New(1, 0, 0, 24),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
@@ -6726,7 +6726,7 @@ local Library do
                     TextColor3 = FromRGB(0, 0, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
-                    Size = UDim2New(0, Dropdown.Size or 130, 0, 28),
+                    Size = UDim2New(0, Dropdown.Size or 130, 0, 24),
                     AutoButtonColor = false,
                     AnchorPoint = Vector2New(1, 0),
                     Position = UDim2New(1, 0, 0, 0),
@@ -7074,7 +7074,7 @@ local Library do
                     Text = "",
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 20),
+                    Size = UDim2New(1, 0, 0, 24),
                     BorderSizePixel = 0,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255)
@@ -8264,7 +8264,7 @@ local Library do
                     Text = "",
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 20),
+                    Size = UDim2New(1, 0, 0, 24),
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 14,
@@ -8336,7 +8336,7 @@ local Library do
                             OptionData.IsSearching = false
                             OptionText:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = OptionData.Selected and 0 or 0.4})
                             task.wait(0.08)
-                            OptionButton:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 20)})
+                            OptionButton:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 0, 24)})
                         end
                     end)
                 end
