@@ -8090,7 +8090,7 @@ local Library do
                 Items = Data.Items or Data.items or { "One", "Two", "Three" },
                 Default = Data.Default or Data.default or nil,
                 Callback = Data.Callback or Data.callback or function() end,
-                Size = Data.Size or Data.size or 220,
+                Size = Data.Size or Data.size or 260,
                 Multi = Data.Multi or Data.multi or false,
 
                 Value = { },
