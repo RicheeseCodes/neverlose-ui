@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `25574d7` — Force-hide corner repairs on minimize so pill corners stay rounded
+**Last commit:** `f20e199` — Polish Toggle switch — theme tokens + slightly bigger pill
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Polish Toggle switch — theme tokens + slightly bigger pill (`f20e199`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Force-hide corner repairs on minimize so pill corners stay rounded (`25574d7`)
 
