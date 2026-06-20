@@ -2128,8 +2128,10 @@ local Library do
                     BackgroundTransparency = 1,
                     BorderColor3 = FromRGB(0, 0, 0),
                     BorderSizePixel = 0,
-                    -- Scale.X = fills holder width; Y grows on open (Rayfield style)
+                    -- Scale.X = fills holder width (300px); AutomaticSize.Y so the
+                    -- card height always fits its wrapped text (no overflow).
                     Size = UDim2New(1, 0, 0, 0),
+                    AutomaticSize = Enum.AutomaticSize.Y,
                     BackgroundColor3 = FromRGB(25, 25, 25)
                 })  Items["Notification"]:AddToTheme({BackgroundColor3 = "Background"})
 
@@ -2142,13 +2144,17 @@ local Library do
                     Thickness = 1
                 })  Items["NotifStroke"]:AddToTheme({Color = "Text"})
 
-                Instances:Create("UIPadding", {
+                -- Adaptive left padding: reserve 60px when an icon is present
+                -- (to clear the 32px icon), otherwise just 20px so the text
+                -- isn't pushed to the right with an empty left gap.
+                local hasIcon = Data.Icon ~= nil
+                Items["NotifPadding"] = Instances:Create("UIPadding", {
                     Parent = Items["Notification"].Instance,
                     Name = "\0",
                     PaddingTop = UDimNew(0, 12),
                     PaddingBottom = UDimNew(0, 12),
                     PaddingRight = UDimNew(0, 20),
-                    PaddingLeft = UDimNew(0, 60)
+                    PaddingLeft = UDimNew(0, hasIcon and 60 or 20)
                 })
 
                 Instances:Create("UICorner", {
@@ -2185,9 +2191,12 @@ local Library do
                     BackgroundTransparency = 1,
                     Size = UDim2New(1, 0, 0, 16),
                     BorderSizePixel = 0,
+                    AutomaticSize = Enum.AutomaticSize.Y,
                     TextXAlignment = Enum.TextXAlignment.Left,
-                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    TextYAlignment = Enum.TextYAlignment.Top,
+                    TextWrapped = true,
                     TextSize = 15,
+                    LayoutOrder = 1,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2201,25 +2210,34 @@ local Library do
                     Size = UDim2New(1, 0, 0, 14),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 0, 0, 18),
                     BorderColor3 = FromRGB(0, 0, 0),
+                    AutomaticSize = Enum.AutomaticSize.Y,
                     TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Top,
                     TextWrapped = true,
-                    TextTruncate = Enum.TextTruncate.AtEnd,
                     TextSize = 13,
+                    LayoutOrder = 2,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Description"]:AddToTheme({TextColor3 = "Text"})
+
+                -- Stack Title + Description vertically; Notification auto-sizes its
+                -- height to fit the wrapped text (no manual height math = no overflow).
+                Instances:Create("UIListLayout", {
+                    Parent = Items["Notification"].Instance,
+                    Name = "\0",
+                    Padding = UDimNew(0, 4),
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    HorizontalAlignment = Enum.HorizontalAlignment.Right
+                })
             end
 
             Library:Thread(function()
                 -- ENTER — Rayfield-exact stagger
-                -- 1. Grow: width pops in (from 1,-60 to 1,0), height = title+desc+padding
-                local titleH = Items["Title"].Instance.TextBounds.Y
-                local descH = Items["Description"].Instance.TextBounds.Y
-                local targetH = math.max(titleH + descH + 31, 60)
-                -- Start collapsed (Rayfield starts at 1,-60 width / 800 height tall pre-grow)
+                -- Notification is AutomaticSize.Y, so its height always fits the
+                -- wrapped content. We only tween the width "pop" + opacity.
+                -- Start collapsed (Rayfield starts narrower pre-grow).
                 Items["Notification"].Instance.Size = UDim2New(1, -60, 0, 0)
-                Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 0, targetH)})
+                Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 0, 0)})
 
                 task.wait(0.15)
                 -- 2. Background + title together
