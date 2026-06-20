@@ -1039,7 +1039,7 @@ local Library do
         table.insert(self.ToClean, DepthOfField.Instance)
 
         Library:Connect(RunService.RenderStepped, function()
-            if Window.IsOpen then
+            if Window.IsOpen and Window.BlurActive ~= false then
                 if Item.Visible then
                     DepthOfField:Tween(nil, {NearIntensity = 1})
 
@@ -2265,6 +2265,7 @@ local Library do
                 Pages = { },
                 Items = { },
                 IsOpen = false,
+                BlurActive = true,
                 SettingsPageOpen = false,
                 CurrentAlignment = "LeftTabs"
             }
@@ -2545,16 +2546,15 @@ local Library do
                 local ToggleKeybind = Enum.KeyCode.K
 
                 -- ════════════════════════════════════════════════════════════════
-                -- TOPBAR ICON CONFIG — swap these for centralicons.com IDs anytime.
+                -- TOPBAR ICON CONFIG — Rayfield's original icon set.
                 -- Format: any valid Roblox asset ID like "rbxassetid://12345"
-                -- Browse icons: https://centralicons.com/
                 -- ════════════════════════════════════════════════════════════════
                 local Icons = {
-                    Search        = "rbxassetid://10709769456",  -- Lucide search (clean magnifier)
-                    Settings      = "rbxassetid://10734950309",  -- Lucide settings (gear)
-                    Minimize      = "rbxassetid://10734898355",  -- Lucide chevron-down
-                    MinimizeAlt   = "rbxassetid://10734897930",  -- Lucide chevron-up (shown while minimised)
-                    Close         = "rbxassetid://10747384394",  -- Lucide x (close)
+                    Search        = "rbxassetid://10734924532",  -- Rayfield search
+                    Settings      = "rbxassetid://80503127983237",-- Rayfield settings (gear)
+                    Minimize      = "rbxassetid://10137941941",  -- Rayfield ChangeSize
+                    MinimizeAlt   = "rbxassetid://11036884234",  -- Rayfield ChangeSize (minimised state)
+                    Close         = "rbxassetid://10137832201",  -- Rayfield Hide (X)
                 }
 
                 Items["Topbar"] = Instances:Create("Frame", {
@@ -2605,137 +2605,51 @@ local Library do
                     Thickness = 1
                 })
 
-                -- Close button (X) - rightmost
-                Items["TopbarClose"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "Close",
-                    Text = "",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(0, 0, 0),
-                    TextSize = 14,
-                    AnchorPoint = Vector2New(1, 0.5),
-                    Position = UDim2New(1, -12, 0.5, 0),
-                    Size = UDim2New(0, 14, 0, 14),
-                    ZIndex = 6,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    AutoButtonColor = false,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })
+                -- ════════════════════════════════════════════════════════════════
+                -- TOPBAR ICONS — Rayfield-style: bigger hit area (28x28),
+                -- 20x20 icon centered, spaced 32px apart
+                -- ════════════════════════════════════════════════════════════════
+                local function makeTopbarBtn(name, posOffset, imageId)
+                    local btn = Instances:Create("TextButton", {
+                        Parent = Items["Topbar"].Instance,
+                        Name = name,
+                        Text = "",
+                        FontFace = Library.Font,
+                        TextColor3 = FromRGB(0, 0, 0),
+                        TextSize = 14,
+                        AnchorPoint = Vector2New(1, 0.5),
+                        Position = UDim2New(1, posOffset, 0.5, 0),
+                        Size = UDim2New(0, 28, 0, 28),
+                        ZIndex = 6,
+                        BackgroundTransparency = 1,
+                        BorderSizePixel = 0,
+                        AutoButtonColor = false,
+                        BackgroundColor3 = FromRGB(255, 255, 255)
+                    })
 
-                Items["TopbarCloseIcon"] = Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarClose"].Instance,
-                    Name = "\0",
-                    Image = Icons.Close,
-                    ImageColor3 = FromRGB(240, 240, 240),
-                    ImageTransparency = 0.8,
-                    Size = UDim2New(1, 0, 1, 0),
-                    Position = UDim2New(0.5, 0, 0.5, 0),
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    ZIndex = 7,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarCloseIcon"]:AddToTheme({ImageColor3 = "Text"})
+                    local icon = Instances:Create("ImageLabel", {
+                        Parent = btn.Instance,
+                        Name = "Icon",
+                        Image = imageId,
+                        ImageColor3 = FromRGB(240, 240, 240),
+                        ImageTransparency = 0.4,
+                        Size = UDim2New(0, 20, 0, 20),
+                        Position = UDim2New(0.5, 0, 0.5, 0),
+                        AnchorPoint = Vector2New(0.5, 0.5),
+                        ZIndex = 7,
+                        BackgroundTransparency = 1,
+                        BorderSizePixel = 0,
+                        BackgroundColor3 = FromRGB(255, 255, 255)
+                    })  icon:AddToTheme({ImageColor3 = "Text"})
 
-                -- Minimize button (resize icon) - second from right
-                Items["TopbarMinimize"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "ChangeSize",
-                    Text = "",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(0, 0, 0),
-                    TextSize = 14,
-                    AnchorPoint = Vector2New(1, 0.5),
-                    Position = UDim2New(1, -38, 0.5, 0),
-                    Size = UDim2New(0, 14, 0, 14),
-                    ZIndex = 6,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    AutoButtonColor = false,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })
+                    return btn, icon
+                end
 
-                Items["TopbarMinimizeIcon"] = Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarMinimize"].Instance,
-                    Name = "\0",
-                    Image = Icons.Minimize,
-                    ImageColor3 = FromRGB(240, 240, 240),
-                    ImageTransparency = 0.8,
-                    Size = UDim2New(1, 0, 1, 0),
-                    Position = UDim2New(0.5, 0, 0.5, 0),
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    ZIndex = 7,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarMinimizeIcon"]:AddToTheme({ImageColor3 = "Text"})
-
-                -- Unload button (vertical sliders icon) - third from right
-                Items["TopbarSettings"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "Unload",
-                    Text = "",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(0, 0, 0),
-                    TextSize = 14,
-                    AnchorPoint = Vector2New(1, 0.5),
-                    Position = UDim2New(1, -64, 0.5, 0),
-                    Size = UDim2New(0, 14, 0, 14),
-                    ZIndex = 6,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    AutoButtonColor = false,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })
-
-                Items["TopbarSettingsIcon"] = Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarSettings"].Instance,
-                    Name = "\0",
-                    Image = Icons.Settings,
-                    ImageColor3 = FromRGB(240, 240, 240),
-                    ImageTransparency = 0.8,
-                    Size = UDim2New(1, 0, 1, 0),
-                    Position = UDim2New(0.5, 0, 0.5, 0),
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    ZIndex = 7,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarSettingsIcon"]:AddToTheme({ImageColor3 = "Text"})
-
-                -- Search button (magnifying glass) - fourth from right
-                Items["TopbarSearch"] = Instances:Create("TextButton", {
-                    Parent = Items["Topbar"].Instance,
-                    Name = "Search",
-                    Text = "",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(0, 0, 0),
-                    TextSize = 14,
-                    AnchorPoint = Vector2New(1, 0.5),
-                    Position = UDim2New(1, -90, 0.5, 0),
-                    Size = UDim2New(0, 14, 0, 14),
-                    ZIndex = 6,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    AutoButtonColor = false,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })
-
-                Items["TopbarSearchIcon"] = Instances:Create("ImageLabel", {
-                    Parent = Items["TopbarSearch"].Instance,
-                    Name = "\0",
-                    Image = Icons.Search,
-                    ImageColor3 = FromRGB(240, 240, 240),
-                    ImageTransparency = 0.8,
-                    Size = UDim2New(1, 0, 1, 0),
-                    Position = UDim2New(0.5, 0, 0.5, 0),
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    ZIndex = 7,
-                    BackgroundTransparency = 1,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["TopbarSearchIcon"]:AddToTheme({ImageColor3 = "Text"})
+                -- Right-to-left: Close (X), Minimize, Settings, Search
+                Items["TopbarClose"],    Items["TopbarCloseIcon"]    = makeTopbarBtn("Close",     -16, Icons.Close)
+                Items["TopbarMinimize"], Items["TopbarMinimizeIcon"] = makeTopbarBtn("ChangeSize", -52, Icons.Minimize)
+                Items["TopbarSettings"], Items["TopbarSettingsIcon"] = makeTopbarBtn("Settings",  -88, Icons.Settings)
+                Items["TopbarSearch"],   Items["TopbarSearchIcon"]   = makeTopbarBtn("Search",   -124, Icons.Search)
 
                 -- Search Overlay (slides in below topbar like Rayfield)
                 Items["SearchOverlay"] = Instances:Create("Frame", {
@@ -2803,15 +2717,22 @@ local Library do
                 -- Settings Page (shown in content area when settings icon is clicked)
 
                 -- ========== TOPBAR BUTTON HOVER EFFECTS (Rayfield-style) ==========
+                -- ════════════════════════════════════════════════════════════════
+                -- TOPBAR HOVER — Rayfield-style: transparency fade + scale pulse
+                -- Idle: ImageTransparency 0.4, Size 20x20
+                -- Hover: ImageTransparency 0, Size 22x22 (slight scale up)
+                -- ════════════════════════════════════════════════════════════════
                 local topbarButtons = {Items["TopbarSearch"], Items["TopbarSettings"], Items["TopbarMinimize"], Items["TopbarClose"]}
                 local topbarIcons = {Items["TopbarSearchIcon"], Items["TopbarSettingsIcon"], Items["TopbarMinimizeIcon"], Items["TopbarCloseIcon"]}
+                local HOVER_IN  = TweenInfo.new(0.35, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+                local HOVER_OUT = TweenInfo.new(0.4,  Enum.EasingStyle.Quint,        Enum.EasingDirection.Out)
                 for i, btn in ipairs(topbarButtons) do
                     local icon = topbarIcons[i]
                     btn:Connect("MouseEnter", function()
-                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0})
+                        icon:Tween(HOVER_IN, {ImageTransparency = 0, Size = UDim2New(0, 22, 0, 22)})
                     end)
                     btn:Connect("MouseLeave", function()
-                        icon:Tween(TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0.8})
+                        icon:Tween(HOVER_OUT, {ImageTransparency = 0.4, Size = UDim2New(0, 20, 0, 20)})
                     end)
                 end
 
@@ -2871,21 +2792,45 @@ local Library do
 
                     task.spawn(closeSearch)
 
-                    -- Topbar stays visually anchored, just collapse below it
+                    -- Step 1: Fade out tab buttons and content elements FIRST
+                    -- so they don't visibly contract during the sidebar collapse
+                    local FADE_TWEEN = TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                    for _, page in pairs(Window.Pages) do
+                        if page.Items and page.Items.Inactive then
+                            local tabDescendants = page.Items.Inactive.Instance:GetDescendants()
+                            table.insert(tabDescendants, page.Items.Inactive.Instance)
+                            for _, inst in ipairs(tabDescendants) do
+                                local props = Tween:GetProperty(inst)
+                                if props then
+                                    if type(props) == "table" then
+                                        for _, p in ipairs(props) do
+                                            Tween:FadeItem(inst, p, false, FADE_TWEEN.Time)
+                                        end
+                                    else
+                                        Tween:FadeItem(inst, props, false, FADE_TWEEN.Time)
+                                    end
+                                end
+                            end
+                        end
+                    end
+
+                    -- Step 2: Topbar stays visually anchored, collapse below it
                     Items["TopbarDivider"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
 
-                    -- Sidebar slides closed horizontally (left→right wipe)
-                    Items["LeftTabs"]:Tween(MIN_TWEEN, {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
+                    -- Step 3: Sidebar wipes shut horizontally
+                    task.delay(0.1, function()
+                        Items["LeftTabs"]:Tween(MIN_TWEEN, {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
+                    end)
 
-                    -- Content collapses from bottom
+                    -- Step 4: Content collapses from bottom
                     Items["Content"]:Tween(MIN_TWEEN, {Size = UDim2New(1, 0, 0, 0)})
 
-                    -- MainFrame shrinks to just the topbar height + width adjusts
+                    -- Step 5: MainFrame shrinks to topbar
                     Items["MainFrame"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
                     Items["Topbar"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45), Position = UDim2New(0, 0, 0, 0)})
 
-                    -- Hide non-topbar pieces AFTER animation finishes
-                    task.delay(MIN_TWEEN.Time, function()
+                    -- Hide pieces AFTER animation finishes
+                    task.delay(MIN_TWEEN.Time + 0.1, function()
                         if Minimised then
                             Items["Content"].Instance.Visible = false
                             Items["LeftTabs"].Instance.Visible = false
@@ -2909,6 +2854,28 @@ local Library do
 
                     Items["Content"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 0, 1, -45)})
                     Items["LeftTabs"]:Tween(MAX_TWEEN, {Size = UDim2New(0, 225, 1, -44), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
+
+                    -- Fade tab buttons back in AFTER sidebar reaches full width
+                    task.delay(0.25, function()
+                        for _, page in pairs(Window.Pages) do
+                            if page.Items and page.Items.Inactive then
+                                local tabDescendants = page.Items.Inactive.Instance:GetDescendants()
+                                table.insert(tabDescendants, page.Items.Inactive.Instance)
+                                for _, inst in ipairs(tabDescendants) do
+                                    local props = Tween:GetProperty(inst)
+                                    if props then
+                                        if type(props) == "table" then
+                                            for _, p in ipairs(props) do
+                                                Tween:FadeItem(inst, p, true, 0.3)
+                                            end
+                                        else
+                                            Tween:FadeItem(inst, props, true, 0.3)
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end)
 
                     task.delay(MAX_TWEEN.Time, function()
                         Debounce = false
@@ -2946,11 +2913,14 @@ local Library do
                     Debounce = true
                     task.spawn(closeSearch)
 
+                    -- Kill blur IMMEDIATELY so it doesn't linger on screen
+                    Window.BlurActive = false
+
                     -- Subtle scale-down adds polish (Rayfield does this)
                     local currentSize = Items["MainFrame"].Instance.Size
                     local shrunkSize = UDim2New(
-                        currentSize.X.Scale, math.floor(currentSize.X.Offset * 0.95),
-                        currentSize.Y.Scale, math.floor(currentSize.Y.Offset * 0.95)
+                        currentSize.X.Scale, math.floor(currentSize.X.Offset * 0.92),
+                        currentSize.Y.Scale, math.floor(currentSize.Y.Offset * 0.92)
                     )
                     Items["MainFrame"]:Tween(HIDE_TWEEN, {Size = shrunkSize})
 
@@ -2969,6 +2939,11 @@ local Library do
                 local function UnhideWindow()
                     Debounce = true
                     Items["MainFrame"].Instance.Visible = true
+
+                    -- Re-enable blur after a brief delay so fade-in looks clean
+                    task.delay(0.15, function()
+                        Window.BlurActive = true
+                    end)
 
                     -- Scale back up to original
                     Items["MainFrame"]:Tween(SHOW_TWEEN, {Size = Minimised and UDim2New(0, OriginalMainWidth - 5, 0, 45) or OriginalMainSize})
