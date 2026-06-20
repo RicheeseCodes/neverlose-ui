@@ -7099,23 +7099,23 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
-                -- Selection indicator (crimson dot) — ONLY visible when selected.
-                -- Neverlose-style: unselected items show no dot at all.
-                local OptionDot = Instances:Create("Frame", {
+                -- Neverlose-style left accent bar — vertical crimson stripe
+                -- that slides in from the left edge when the option is selected.
+                local OptionAccent = Instances:Create("Frame", {
                     Parent = OptionButton.Instance,
                     Name = "\0",
-                    Size = UDim2New(0, 0, 0, 0),
-                    Position = UDim2New(0, 14, 0.5, 0),
-                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Size = UDim2New(0, 2, 0, 0),
+                    Position = UDim2New(0, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(230, 57, 70),
                     BackgroundTransparency = 0,
-                })  OptionDot:AddToTheme({BackgroundColor3 = "Accent"})
+                })  OptionAccent:AddToTheme({BackgroundColor3 = "Accent"})
 
                 Instances:Create("UICorner", {
-                    Parent = OptionDot.Instance,
+                    Parent = OptionAccent.Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(1, 0)
+                    CornerRadius = UDimNew(0, 1)
                 })
 
                 local OptionText = Instances:Create("TextLabel", {
@@ -7125,11 +7125,11 @@ local Library do
                     TextColor3 = FromRGB(234, 234, 240),
                     TextTransparency = 0.4,
                     Text = Option,
-                    Size = UDim2New(1, -32, 0, 15),
+                    Size = UDim2New(1, -22, 0, 15),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 26, 0.5, 0),
+                    Position = UDim2New(0, 14, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     TextXAlignment = Enum.TextXAlignment.Left,
                     TextSize = 14,
@@ -7140,18 +7140,18 @@ local Library do
                     Button = OptionButton,
                     Name = Option,
                     OptionText = OptionText,
-                    OptionDot = OptionDot,
+                    OptionAccent = OptionAccent,
                     Selected = false
                 }
 
                 function OptionData:Toggle(Value)
-                    local TW_DOT = TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+                    local TW_BAR = TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
                     if Value == "Active" then
                         OptionText:Tween(nil, {TextTransparency = 0})
-                        OptionDot:Tween(TW_DOT, {Size = UDim2New(0, 6, 0, 6)})
+                        OptionAccent:Tween(TW_BAR, {Size = UDim2New(0, 2, 0, 14)})
                     else
                         OptionText:Tween(nil, {TextTransparency = OptionData.Hovering and 0 or 0.4})
-                        OptionDot:Tween(TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 0, 0, 0)})
+                        OptionAccent:Tween(TW_BAR, {Size = UDim2New(0, 2, 0, 0)})
                     end
                 end
 
