@@ -2196,7 +2196,7 @@ local Library do
                     TextYAlignment = Enum.TextYAlignment.Top,
                     TextWrapped = true,
                     TextSize = 15,
-                    LayoutOrder = 1,
+                    Position = UDim2New(0, 0, 0, 0),
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Title"]:AddToTheme({TextColor3 = "Text"})
 
@@ -2216,19 +2216,9 @@ local Library do
                     TextYAlignment = Enum.TextYAlignment.Top,
                     TextWrapped = true,
                     TextSize = 13,
-                    LayoutOrder = 2,
+                    Position = UDim2New(0, 0, 0, 20),
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Description"]:AddToTheme({TextColor3 = "Text"})
-
-                -- Stack Title + Description vertically; Notification auto-sizes its
-                -- height to fit the wrapped text (no manual height math = no overflow).
-                Instances:Create("UIListLayout", {
-                    Parent = Items["Notification"].Instance,
-                    Name = "\0",
-                    Padding = UDimNew(0, 4),
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Right
-                })
             end
 
             Library:Thread(function()
