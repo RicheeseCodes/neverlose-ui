@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `eb13434` — Add selection dots/checkboxes to dropdown popup + listbox rows
+**Last commit:** `121abf9` — Dropdown layout: left-flowing instead of right-anchored
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Dropdown layout: left-flowing instead of right-anchored (`121abf9`)
 
 - **[2026-06-21]** Claude Opus 4.7: Add selection dots/checkboxes to dropdown popup + listbox rows (`eb13434`)
 
