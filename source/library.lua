@@ -6733,8 +6733,8 @@ local Library do
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(35, 33, 39)
-                })  Items["RealDropdown"]:AddToTheme({BackgroundColor3 = "Element"})
+                    BackgroundColor3 = FromRGB(30, 30, 42)
+                })
 
                 Instances:Create("UICorner", {
                     Parent = Items["RealDropdown"].Instance,
@@ -6745,24 +6745,24 @@ local Library do
                 Items["DropdownStroke"] = Instances:Create("UIStroke", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
-                    Color = FromRGB(34, 34, 46),
-                    Transparency = 0.5,
+                    Color = FromRGB(55, 55, 75),
+                    Transparency = 0.3,
                     Thickness = 1
-                })  Items["DropdownStroke"]:AddToTheme({Color = "Outline"})
+                })
 
                 Items["Value"] = Instances:Create("TextLabel", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.2,
+                    TextTransparency = 0.1,
                     Text = "-",
-                    Size = UDim2New(1, -28, 0, 15),
+                    Size = UDim2New(1, -26, 0, 15),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     TextTruncate = Enum.TextTruncate.AtEnd,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 8, 0.5, 0),
+                    Position = UDim2New(0, 10, 0.5, 0),
                     TextXAlignment = Enum.TextXAlignment.Left,
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 3,
@@ -6770,29 +6770,31 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Value"]:AddToTheme({TextColor3 = "Text"})
 
+                -- Liner removed (was showing as visible vertical bar inside the dropdown)
                 Items["Liner"] = Instances:Create("Frame", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(1, 0.5),
-                    Position = UDim2New(1, -24, 0.5, 0),
-                    Size = UDim2New(0, 1, 0, 16),
+                    Position = UDim2New(1, -22, 0.5, 0),
+                    Size = UDim2New(0, 0, 0, 0),
                     ZIndex = 3,
                     BorderSizePixel = 0,
-                    BackgroundTransparency = 0.6,
-                    BackgroundColor3 = FromRGB(55, 53, 59)
-                })  Items["Liner"]:AddToTheme({BackgroundColor3 = "Outline"})
+                    BackgroundTransparency = 1,
+                    Visible = false,
+                    BackgroundColor3 = FromRGB(0, 0, 0)
+                })
 
                 Items["ArrowIcon"] = Instances:Create("ImageLabel", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
-                    ImageColor3 = FromRGB(160, 160, 170),
+                    ImageColor3 = FromRGB(200, 200, 210),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Size = UDim2New(0, 12, 0, 6),
+                    Size = UDim2New(0, 10, 0, 6),
                     AnchorPoint = Vector2New(1, 0.5),
                     Image = "rbxassetid://123317177279443",
                     BackgroundTransparency = 1,
-                    Position = UDim2New(1, -6, 0.5, 0),
+                    Position = UDim2New(1, -8, 0.5, 0),
                     ZIndex = 3,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
@@ -6888,9 +6890,8 @@ local Library do
 
             Items["RealDropdown"]:OnHover(function()
                 if Dropdown.IsOpen then return end
-
-                Items["RealDropdown"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.ElementHover})
-                Items["DropdownStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.2})
+                Items["RealDropdown"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = FromRGB(40, 40, 55)})
+                Items["DropdownStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.1})
                 Items["ArrowIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageColor3 = FromRGB(255, 255, 255)})
                 Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
                 Items["Gradient"].Instance.Enabled = true
@@ -6898,11 +6899,10 @@ local Library do
 
             Items["RealDropdown"]:OnHoverLeave(function()
                 if Dropdown.IsOpen then return end
-
-                Items["RealDropdown"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Element})
-                Items["DropdownStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5})
-                Items["ArrowIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageColor3 = FromRGB(160, 160, 170)})
-                Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
+                Items["RealDropdown"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = FromRGB(30, 30, 42)})
+                Items["DropdownStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.3})
+                Items["ArrowIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageColor3 = FromRGB(200, 200, 210)})
+                Items["Value"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.1})
                 Items["Gradient"].Instance.Enabled = false
             end)
 
@@ -8092,21 +8092,29 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
                     ZIndex = 2,
-                    Size = UDim2New(1, 0, 0, 30),
+                    Size = UDim2New(1, 0, 0, 28),
                     BorderSizePixel = 0,
-                    PlaceholderColor3 = FromRGB(185, 185, 185),
+                    PlaceholderColor3 = FromRGB(140, 140, 155),
                     TextXAlignment = Enum.TextXAlignment.Left,
-                    PlaceholderText = "Search..",
-                    TextSize = 14,
-                    BackgroundColor3 = FromRGB(27, 26, 29)
-                })  Items["Search"]:AddToTheme({TextColor3 = "Text", BackgroundColor3 = "Element"})
+                    PlaceholderText = "Search...",
+                    TextSize = 13,
+                    BackgroundColor3 = FromRGB(30, 30, 42)
+                })  Items["Search"]:AddToTheme({TextColor3 = "Text"})
                 
                 Instances:Create("UICorner", {
                     Parent = Items["Search"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 6)
+                    CornerRadius = UDimNew(0, 8)
                 })
-                
+
+                Instances:Create("UIStroke", {
+                    Parent = Items["Search"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(55, 55, 75),
+                    Transparency = 0.3,
+                    Thickness = 1,
+                })
+
                 Instances:Create("UIPadding", {
                     Parent = Items["Search"].Instance,
                     Name = "\0",
@@ -8118,18 +8126,18 @@ local Library do
                     Parent = Items["Listbox"].Instance,
                     Name = "\0",
                     Active = true,
-                    Size = UDim2New(1, 0, 1, -30),
+                    Size = UDim2New(1, 0, 1, -32),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Position = UDim2New(0, 0, 0, 30),
-                    BackgroundColor3 = FromRGB(27, 26, 29),
+                    Position = UDim2New(0, 0, 0, 32),
+                    BackgroundColor3 = FromRGB(30, 30, 42),
                     ZIndex = 2,
                     BorderSizePixel = 0,
-                })  Items["Background"]:AddToTheme({BackgroundColor3 = "Element"})
-                
+                })
+
                 Items["Holder"] = Instances:Create("ScrollingFrame", {
                     Parent = Items["Background"].Instance,
                     Name = "\0",
-                    ScrollBarImageColor3 = FromRGB(0, 0, 0),
+                    ScrollBarImageColor3 = FromRGB(70, 70, 88),
                     Active = true,
                     AutomaticCanvasSize = Enum.AutomaticSize.Y,
                     ScrollBarThickness = 2,
@@ -8141,12 +8149,20 @@ local Library do
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
                     CanvasSize = UDim2New(0, 0, 0, 0)
-                })  Items["Holder"]:AddToTheme({ScrollBarImageColor3 = "Accent"})
+                })
                 
                 Instances:Create("UICorner", {
                     Parent = Items["Background"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 6)
+                    CornerRadius = UDimNew(0, 8)
+                })
+
+                Instances:Create("UIStroke", {
+                    Parent = Items["Background"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(55, 55, 75),
+                    Transparency = 0.3,
+                    Thickness = 1,
                 })
                 
                 Instances:Create("UIListLayout", {
@@ -8168,13 +8184,15 @@ local Library do
                 Items["_"] = Instances:Create("Frame", {
                     Parent = Items["Listbox"].Instance,
                     Name = "\0",
-                    Size = UDim2New(1, 0, 0, 10),
+                    Size = UDim2New(0, 0, 0, 0),
                     Position = UDim2New(0, 0, 0, 25),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
+                    Visible = false,
+                    BackgroundTransparency = 1,
                     BackgroundColor3 = FromRGB(27, 26, 29)
-                })  Items["_"]:AddToTheme({BackgroundColor3 = "Element"})
+                })
 
                 Instances:Create("Frame", {
                     Parent = Items["_"].Instance,
