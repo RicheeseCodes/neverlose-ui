@@ -60,8 +60,8 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `1647ec4` — Match dropdown/listbox option row height to toggle rows (24px)
-**Last AI to touch this:** Z code (GLM-5.2)
+**Last commit:** `9a1c8f2` — Dropdown sizing fix: relative width + breathing margin
+**Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
 ### What works right now:
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Dropdown sizing fix: relative width + breathing margin (`9a1c8f2`)
 
 - **[2026-06-21]** Z code (GLM-5.2): Match dropdown/listbox option row height to toggle rows (24px) (`1647ec4`)
 
