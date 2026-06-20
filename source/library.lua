@@ -6700,17 +6700,6 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
-                -- Horizontal flow from left: Label, gap, Box
-                Instances:Create("UIListLayout", {
-                    Parent = Items["Dropdown"].Instance,
-                    Name = "\0",
-                    FillDirection = Enum.FillDirection.Horizontal,
-                    Padding = UDimNew(0, 10),
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                    VerticalAlignment = Enum.VerticalAlignment.Center,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                })
-
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Dropdown"].Instance,
                     Name = "\0",
@@ -6720,15 +6709,18 @@ local Library do
                     Text = Dropdown.Name,
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
+                    AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
-                    LayoutOrder = 1,
+                    Position = UDim2New(0, 2, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     TextSize = 13,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
+                -- Box anchored RIGHT, fully visible inside the section bounds.
+                -- Size 0.5 = takes half the section width (leaves room for label).
                 Items["RealDropdown"] = Instances:Create("TextButton", {
                     Parent = Items["Dropdown"].Instance,
                     Name = "\0",
@@ -6736,9 +6728,10 @@ local Library do
                     TextColor3 = FromRGB(0, 0, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
-                    Size = UDim2New(0, Dropdown.Size or 130, 0, 26),
+                    Size = UDim2New(0.5, -4, 0, 26),
                     AutoButtonColor = false,
-                    LayoutOrder = 2,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, 0, 0.5, 0),
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 14,
