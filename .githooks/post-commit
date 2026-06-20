@@ -17,8 +17,9 @@ SUBJECT=$(git log -1 --pretty=%s)
 DATE=$(git log -1 --pretty=%cd --date=short)
 BODY=$(git log -1 --pretty=%b)
 
-# Extract AI identity from Co-Authored-By line, fallback to "Manual" if none
-AI=$(echo "$BODY" | grep -i "Co-Authored-By" | head -1 | sed -E 's/.*Co-Authored-By: ([^<]+).*/\1/' | xargs)
+# Extract AI identity from Co-Authored-By trailer (must end with <email@addr>)
+# Only match the actual trailer format, not loose mentions in commit body
+AI=$(echo "$BODY" | grep -iE '^Co-Authored-By:[[:space:]]+.+<[^>]+>[[:space:]]*$' | head -1 | sed -E 's/^Co-Authored-By:[[:space:]]+(.+)[[:space:]]+<[^>]+>[[:space:]]*$/\1/' | xargs)
 if [ -z "$AI" ]; then
     AUTHOR=$(git log -1 --pretty=%an)
     AI="Manual ($AUTHOR)"
