@@ -3443,15 +3443,13 @@ local Library do
                 })
 
                 if not Window.HideHeader then
-                    Instances:Create("UICorner", {
-                        Parent = Items["MainFrame"].Instance,
-                        Name = "\0",
-                        CornerRadius = UDimNew(0, 10)
-                    })
-
                     -- BottomCornerRepair: squares off MainFrame's BOTTOM corners
                     -- so the bottom edge of the menu is completely flat/sharp.
-                    -- (Same CornerRepair technique as topbar — fill the rounded gap)
+                    -- NOTE: MainFrame no longer has its own UICorner. The visible
+                    -- top rounding comes from Topbar's UICorner, and the bottom is
+                    -- flattened by this repair. Previously BOTH MainFrame and Topbar
+                    -- had UICorner(10px); the slight mismatch between the two
+                    -- rounded shapes created dark "dots" at the bottom corners.
                     Items["BottomCornerRepair"] = Instances:Create("Frame", {
                         Parent = Items["MainFrame"].Instance,
                         Name = "\0",
