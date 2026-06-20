@@ -3442,6 +3442,20 @@ local Library do
                         Name = "\0",
                         CornerRadius = UDimNew(0, 10)
                     })
+
+                    -- BottomCornerRepair: squares off MainFrame's BOTTOM corners
+                    -- so the bottom edge of the menu is completely flat/sharp.
+                    -- (Same CornerRepair technique as topbar — fill the rounded gap)
+                    Items["BottomCornerRepair"] = Instances:Create("Frame", {
+                        Parent = Items["MainFrame"].Instance,
+                        Name = "\0",
+                        BackgroundTransparency = 0,
+                        BorderSizePixel = 0,
+                        Size = UDim2New(1, 0, 0, 10),
+                        Position = UDim2New(0, 0, 1, -10),
+                        ZIndex = 1,
+                        BackgroundColor3 = FromRGB(27, 25, 29)
+                    })  Items["BottomCornerRepair"]:AddToTheme({BackgroundColor3 = "Background"})
                 end
                 
                 do
