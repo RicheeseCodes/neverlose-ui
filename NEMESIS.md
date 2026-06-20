@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `3a9a796` — Dropdown popup dot: Neverlose-style — only visible when selected
+**Last commit:** `e0d0a59` — Listbox redesign: unified card, no scrollbar, flat search
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Listbox redesign: unified card, no scrollbar, flat search (`e0d0a59`)
 
 - **[2026-06-21]** Claude Opus 4.7: Dropdown popup dot: Neverlose-style — only visible when selected (`3a9a796`)
 
