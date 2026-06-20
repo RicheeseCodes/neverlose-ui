@@ -181,16 +181,28 @@ local Library do
 
     local Themes = {
         ["Preset"] = {
-            ["AccentGradient"] = FromRGB(0, 195, 255),   -- Slightly deeper blue accent
-            ["Background 2"] = FromRGB(10, 10, 12),      -- Very dark gray
-            ["Background"] = FromRGB(12, 12, 14),        -- Main near-black background
-            ["Text"] = FromRGB(235, 235, 235),           -- Slightly dimmed light text
-            ["Outline"] = FromRGB(25, 25, 28),           -- Subtle outline, almost invisible
-            ["Section Top"] = FromRGB(28, 27, 31),       -- Dark section header
-            ["Section Background"] = FromRGB(10, 10, 12),-- Deep black section background
-            ["Section Background 2"] = FromRGB(14, 14, 16),-- Alternate section, minimal difference
-            ["Accent"] = FromRGB(0, 116, 224),           -- Darker blue accent for consistency
-            ["Element"] = FromRGB(16, 16, 18)            -- Deep gray for UI elements
+            -- Nemesis Palette — dark, sharp, aggressive
+            ["AccentGradient"] = FromRGB(255, 77, 90),     -- Lighter crimson gradient endpoint
+            ["Background 2"] = FromRGB(10, 10, 15),        -- Deeper dark
+            ["Background"] = FromRGB(13, 13, 18),           -- Main near-black background (deep blue-black)
+            ["Text"] = FromRGB(234, 234, 240),             -- Primary text, near white
+            ["SubText"] = FromRGB(136, 136, 160),           -- Secondary/muted text
+            ["Outline"] = FromRGB(34, 34, 46),             -- Subtle borders/strokes
+            ["Section Top"] = FromRGB(17, 17, 24),          -- Dark section header
+            ["Section Background"] = FromRGB(11, 11, 16),   -- Deep section background
+            ["Section Background 2"] = FromRGB(22, 22, 30), -- Alternate section bg (sidebar tabs)
+            ["Accent"] = FromRGB(230, 57, 70),             -- Nemesis crimson red
+            ["Element"] = FromRGB(22, 22, 30),              -- Element card background
+            ["ElementHover"] = FromRGB(28, 28, 38),         -- Element hover state
+            ["ToggleTrack"] = FromRGB(10, 10, 16),          -- Recessed toggle track
+            ["ToggleOn"] = FromRGB(230, 57, 70),           -- Toggle ON (same as accent)
+            ["ToggleOff"] = FromRGB(74, 74, 90),           -- Toggle OFF knob
+            ["SliderTrack"] = FromRGB(230, 57, 70),         -- Slider track/fill (crimson)
+            ["DropdownSelected"] = FromRGB(30, 16, 40),    -- Selected option row bg (dark purple tint)
+            ["InputBackground"] = FromRGB(16, 16, 22),    -- Textbox/input field bg
+            ["InputBorder"] = FromRGB(34, 34, 46),          -- Input border
+            ["PlaceholderText"] = FromRGB(136, 136, 160),  -- Placeholder color
+            ["ErrorRed"] = FromRGB(85, 0, 0)               -- Error flash bg
         }
     }
 
@@ -4179,7 +4191,7 @@ local Library do
                 Window:SetOpen(true)
             end)
             if not ok then
-                warn("[NeverloseUI] SetOpen error:", err)
+                warn("[Nemesis] SetOpen error:", err)
                 Items["MainFrame"].Instance.Visible = true
             end
             return setmetatable(Window, Library)
@@ -4408,38 +4420,52 @@ local Library do
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
-                    Size = UDim2New(0, 200, 0, 40),
+                    Size = UDim2New(1, -16, 0, 36),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(124, 163, 255)
-                })  Items["Inactive"]:AddToTheme({BackgroundColor3 = "Accent"})
-                
+                    BackgroundColor3 = FromRGB(22, 22, 30)
+                })  Items["Inactive"]:AddToTheme({BackgroundColor3 = "Section Background 2"})
+
                 Instances:Create("UICorner", {
                     Parent = Items["Inactive"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 5)
+                    CornerRadius = UDimNew(0, 8)
                 })
-                
-                Items.Gradient = Instances:Create("UIGradient", {
+
+                -- Nemesis: thicker accent bar with rounded ends (4px wide)
+                Items["AccentBar"] = Instances:Create("Frame", {
                     Parent = Items["Inactive"].Instance,
                     Name = "\0",
-                    Transparency = NumSequence{NumSequenceKeypoint(0, 0.41874998807907104), NumSequenceKeypoint(0.445, 0.78125), NumSequenceKeypoint(0.751, 0.9375), NumSequenceKeypoint(1, 1)}
+                    Size = UDim2New(0, 4, 0, 0),
+                    Position = UDim2New(0, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    ZIndex = 3,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70)
+                })  Items["AccentBar"]:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["AccentBar"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 4)
                 })
-                
+
+                -- Nemesis: icon uses solid accent color, no gradient
                 Items["Icon"] = Instances:Create("ImageLabel", {
                     Parent = Items["Inactive"].Instance,
                     Name = "\0",
-                    ImageColor3 = FromRGB(255, 255, 255),
+                    ImageColor3 = FromRGB(230, 57, 70),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Size = UDim2New(0, 18, 0, 18),
+                    Size = UDim2New(0, 16, 0, 16),
                     AnchorPoint = Vector2New(0, 0.5),
                     Image = "rbxassetid://"..Page.Icon,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 16, 0.5, 0),
-                    ZIndex = 2,
+                    Position = UDim2New(0, 12, 0.5, 0),
+                    ZIndex = 3,
                     BorderSizePixel = 0,
+                    ImageTransparency = 0.5,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  --Items["Icon"]:AddToTheme({ImageColor3 = "Accent"})
+                })
 
                 Instances:Create("UIGradient", {
                     Parent = Items["Icon"].Instance,
@@ -4448,22 +4474,23 @@ local Library do
                 }):AddToTheme({Color = function()
                     return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
                 end})
-                
+
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Inactive"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
-                    TextColor3 = FromRGB(240, 240, 240),
+                    TextColor3 = FromRGB(234, 234, 240),
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = Page.Name,
                     AutomaticSize = Enum.AutomaticSize.X,
                     AnchorPoint = Vector2New(0, 0.5),
                     Size = UDim2New(0, 0, 0, 15),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 45, 0.5, 0),
+                    Position = UDim2New(0, 36, 0.5, 0),
                     BorderSizePixel = 0,
-                    ZIndex = 2,
-                    TextSize = 14,
+                    ZIndex = 3,
+                    TextSize = 13,
+                    TextTransparency = 0.3,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text"})      
                 
@@ -4526,6 +4553,18 @@ local Library do
                     Page.ColumnsData[Index] = NewColumn
                 end
 
+                Items["Inactive"]:OnHover(function()
+                    if not Page.Active then
+                        Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.85})
+                    end
+                end)
+
+                Items["Inactive"]:OnHoverLeave(function()
+                    if not Page.Active then
+                        Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                    end
+                end)
+
                 Page.Items = Items
             end
 
@@ -4543,16 +4582,22 @@ local Library do
                 Items["Page"].Instance.Parent = Bool and Page.Window.Items["Content"].Instance or Library.UnusedHolder.Instance
 
                 if Page.Active then
-                    Items["Inactive"]:Tween(nil, {BackgroundTransparency = 0.25})
+                    Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.75})
+                    Items["AccentBar"]:Tween(TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2New(0, 3, 0, 18)})
+                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
                     Items["Page"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 0)})
 
-                    for Index, Value in Page.Sections do 
+                    for Index, Value in Page.Sections do
                         task.spawn(function()
                             Value:TweenElements(true)
                         end)
                     end
                 else
-                    Items["Inactive"]:Tween(nil, {BackgroundTransparency = 1})
+                    Items["Inactive"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                    Items["AccentBar"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 3, 0, 0)})
+                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.3})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
                     Items["Page"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 60)})
                 end
 
@@ -5591,7 +5636,7 @@ local Library do
                 Value = false
             }
 
-            local Items = { } do 
+            local Items = { } do
                 Items["Toggle"] = Instances:Create("TextButton", {
                     Parent = Toggle.Section.Items["Content"].Instance,
                     Name = "\0",
@@ -5602,44 +5647,74 @@ local Library do
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
-                    Size = UDim2New(1, 0, 0, 18),
+                    Size = UDim2New(1, 0, 0, 24),
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
-                
+
+                Items["Text"] = Instances:Create("TextLabel", {
+                    Parent = Items["Toggle"].Instance,
+                    Name = "\0",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(240, 240, 240),
+                    TextTransparency = 0.2,
+                    Text = Toggle.Name,
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    Size = UDim2New(0, 0, 0, 15),
+                    Position = UDim2New(0, 0, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 1,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    ZIndex = 2,
+                    TextSize = 13,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+
                 Items["Indicator"] = Instances:Create("Frame", {
                     Parent = Items["Toggle"].Instance,
                     Name = "\0",
-                    Size = UDim2New(0, 18, 0, 18),
+                    Size = UDim2New(0, 40, 0, 20),
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, 0, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(124, 163, 255)
+                    BackgroundColor3 = FromRGB(50, 48, 54)
                 })  Items["Indicator"]:AddToTheme({BackgroundColor3 = "Element"})
-                
+
                 Instances:Create("UICorner", {
                     Parent = Items["Indicator"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 3)
+                    CornerRadius = UDimNew(1, 0)
                 })
-                
+
+                Items["SwitchStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["Indicator"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(65, 63, 69),
+                    Transparency = 0.5,
+                    Thickness = 1
+                })
+
                 Items["Accent"] = Instances:Create("Frame", {
                     Parent = Items["Indicator"].Instance,
                     Name = "\0",
-                    Size = UDim2New(0, 0, 0, 0),
+                    Size = UDim2New(0, 14, 0, 14),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
+                    ZIndex = 3,
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255),
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    Position = UDim2New(0.5, 0, 0.5, 0)
-                })  --Items["Accent"]:AddToTheme({BackgroundColor3 = "Accent"})
+                    BackgroundColor3 = FromRGB(140, 140, 145),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    Position = UDim2New(0, 3, 0.5, 0)
+                })
 
                 Instances:Create("UICorner", {
                     Parent = Items["Accent"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 3)
+                    CornerRadius = UDimNew(1, 0)
                 })
 
                 Items["CheckImage"] = Instances:Create("ImageLabel", {
@@ -5651,76 +5726,43 @@ local Library do
                     Image = "rbxassetid://121760666525660",
                     BackgroundTransparency = 1,
                     Position = UDim2New(0.5, 0, 0.5, 0),
-                    ZIndex = 2,
+                    ZIndex = 4,
                     BorderSizePixel = 0,
                     ImageTransparency = 1,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["CheckImage"]:AddToTheme({ImageColor3 = "Text"})
-                
-                Items["Text"] = Instances:Create("TextLabel", {
-                    Parent = Items["Toggle"].Instance,
-                    Name = "\0",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.30000001192092896,
-                    Text = Toggle.Name,
-                    AutomaticSize = Enum.AutomaticSize.X,
-                    Size = UDim2New(0, 0, 0, 15),
-                    Position = UDim2New(0, 24, 0, 0),
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 1,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
-                    TextSize = 14,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+                })
 
                 Items["Gradient"] = Instances:Create("UIGradient", {
-                    Parent = Items["Accent"].Instance,
+                    Parent = Items["Indicator"].Instance,
                     Name = "\0",
-                    Enabled = true,
-                    Rotation = -115,
-                    Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(255, 255, 255)), RGBSequenceKeypoint(1, FromRGB(143, 143, 143))}
+                    Enabled = false,
+                    Rotation = -115
                 })  Items["Gradient"]:AddToTheme({Color = function()
                     return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
                 end})
-
-                Items["Toggle"]:OnHover(function()
-                    Items["Indicator"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 21, 0, 21), Position = UDim2New(0, -3, 0, -3)})
-                end)
-
-                Items["Toggle"]:OnHoverLeave(function()
-                    Items["Indicator"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 18, 0, 18), Position = UDim2New(0, 0, 0, 0)})
-                end)
             end
 
-            Items["Indicator"].Instance.Position = UDim2New(0, 60, 0, 0)
-            Items["Text"].Instance.Position = UDim2New(0, 84, 0, 0)
-
-            --Toggle.Section.Items["Fade"].Instance.Size = UDim2New(1, 0, 0, Toggle.Section.Items["Content"].Instance.AbsoluteSize.X - 180)
-
             function Toggle:Get()
-                return Toggle.Value 
+                return Toggle.Value
             end
 
             function Toggle:Set(Value)
-                Toggle.Value = Value 
-                Library.Flags[Toggle.Flag] = Value 
+                Toggle.Value = Value
+                Library.Flags[Toggle.Flag] = Value
 
-                if Toggle.Value then 
-                    Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time + 0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0, Size = UDim2New(1, 0, 1, 0)})
-                    Items["CheckImage"]:Tween(nil, {ImageTransparency = 0, Size = UDim2New(0, 10, 0, 9)})
-
-                    --Items["Gradient"].Instance.Enabled = true 
+                if Toggle.Value then
+                    Items["Accent"]:Tween(TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(1, -17, 0.5, 0), BackgroundColor3 = FromRGB(255, 255, 255)})
+                    Items["Indicator"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Accent})
+                    Items["SwitchStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Color = Library.Theme.Accent, Transparency = 0.3})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
                 else
-                    Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time + 0.05, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 1, Size = UDim2New(0, 0, 0, 0)})
-                    Items["CheckImage"]:Tween(nil, {ImageTransparency = 1, Size = UDim2New(0, 0, 0, 0)})
-
-                    --Items["Gradient"].Instance.Enabled = false
+                    Items["Accent"]:Tween(TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(0, 3, 0.5, 0), BackgroundColor3 = FromRGB(140, 140, 145)})
+                    Items["Indicator"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Element})
+                    Items["SwitchStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Color = FromRGB(65, 63, 69), Transparency = 0.5})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
                 end
 
-                if Toggle.Callback then 
+                if Toggle.Callback then
                     Library:SafeCall(Toggle.Callback, Toggle.Value)
                 end
             end
@@ -6081,7 +6123,175 @@ local Library do
 
             Toggle.Section.Elements[#Toggle.Section.Elements+1] = Toggle
 
-            return Toggle 
+            return Toggle
+        end
+
+        Library.Sections.Checkbox = function(self, Data)
+            Data = Data or { }
+
+            local Checkbox = {
+                Window = self.Window,
+                Page = self.Page,
+                Section = self,
+
+                Name = Data.Name or Data.name or "Checkbox",
+                Flag = Data.Flag or Data.flag or Library:NextFlag(),
+                Default = Data.Default or Data.default or false,
+                Callback = Data.Callback or Data.callback or function() end,
+
+                Value = false
+            }
+
+            local Items = { } do
+                Items["Checkbox"] = Instances:Create("TextButton", {
+                    Parent = Checkbox.Section.Items["Content"].Instance,
+                    Name = "\0",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(0, 0, 0),
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    Text = "",
+                    AutoButtonColor = false,
+                    BackgroundTransparency = 1,
+                    BorderSizePixel = 0,
+                    Size = UDim2New(1, 0, 0, 24),
+                    ZIndex = 2,
+                    TextSize = 14,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })
+
+                Items["Text"] = Instances:Create("TextLabel", {
+                    Parent = Items["Checkbox"].Instance,
+                    Name = "\0",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(234, 234, 240),
+                    TextTransparency = 0.2,
+                    Text = Checkbox.Name,
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    Size = UDim2New(0, 0, 0, 15),
+                    Position = UDim2New(0, 28, 0.5, 0),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 1,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    ZIndex = 2,
+                    TextSize = 13,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+
+                Items["Box"] = Instances:Create("Frame", {
+                    Parent = Items["Checkbox"].Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 18, 0, 18),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    Position = UDim2New(0, 0, 0.5, 0),
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    ZIndex = 2,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(22, 22, 30)
+                })  Items["Box"]:AddToTheme({BackgroundColor3 = "Element"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Box"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 4)
+                })
+
+                Items["BoxStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["Box"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(65, 63, 75),
+                    Transparency = 0.4,
+                    Thickness = 1.2
+                })
+
+                Items["Fill"] = Instances:Create("Frame", {
+                    Parent = Items["Box"].Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 0, 0, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    ZIndex = 3,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70)
+                })  Items["Fill"]:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Fill"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 4)
+                })
+
+                Items["CheckIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["Fill"].Instance,
+                    Name = "\0",
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    Size = UDim2New(0, 0, 0, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Image = "rbxassetid://121760666525660",
+                    ImageColor3 = FromRGB(255, 255, 255),
+                    BackgroundTransparency = 1,
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    ZIndex = 4,
+                    BorderSizePixel = 0,
+                    ImageTransparency = 1,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })
+
+                Items["Checkbox"]:OnHover(function()
+                    if not Checkbox.Value then
+                        Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.2})
+                    end
+                end)
+
+                Items["Checkbox"]:OnHoverLeave(function()
+                    if not Checkbox.Value then
+                        Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.4})
+                    end
+                end)
+            end
+
+            function Checkbox:Get()
+                return Checkbox.Value
+            end
+
+            function Checkbox:Set(Value)
+                Checkbox.Value = Value
+                Library.Flags[Checkbox.Flag] = Value
+
+                if Checkbox.Value then
+                    Items["Fill"]:Tween(TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 1, 0)})
+                    Items["CheckIcon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Size = UDim2New(0, 11, 0, 10), ImageTransparency = 0})
+                    Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Color = Library.Theme.Accent, Transparency = 0})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
+                else
+                    Items["Fill"]:Tween(TweenInfo.new(0.25, Enum.EasingStyle.Quint), {Size = UDim2New(0, 0, 0, 0)})
+                    Items["CheckIcon"]:Tween(TweenInfo.new(0.2, Enum.EasingStyle.Quint), {Size = UDim2New(0, 0, 0, 0), ImageTransparency = 1})
+                    Items["BoxStroke"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Color = FromRGB(65, 63, 75), Transparency = 0.4})
+                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
+                end
+
+                if Checkbox.Callback then
+                    Library:SafeCall(Checkbox.Callback, Checkbox.Value)
+                end
+            end
+
+            function Checkbox:SetVisibility(Bool)
+                Items["Checkbox"].Instance.Visible = Bool
+            end
+
+            Items["Checkbox"]:Connect("MouseButton1Down", function()
+                Checkbox:Set(not Checkbox.Value)
+            end)
+
+            Checkbox:Set(Checkbox.Default)
+
+            Library.SetFlags[Checkbox.Flag] = function(Value)
+                Checkbox:Set(Value)
+            end
+
+            Checkbox.Section.Elements[#Checkbox.Section.Elements+1] = Checkbox
+            return Checkbox
         end
 
         Library.Sections.Button = function(self, Data)
@@ -6097,7 +6307,7 @@ local Library do
                 Callback = Data.Callback or Data.callback or function() end
             }
 
-            local Items = { } do 
+            local Items = { } do
                 Items["Button"] = Instances:Create("TextButton", {
                     Parent = Button.Section.Items["Content"].Instance,
                     Name = "\0",
@@ -6107,16 +6317,30 @@ local Library do
                     Text = "",
                     AutoButtonColor = false,
                     BorderSizePixel = 0,
-                    Size = UDim2New(1, 0, 0, 32),
+                    Size = UDim2New(1, 0, 0, 34),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(27, 26, 29)
+                    BackgroundColor3 = FromRGB(35, 33, 39)
                 })  Items["Button"]:AddToTheme({BackgroundColor3 = "Element"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Button"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 8)
+                })
+
+                Items["ButtonStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["Button"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(55, 53, 59),
+                    Transparency = 0.5,
+                    Thickness = 1
+                })
 
                 Items["Accent"] = Instances:Create("Frame", {
                     Parent = Items["Button"].Instance,
                     Name = "\0",
-                    Size = UDim2New(0, 0, 0, 0),
+                    Size = UDim2New(1, 0, 1, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
@@ -6124,14 +6348,13 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255),
                     AnchorPoint = Vector2New(0.5, 0.5),
                     Position = UDim2New(0.5, 0, 0.5, 0)
-                })  --Items["Accent"]:AddToTheme({BackgroundColor3 = "Accent"})
+                })
 
                 Items["Gradient"] = Instances:Create("UIGradient", {
                     Parent = Items["Accent"].Instance,
                     Name = "\0",
                     Enabled = true,
-                    Rotation = -115,
-                    Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(255, 255, 255)), RGBSequenceKeypoint(1, FromRGB(143, 143, 143))}
+                    Rotation = -115
                 })  Items["Gradient"]:AddToTheme({Color = function()
                     return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
                 end})
@@ -6139,21 +6362,15 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["Accent"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 4)
+                    CornerRadius = UDimNew(0, 8)
                 })
-                
-                Instances:Create("UICorner", {
-                    Parent = Items["Button"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 4)
-                })
-                
+
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Button"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.30000001192092896,
+                    TextTransparency = 0.15,
                     Text = Button.Name,
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
@@ -6162,64 +6379,60 @@ local Library do
                     BackgroundTransparency = 1,
                     Position = UDim2New(0.5, 0, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
-                    TextSize = 14,
+                    ZIndex = 3,
+                    TextSize = 13,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Text"]:AddToTheme({TextColor3 = "Text"})          
-                
-                if Button.Icon then 
+                })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+
+                if Button.Icon then
                     Items["Icon"] = Instances:Create("ImageLabel", {
                         Parent = Items["Text"].Instance,
                         Name = "\0",
                         ImageColor3 = FromRGB(240, 240, 240),
-                        ImageTransparency = 0.30000001192092896,
+                        ImageTransparency = 0.15,
                         BorderColor3 = FromRGB(0, 0, 0),
-                        Size = UDim2New(0, 18, 0, 18),
+                        Size = UDim2New(0, 16, 0, 16),
                         AnchorPoint = Vector2New(1, 0.5),
                         Image = "rbxassetid://"..Button.Icon,
                         BackgroundTransparency = 1,
-                        Position = UDim2New(0, -8, 0.5, 0),
-                        ZIndex = 2,
+                        Position = UDim2New(0, -6, 0.5, 0),
+                        ZIndex = 3,
                         BorderSizePixel = 0,
                         BackgroundColor3 = FromRGB(255, 255, 255)
                     })  Items["Icon"]:AddToTheme({ImageColor3 = "Text"})
-                end                    
+                end
 
                 Items["Button"]:OnHover(function()
-                    Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time + 0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(1, 0, 1, 0), BackgroundTransparency = 0})
+                    Items["Button"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = FromRGB(45, 43, 49)})
+                    Items["ButtonStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.2})
                 end)
 
                 Items["Button"]:OnHoverLeave(function()
-                    Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time + 0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 0, 0, 0), BackgroundTransparency = 1})
+                    Items["Button"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Element})
+                    Items["ButtonStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.5})
                 end)
-            end 
-
-            --Button.Section.Items["Fade"].Instance.Size = UDim2New(1, 0, 0, Button.Section.Items["Content"].Instance.AbsoluteSize.X - 180)
+            end
 
             function Button:SetVisibility(Bool)
                 Items["Button"].Instance.Visible = Bool
             end
 
             function Button:Press()
-                Items["Button"]:ChangeItemTheme({BackgroundColor3 = "Accent"})
-                Items["Button"]:Tween(nil, {BackgroundColor3 = Library.Theme.Accent})
+                Items["Accent"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint), {BackgroundTransparency = 0})
+                Items["Text"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint), {TextColor3 = FromRGB(0, 0, 0), TextTransparency = 0})
 
-                Items["Text"]:Tween(nil, {TextColor3 = FromRGB(0, 0, 0), TextTransparency = 0})
-
-                if Button.Icon then 
-                    Items["Icon"]:Tween(nil, {ImageColor3 = FromRGB(0, 0, 0), ImageTransparency = 0})
+                if Button.Icon then
+                    Items["Icon"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint), {ImageColor3 = FromRGB(0, 0, 0), ImageTransparency = 0})
                 end
 
                 task.wait(0.2)
 
                 Library:SafeCall(Button.Callback)
-                Items["Button"]:ChangeItemTheme({BackgroundColor3 = "Element"})
-                Items["Button"]:Tween(nil, {BackgroundColor3 = Library.Theme.Element})
+                Items["Accent"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1})
+                Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextColor3 = Library.Theme.Text, TextTransparency = 0.15})
 
-                Items["Text"]:Tween(nil, {TextColor3 = Library.Theme.Text, TextTransparency = 0.3})
-
-                if Button.Icon then 
-                    Items["Icon"]:Tween(nil, {ImageColor3 = Library.Theme.Text, ImageTransparency = 0.3})
+                if Button.Icon then
+                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageColor3 = Library.Theme.Text, ImageTransparency = 0.15})
                 end
             end
 
@@ -6251,12 +6464,12 @@ local Library do
                 Sliding = false
             }
 
-            local Items = { } do 
+            local Items = { } do
                 Items["Slider"] = Instances:Create("Frame", {
                     Parent = Slider.Section.Items["Content"].Instance,
                     Name = "\0",
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 35),
+                    Size = UDim2New(1, 0, 0, 38),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
@@ -6268,7 +6481,7 @@ local Library do
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.30000001192092896,
+                    TextTransparency = 0.2,
                     Text = Slider.Name,
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
@@ -6276,9 +6489,28 @@ local Library do
                     BorderSizePixel = 0,
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
-                    TextSize = 14,
+                    TextSize = 13,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+
+                Items["Value"] = Instances:Create("TextLabel", {
+                    Parent = Items["Slider"].Instance,
+                    Name = "\0",
+                    FontFace = Library.Font,
+                    TextColor3 = FromRGB(200, 200, 200),
+                    TextTransparency = 0.3,
+                    Text = "50",
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    Size = UDim2New(0, 0, 0, 15),
+                    AnchorPoint = Vector2New(1, 0),
+                    BorderSizePixel = 0,
+                    BackgroundTransparency = 1,
+                    Position = UDim2New(1, 0, 0, 0),
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    ZIndex = 2,
+                    TextSize = 12,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })  Items["Value"]:AddToTheme({TextColor3 = "SubText"})
 
                 Items["RealSlider"] = Instances:Create("TextButton", {
                     Parent = Items["Slider"].Instance,
@@ -6290,16 +6522,17 @@ local Library do
                     AutoButtonColor = false,
                     AnchorPoint = Vector2New(0, 1),
                     BorderSizePixel = 0,
-                    Position = UDim2New(0, 20, 1, -3),
-                    Size = UDim2New(1, -40, 0, 7),
+                    Position = UDim2New(0, 0, 1, -2),
+                    Size = UDim2New(1, 0, 0, 6),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(27, 26, 29)
+                    BackgroundColor3 = FromRGB(40, 38, 44)
                 })  Items["RealSlider"]:AddToTheme({BackgroundColor3 = "Element"})
 
                 Instances:Create("UICorner", {
                     Parent = Items["RealSlider"].Instance,
-                    Name = "\0"
+                    Name = "\0",
+                    CornerRadius = UDimNew(1, 0)
                 })
 
                 Items["Accent"] = Instances:Create("Frame", {
@@ -6307,41 +6540,45 @@ local Library do
                     Name = "\0",
                     Size = UDim2New(0.5, 0, 1, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
+                    ZIndex = 3,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
-                })  --Items["Accent"]:AddToTheme({BackgroundColor3 = "Accent"})
+                })
 
                 Instances:Create("UICorner", {
                     Parent = Items["Accent"].Instance,
-                    Name = "\0"
-                })
-
-                Items["Icon"] = Instances:Create("ImageLabel", {
-                    Parent = Items["Accent"].Instance,
                     Name = "\0",
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    Size = UDim2New(0, 16, 0, 12),
-                    AnchorPoint = Vector2New(0.5, 0.5),
-                    Image = "rbxassetid://117786983271442",
-                    BackgroundTransparency = 1,
-                    Position = UDim2New(1, 5, 0.5, 0),
-                    ZIndex = 2,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
+                    CornerRadius = UDimNew(1, 0)
                 })
 
                 Instances:Create("UIGradient", {
                     Parent = Items["Accent"].Instance,
                     Name = "\0",
-                    Rotation = -102,
-                    Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(255, 255, 255)), RGBSequenceKeypoint(1, FromRGB(166, 166, 166))}
+                    Rotation = 0
                 }):AddToTheme({Color = function()
-                    return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
+                    return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.AccentGradient), RGBSequenceKeypoint(1, Library.Theme.Accent)}
                 end})
 
+                Items["Icon"] = Instances:Create("Frame", {
+                    Parent = Items["Accent"].Instance,
+                    Name = "\0",
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    Size = UDim2New(0, 14, 0, 14),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    BackgroundColor3 = FromRGB(255, 255, 255),
+                    Position = UDim2New(1, 0, 0.5, 0),
+                    ZIndex = 4,
+                    BorderSizePixel = 0
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Icon"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(1, 0)
+                })
+
                 Items["Plus"] = Instances:Create("TextButton", {
-                    Parent = Items["RealSlider"].Instance,
+                    Parent = Items["Slider"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
@@ -6349,18 +6586,19 @@ local Library do
                     Text = "+",
                     BorderColor3 = FromRGB(0, 0, 0),
                     AutoButtonColor = false,
-                    AnchorPoint = Vector2New(0, 0.5),
-                    Size = UDim2New(0, 20, 0, 20),
+                    AnchorPoint = Vector2New(1, 1),
+                    Size = UDim2New(0, 16, 0, 16),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(1, 0, 0.5, -3),
+                    Position = UDim2New(1, 0, 1, 0),
                     BorderSizePixel = 0,
                     ZIndex = 2,
-                    TextSize = 14,
+                    TextSize = 12,
+                    Visible = false,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Plus"]:AddToTheme({TextColor3 = "Text"})
 
                 Items["Minus"] = Instances:Create("TextButton", {
-                    Parent = Items["RealSlider"].Instance,
+                    Parent = Items["Slider"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
@@ -6368,49 +6606,19 @@ local Library do
                     Text = "-",
                     BorderColor3 = FromRGB(0, 0, 0),
                     AutoButtonColor = false,
-                    AnchorPoint = Vector2New(1, 0.5),
-                    Size = UDim2New(0, 20, 0, 20),
+                    AnchorPoint = Vector2New(0, 1),
+                    Size = UDim2New(0, 16, 0, 16),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, -2, 0.5, -2),
+                    Position = UDim2New(0, 0, 1, 0),
                     BorderSizePixel = 0,
                     ZIndex = 2,
-                    TextSize = 14,
+                    TextSize = 12,
+                    Visible = false,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Minus"]:AddToTheme({TextColor3 = "Text"})
-
-                Items["Value"] = Instances:Create("TextLabel", {
-                    Parent = Items["Slider"].Instance,
-                    Name = "\0",
-                    FontFace = Library.Font,
-                    TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.30000001192092896,
-                    Text = "50%",
-                    AutomaticSize = Enum.AutomaticSize.X,
-                    Size = UDim2New(0, 0, 0, 15),
-                    AnchorPoint = Vector2New(1, 0),
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 1,
-                    Position = UDim2New(1, 0, 0, 0),
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
-                    TextSize = 14,
-                    BackgroundColor3 = FromRGB(255, 255, 255)
-                })  Items["Value"]:AddToTheme({TextColor3 = "Text"})
-
-                Items["RealSlider"]:OnHover(function()
-                    Items["Icon"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 18, 0, 14)})
-                end)
-
-                Items["RealSlider"]:OnHoverLeave(function()
-                    Items["Icon"]:Tween(TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2New(0, 16, 0, 12)})
-                end)
             end
 
-            --Slider.Section.Items["Fade"].Instance.Size = UDim2New(1, 0, 0, Slider.Section.Items["Content"].Instance.AbsoluteSize.X - 180)
-
-            --Items["Value"].Instance.TextTransparency = 1
-            Items["RealSlider"].Instance.Position = UDim2New(0, 80, 1, -3)
-            Items["Text"].Instance.Position = UDim2New(0, 80, 0, 0)
+            Items["Text"].Instance.Position = UDim2New(0, 0, 0, 0)
 
             function Slider:Get()
                 return Slider.Value 
@@ -6421,14 +6629,12 @@ local Library do
             end
 
             function Slider:RefreshPosition(Bool)
-                if Bool then 
-                    Items["RealSlider"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 20, 1, -3)})
+                if Bool then
+                    Items["RealSlider"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 1, -2)})
                     Items["Text"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2New(0, 0, 0, 0)})
-                -- Items["Value"].Instance.TextTransparency = 0.3
                 else
-                    Items["RealSlider"].Instance.Position = UDim2New(0, 80, 1, -3)
-                    Items["Text"].Instance.Position = UDim2New(0, 80, 0, 0)
-                -- Items["Value"].Instance.TextTransparency = 1
+                    Items["RealSlider"].Instance.Position = UDim2New(0, 0, 1, -2)
+                    Items["Text"].Instance.Position = UDim2New(0, 0, 0, 0)
                 end
             end
 
@@ -6436,16 +6642,11 @@ local Library do
                 Slider.Value = Library:Round(MathClamp(Value, Slider.Min, Slider.Max), Slider.Decimals)
                 Library.Flags[Slider.Flag] = Slider.Value
 
-                Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New((Slider.Value - Slider.Min) / (Slider.Max - Slider.Min), 0, 1, 0)})
+                local ratio = (Slider.Value - Slider.Min) / (Slider.Max - Slider.Min)
+                Items["Accent"]:Tween(TweenInfo.new(Library.Tween.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2New(ratio, 0, 1, 0)})
                 Items["Value"].Instance.Text = StringFormat("%s%s", Slider.Value, Slider.Suffix)
 
-                if Slider.Value >= Slider.Max then 
-                    Items["Icon"].Instance.Position = UDim2New(1, -5, 0.5, 0)
-                else
-                    Items["Icon"].Instance.Position = UDim2New(1, 5, 0.5, 0)
-                end
-
-                if Slider.Callback then 
+                if Slider.Callback then
                     Library:SafeCall(Slider.Callback, Slider.Value)
                 end
             end
@@ -6530,24 +6731,24 @@ local Library do
                 IsOpen = false
             }
 
-            local Items = { } do 
+            local Items = { } do
                 Items["Dropdown"] = Instances:Create("Frame", {
                     Parent = Dropdown.Section.Items["Content"].Instance,
                     Name = "\0",
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 25),
+                    Size = UDim2New(1, 0, 0, 28),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
-                
+
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Dropdown"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.30000001192092896,
+                    TextTransparency = 0.2,
                     Text = Dropdown.Name,
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
@@ -6557,10 +6758,10 @@ local Library do
                     Position = UDim2New(0, 0, 0.5, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
-                    TextSize = 14,
+                    TextSize = 13,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
-                
+
                 Items["RealDropdown"] = Instances:Create("TextButton", {
                     Parent = Items["Dropdown"].Instance,
                     Name = "\0",
@@ -6568,65 +6769,74 @@ local Library do
                     TextColor3 = FromRGB(0, 0, 0),
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
-                    Size = UDim2New(0, Dropdown.Size or 125, 0, 25),
+                    Size = UDim2New(0, Dropdown.Size or 130, 0, 28),
                     AutoButtonColor = false,
                     AnchorPoint = Vector2New(1, 0),
                     Position = UDim2New(1, 0, 0, 0),
                     BorderSizePixel = 0,
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(27, 26, 29)
+                    BackgroundColor3 = FromRGB(35, 33, 39)
                 })  Items["RealDropdown"]:AddToTheme({BackgroundColor3 = "Element"})
-                
+
                 Instances:Create("UICorner", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 6)
+                    CornerRadius = UDimNew(0, 8)
                 })
-                
+
+                Items["DropdownStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["RealDropdown"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(55, 53, 59),
+                    Transparency = 0.5,
+                    Thickness = 1
+                })
+
                 Items["Value"] = Instances:Create("TextLabel", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(240, 240, 240),
-                    TextTransparency = 0.30000001192092896,
+                    TextTransparency = 0.2,
                     Text = "-",
-                    Size = UDim2New(1, -40, 0, 15),
+                    Size = UDim2New(1, -32, 0, 15),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     TextTruncate = Enum.TextTruncate.AtEnd,
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 10, 0.5, -1),
+                    Position = UDim2New(0, 10, 0.5, 0),
                     TextXAlignment = Enum.TextXAlignment.Left,
                     BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
-                    TextSize = 14,
+                    ZIndex = 3,
+                    TextSize = 12,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Value"]:AddToTheme({TextColor3 = "Text"})
-                
+
                 Items["Liner"] = Instances:Create("Frame", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
-                    AnchorPoint = Vector2New(1, 0),
-                    Position = UDim2New(1, -25, 0, 0),
-                    Size = UDim2New(0, 2, 1, 0),
-                    ZIndex = 2,
+                    AnchorPoint = Vector2New(1, 0.5),
+                    Position = UDim2New(1, -24, 0.5, 0),
+                    Size = UDim2New(0, 1, 0, 16),
+                    ZIndex = 3,
                     BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(34, 32, 36)
+                    BackgroundTransparency = 0.6,
+                    BackgroundColor3 = FromRGB(55, 53, 59)
                 })  Items["Liner"]:AddToTheme({BackgroundColor3 = "Outline"})
-                
+
                 Items["ArrowIcon"] = Instances:Create("ImageLabel", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
-                    ImageColor3 = FromRGB(141, 141, 150),
+                    ImageColor3 = FromRGB(160, 160, 170),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Size = UDim2New(0, 16, 0, 8),
+                    Size = UDim2New(0, 12, 0, 6),
                     AnchorPoint = Vector2New(1, 0.5),
                     Image = "rbxassetid://123317177279443",
                     BackgroundTransparency = 1,
-                    Position = UDim2New(1, -5, 0.5, 0),
-                    ZIndex = 2,
+                    Position = UDim2New(1, -6, 0.5, 0),
+                    ZIndex = 3,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
@@ -6634,8 +6844,7 @@ local Library do
                 Items["Gradient"] = Instances:Create("UIGradient", {
                     Parent = Items["ArrowIcon"].Instance,
                     Name = "\0",
-                    Enabled = false,
-                    Color = RGBSequence{RGBSequenceKeypoint(0, FromRGB(131, 131, 131)), RGBSequenceKeypoint(1, FromRGB(255, 255, 255))}
+                    Enabled = false
                 })  Items["Gradient"]:AddToTheme({Color = function()
                     return RGBSequence{RGBSequenceKeypoint(0, Library.Theme.Accent), RGBSequenceKeypoint(1, Library.Theme.AccentGradient)}
                 end})
@@ -8427,6 +8636,6 @@ local Library do
     end
 end
 
-warn("[NeverloseUI] Library loaded successfully")
+warn("[Nemesis] Library loaded successfully")
 getgenv().Library = Library
 return Library

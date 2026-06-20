@@ -1,0 +1,547 @@
+================================================================================
+PROJECT MEMORY — Nemesis UI Library (Roblox Lua) [formerly Neverlose UI]
+Last updated: 2026-06-20
+================================================================================
+
+PROJECT REBRAND: As of 2026-06-20, the project is now called "Nemesis".
+Internal references: warn messages now say "[Nemesis]" instead of "[NeverloseUI]".
+Theme rebuilt around a crimson-red palette (Accent: RGB 230,57,70) — see Theme section.
+All future work falls under the Nemesis name. Repo remains RicheeseCodes/neverlose-ui
+(repo name unchanged, library name is now "Nemesis").
+
+This file is a complete knowledge transfer for any AI continuing work on this
+project. It covers the user, the codebase, every decision made, every bug fixed,
+every feature added, and every convention established. Read this fully before
+touching any code.
+
+
+================================================================================
+1. THE USER
+================================================================================
+
+- Name: Rudraksh Kotwar (GitHub: RicheeseCodes)
+- Role: Roblox exploit/script developer
+- Executor: Opiumware (a Roblox script executor)
+- Skill level: Knows Lua basics, understands UI concepts, but relies on AI for
+  complex library-level code. Communicates casually ("bro", "bruh").
+- Preferences:
+  - Wants ONE single working script (library.lua loadstring + test script)
+  - Prefers visual results — always test in-game, not just "it should work"
+  - Gets frustrated when UI is invisible or broken — always provide a COMPLETE
+    test script, not just the loadstring
+  - Wants Rayfield-style aesthetics (smooth animations, clean look)
+  - Doesn't want floating/dropdown panels — settings should be IN the content area
+  - Sidebar minimize should be horizontal wipe (left-to-right), NOT vertical collapse
+  - No gaps between UI sections (topbar, sidebar, content)
+  - Does NOT want verbose explanations — just fix and show results
+
+
+================================================================================
+2. PROJECT OVERVIEW
+================================================================================
+
+Goal: Modify the Neverlose UI Library (a Roblox Lua UI framework) to add
+Rayfield-style features while keeping the Neverlose core architecture.
+
+Repository:
+- Origin (upstream): https://github.com/ImInsane-1337/neverlose-ui.git
+- Fork (user's):     https://github.com/RicheeseCodes/neverlose-ui.git
+- Local path:        /Users/rudrakshkotwar/NEW UI 100D
+- Branch:            main
+- Push target:       git push fork main
+
+Main file being modified:
+- /Users/rudrakshkotwar/NEW UI 100D/source/library.lua (~8432 lines)
+- This is the ONLY tracked file that gets pushed. Everything else is reference.
+
+
+================================================================================
+3. DIRECTORY STRUCTURE
+================================================================================
+
+/Users/rudrakshkotwar/NEW UI 100D/
+  source/
+    library.lua          <-- THE main file. This is what gets pushed and loaded.
+  neverlose/
+    library.lua          <-- Original unmodified Neverlose source (reference)
+    demo.lua             <-- Original demo script
+    example.lua          <-- Original example
+  rayfield/
+    source.lua           <-- Rayfield source code (reference for styling)
+    example.lua          <-- Rayfield example
+    icons.lua            <-- Rayfield icon list
+    reporter.lua         <-- Rayfield reporter
+  obsidian/
+    Library.lua          <-- Obsidian UI library (reference)
+    Example.lua          <-- Obsidian example
+  merged/
+    library_merged.lua   <-- Neverlose + Obsidian merged variant
+    demo.lua             <-- Merged demo
+  scratch/
+    library.lua          <-- From-scratch variant (separate project)
+    demo.lua             <-- Scratch demo
+  example.lua            <-- Root example file
+  README.md              <-- Repo readme
+
+
+================================================================================
+4. HOW THE LIBRARY WORKS — ARCHITECTURE
+================================================================================
+
+4.1 Loading Flow:
+    local Library = loadstring(readfile("source/library.lua"))()
+    -- Library is now available. User must THEN call:
+    local Window = Library:Window({Name = "My UI", SubName = "v1"})
+    local Page = Window:Page({Name = "Combat", Icon = "..."})
+    -- etc.
+
+    IMPORTANT: The loadstring ONLY loads the library and returns it.
+    It does NOT create any visible UI. The user MUST call Library:Window()
+    to actually see anything. This was a major source of confusion early on.
+
+4.2 Instance Wrapper System:
+    The library wraps Roblox Instances in a custom table with methods:
+    - Instances:Create(ClassName, Properties) — creates wrapped Instance
+      Supported: Frame, TextLabel, TextButton, ImageLabel, UICorner,
+      UIStroke, UIGradient, TextBox, ScrollingFrame
+      NOT supported: ImageButton (use TextButton + child ImageLabel instead)
+    - item:Tween(TweenInfo, Goal) — tweens properties
+    - item:Connect(Event, Callback) — connects events
+    - item:AddToTheme({Property = "ThemeKey"}) — registers for theme changes
+    - item.Instance — the actual Roblox Instance
+
+4.3 Tween System:
+    - Tween:GetProperty(Instance) — returns transparency property name(s)
+      Frame -> BackgroundTransparency
+      TextLabel/TextButton -> {TextTransparency, BackgroundTransparency}
+      ImageLabel -> {BackgroundTransparency, ImageTransparency}
+      UIStroke -> Transparency
+    - Tween:FadeItem(Instance, Property, Visible, Speed)
+      When Visible=true: sets to 1, tweens to original saved transparency
+      When Visible=false: tweens to 1 (fully transparent)
+
+4.4 Window:SetOpen(Bool):
+    Iterates ALL descendants of MainFrame and calls FadeItem on each.
+    This is how the entire UI fades in/out.
+
+4.5 Page System:
+    - Library:Page(Window, Data) or Window:Page(Data)
+    - Creates a tab button (Items["Inactive"]) in LeftTabs sidebar
+    - Creates a page frame (Items["Page"]) initially in UnusedHolder
+    - Page:Turn(Bool):
+      true: reparents page to Content, fades in elements, animates position
+      false: fades out, reparents to UnusedHolder
+    - Tab click handler iterates all Window.Pages and calls Turn(true/false)
+    - First page auto-activates (Turn(true))
+
+4.6 Layout Structure (current):
+    MainFrame: Size = UDim2(0, 677, 0, 644), anchored center, UICorner(4px)
+    |
+    |-- Topbar: Size = UDim2(1, 225, 0, 45), Position = UDim2(0, -225, 0, 0)
+    |   Spans both sidebar width (225px) and content width
+    |   Contains 4 icon buttons (right-aligned):
+    |     TopbarSearch   @ Position(1, -90, 0.5, 0)  icon: rbxassetid://6031763426
+    |     TopbarSettings @ Position(1, -64, 0.5, 0)  icon: rbxassetid://80503127983237
+    |     TopbarMinimize @ Position(1, -38, 0.5, 0)  icon: rbxassetid://10137941941
+    |     TopbarClose    @ Position(1, -12, 0.5, 0)  icon: rbxassetid://10137832201
+    |
+    |-- LeftTabs (sidebar): AnchorPoint(1,0), Position(0, 0, 0, 44),
+    |   Size(0, 225, 1, -44). Extends 225px LEFT of MainFrame.
+    |   NO UICorner (removed to fix gaps). Overlaps 1px with topbar.
+    |
+    |-- Content: Position(0, 0, 0, 44), Size(1, 0, 1, -44)
+    |   Overlaps 1px with topbar. Pages render here.
+    |   |
+    |   |-- SettingsPage: Full-size frame, initially Visible=false
+    |       Contains keybind changer row and unload button.
+    |       Shown when topbar settings icon clicked.
+
+4.7 Topbar Button Pattern:
+    Each topbar button uses TextButton + child ImageLabel (NOT ImageButton,
+    which isn't supported by the Instances wrapper). Pattern:
+
+    Items["TopbarX"] = Instances:Create("TextButton", {
+        Text = "", AutoButtonColor = false, BackgroundTransparency = 1,
+        AnchorPoint = Vector2New(0.5, 0.5),
+        Size = UDim2New(0, 22, 0, 22),
+        Position = UDim2New(1, -XX, 0.5, 0),  -- right-aligned
+        ZIndex = 11
+    })
+    Items["TopbarXIcon"] = Instances:Create("ImageLabel", {
+        Parent = Items["TopbarX"].Instance,
+        Image = "rbxassetid://XXXXX",
+        ImageTransparency = 0.8,  -- fades to 0 on hover
+        Size = UDim2New(1, 0, 1, 0),
+        ZIndex = 12
+    })
+
+4.8 Animation Conventions (Rayfield-style):
+    - Opens/shows:  TweenInfo.new(0.5, Enum.EasingStyle.Exponential)
+    - Closes/hides: TweenInfo.new(0.3, Enum.EasingStyle.Quint)
+    - Hover effects: TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Out)
+    - Notification stagger: 0.15s, 0.05s, 0.05s delays between elements
+
+
+================================================================================
+5. FEATURES ADDED (in chronological order)
+================================================================================
+
+5.1 Rayfield-style Topbar with Animated Search (commit 86372a6)
+    - Added search overlay with magnifying glass icon
+    - Search bar animates in/out with Rayfield-exact timing
+    - Search input auto-focuses when opened
+
+5.2 Topbar Icons: Search, Settings, Minimize, Close (commit 02bfc49)
+    - Added 4 Rayfield-style icons to topbar
+    - Initially used ImageButton (broken)
+
+5.3 Fix: TextButton+ImageLabel Pattern (commit 3c6f5f9)
+    - ImageButton is NOT supported by Instances:Create
+    - Replaced all ImageButton usage with TextButton + child ImageLabel
+    - Removed Interactable property (not supported)
+
+5.4 Smooth Rayfield Animations (commit 84f16ff)
+    - Minimize: sidebar wipes horizontally, content collapses, MainFrame
+      shrinks to topbar height
+    - Maximize: reverses all above
+    - Hide: full UI fades out via Window:SetOpen(false)
+    - Unhide: full UI fades back in
+    - Keybind toggle (default: K key)
+
+5.5 Settings Panel + Keybind + Notifications (commit 968b646)
+    - Added configurable keybind (click button, press any key)
+    - Added unload button
+    - Redesigned notifications to Rayfield style:
+      * UIStroke border, UICorner(8px), UIPadding
+      * Icon on the left (ImageLabel)
+      * Staggered fade-in: frame -> title -> icon -> description -> accent bar
+      * Accent bar animates width over duration
+      * Staggered fade-out when done
+      * Size tweens for appear/disappear
+
+5.6 Fix: Layout Gaps + Sidebar Animation Direction (commit 858ad36)
+    - Problem: small gaps visible between topbar, sidebar, and content
+    - Cause: UICorner(4px) on LeftTabs created rounded edges at junctions
+    - Fix: removed UICorner from LeftTabs, overlapped LeftTabs/Content 1px
+      with topbar (Position Y changed from 45 to 44)
+    - Problem: sidebar minimized vertically (height collapsed down)
+    - Fix: changed to horizontal wipe (width collapses to 0):
+      MinimiseWindow: LeftTabs Size -> UDim2(0, 0, 1, -44)
+      MaximiseWindow: LeftTabs Size -> UDim2(0, 225, 1, -44)
+
+5.8 Nemesis Rebrand + Element Restyling (commit pending) — LATEST
+    - Rebranded project: "[NeverloseUI]" -> "[Nemesis]" in warn messages
+    - New Nemesis theme palette (crimson red on near-black):
+      * Accent = RGB(230, 57, 70) crimson
+      * AccentGradient = RGB(255, 77, 90) lighter crimson
+      * Background = RGB(13, 13, 18) deep blue-black
+      * Element = RGB(22, 22, 30) cards
+      * ElementHover = RGB(28, 28, 38)
+      * ToggleTrack/On/Off, SliderTrack, DropdownSelected etc. defined
+    - Sidebar tabs redesigned:
+      * Rounded card with accent bar on left when active
+      * Icon + text fade together (transparency animation)
+      * Inactive: BG transparent, icon dimmed 30%, text dimmed 20%
+      * Active: 4px x 18px accent bar appears, icon/text full opacity
+      * Hover: 0.85 BG transparency
+    - Toggle redesigned as Rayfield-style ON/OFF SWITCH:
+      * 40x20 pill-shaped indicator, 14x14 round knob
+      * Knob slides between position (0,3) and (1,-17)
+      * On: bg fills with accent crimson, knob turns white
+      * Off: bg returns to Element gray, knob gray
+      * UIStroke colored by state (accent on / gray off)
+    - Button restyled:
+      * 34px tall, rounded (8px), UIStroke
+      * Hover: bg lightens to (45,43,49), stroke 0.2 transparency
+      * Press: gradient Accent fills, text turns black, runs callback
+    - Slider redesigned (modern thin track):
+      * 6px tall track, fully rounded (CornerRadius 1,0)
+      * Value label TOP-RIGHT, name TOP-LEFT
+      * Crimson gradient fill, 14px circular WHITE thumb at the fill end
+      * Plus/Minus buttons hidden (Visible=false) — drag-only by default
+    - Dropdown restyled:
+      * Rounded (8px), UIStroke
+      * Vertical separator (1x16) before arrow icon
+      * Arrow icon 12x6, dimmed gray
+      * Supports BOTH single AND multi-select (Data.Multi = true for multi)
+    - NEW: Checkbox element added (Library.Sections.Checkbox)
+      * Square 18x18 with 4px corner radius
+      * UIStroke (gray off, accent crimson on)
+      * Animated fill scales from center on check
+      * Checkmark icon scales in over the fill
+      * Use: Section:Checkbox({Name="X", Default=false, Callback=fn})
+      * Distinct from Toggle: Toggle is a sliding SWITCH, Checkbox is a square BOX
+    - End-of-file warn updated to "[Nemesis] Library loaded successfully"
+
+5.7 Settings Page in Content Area (commit 5b3b2b1)
+    - Problem: settings was a floating dropdown panel over the UI
+    - User wanted it IN the content area like a real page
+    - Removed all floating SettingsPanel code (~120 lines of creation code
+      and ~60 lines of handlers)
+    - Created SettingsPage frame inside Content area with:
+      * "Menu Settings" title + "Configure your menu preferences" subtitle
+      * Divider line
+      * "Toggle Keybind" row with clickable button (shows current key)
+      * Another divider
+      * "Unload Menu" red button with hover effect
+    - Settings icon click:
+      * Hides current active page (marks it as _wasActive)
+      * Shows SettingsPage with fade-in animation
+    - Settings icon click again:
+      * Fades out SettingsPage
+      * Restores previously active page
+    - Sidebar tab click:
+      * Instantly hides SettingsPage (no animation, page turn handles it)
+      * Clears _wasActive flags
+      * Shows clicked page normally
+    - Window.SettingsPageOpen flag stored on Window object (not local)
+      so Page click handler can access it
+    - Window.CloseSettingsPage function stored on Window for external access
+
+
+================================================================================
+6. KEY CODE LOCATIONS (line numbers as of commit 5b3b2b1)
+================================================================================
+
+NOTE: Line numbers shift with every edit. Use these as approximate anchors.
+Search for the Item name or comment to find exact location.
+
+~1-10       Service imports (Workspace, UIS, Players, etc.)
+~19-35      Shorthand aliases (FromRGB, UDim2New, etc.)
+~81         Library.Pages = {} (metatable for Page methods)
+~2101       Library.Notification function (Rayfield-style staggered)
+~2245       Library.Window function start
+~2253       Window.Pages = {}, Items = {}, IsOpen = false
+~2256       Window.SettingsPageOpen = false
+~2260       Items["MainFrame"] creation
+~2286       Items["LeftTabs"] (sidebar) — NO UICorner
+~2527-2532  Local variables: Minimised, Hidden, Debounce, searchOpen,
+            OriginalMainSize, ToggleKeybind
+~2534       Items["Topbar"] creation
+~2583       Items["TopbarClose"] (X icon, hides UI)
+~2616       Items["TopbarMinimize"] (resize icon)
+~2649       Items["TopbarSettings"] (sliders icon, opens settings page)
+~2682       Items["TopbarSearch"] (magnifying glass)
+~2700       Items["SearchOverlay"] (animated search bar)
+~2780       Topbar button hover effects
+~2793       openSearch() / closeSearch() functions
+~2900       MinimiseWindow() function — horizontal sidebar wipe
+~2930       MaximiseWindow() function
+~2950       HideWindow() / UnhideWindow() functions
+~3018       Items["Content"] creation
+~3031       Items["SettingsPage"] creation (content-area settings)
+~3196       openSettingsPage() function
+~3231       closeSettingsPage() function
+~3258       Window.CloseSettingsPage = closeSettingsPage
+~3260       TopbarSettings click handler
+~3269       Keybind changer handler (waitingForKeybind)
+~3288       Unload button handler + hover effects
+~3751       Window.Items = Items
+~4171       Library.Page function start
+~4321       Page:Turn(Bool) function
+~4593       Page tab click handler (also hides settings page)
+~8323       Library.CreateSettingsPage (for merged variant, separate)
+~8430       warn("[NeverloseUI] Library loaded successfully")
+~8431       getgenv().Library = Library
+~8432       return Library
+
+
+================================================================================
+7. BUGS ENCOUNTERED AND SOLVED
+================================================================================
+
+Bug 1: UI not visible after loading
+  Symptom: User ran loadstring, saw "Library loaded successfully" in console,
+           but no UI appeared on screen.
+  Cause:   User was ONLY running the loadstring. The loadstring returns the
+           Library table but does NOT create any UI. User must call
+           Library:Window() to create the window.
+  Fix:     Provided a complete test script with Library:Window() etc.
+  Lesson:  ALWAYS provide a full test script, not just the loadstring.
+
+Bug 2: ImageButton not supported
+  Symptom: Topbar icons didn't appear.
+  Cause:   Instances:Create doesn't support "ImageButton" class.
+  Fix:     Use TextButton + child ImageLabel pattern instead.
+
+Bug 3: Layout gaps between sections
+  Symptom: Small visible gaps between topbar, sidebar, and content area.
+  Cause:   UICorner(4px) on LeftTabs created rounded edges at junctions.
+  Fix:     Removed UICorner from LeftTabs. Changed LeftTabs and Content
+           Position Y from 45 to 44 (1px overlap with topbar).
+
+Bug 4: Sidebar minimize animation wrong direction
+  Symptom: Sidebar collapsed vertically (top-to-bottom) when minimized.
+  User wanted: Horizontal wipe (left-to-right).
+  Cause:   Code was setting Size height to 0: UDim2(0, 225, 0, 0)
+  Fix:     Changed to set width to 0: UDim2(0, 0, 1, -44)
+
+Bug 5: Settings panel was floating dropdown
+  Symptom: Settings appeared as floating panel with ZIndex=15 over the UI.
+  User wanted: Settings shown IN the actual right content area like a page.
+  Fix:     Removed floating panel. Created SettingsPage frame inside Content.
+           Settings icon toggles it, sidebar tabs hide it.
+
+
+================================================================================
+8. IMPORTANT CONVENTIONS AND RULES
+================================================================================
+
+8.1 Never use ImageButton — use TextButton + child ImageLabel
+8.2 Never use "Interactable" property — not supported
+8.3 Topbar icons use ImageTransparency 0.8 (idle) -> 0 (hover)
+8.4 Animation timing: Exponential for opens (0.5s), Quint for closes (0.3s)
+8.5 No UICorner on LeftTabs (causes gaps)
+8.6 LeftTabs and Content overlap topbar by 1px (Position Y = 44, not 45)
+8.7 Sidebar minimize = horizontal wipe (width to 0), NOT vertical collapse
+8.8 Always provide a complete test script with Library:Window() call
+8.9 Push to fork remote: git push fork main
+8.10 File is Roblox Luau, not standard Lua — uses continue, generalized
+     iteration (for k, v in table), etc.
+8.11 The Instances:Create wrapper returns a table with .Instance property.
+     Access the actual Roblox Instance via item.Instance.
+8.12 Tween:FadeItem handles saving/restoring original transparency values.
+     Don't manually track them.
+
+
+================================================================================
+9. COMPLETE TEST SCRIPT (for executing in Roblox)
+================================================================================
+
+-- Load the library
+local Library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/RicheeseCodes/neverlose-ui/main/source/library.lua"
+))()
+
+-- Create window (THIS IS REQUIRED to see anything!)
+local Window = Library:Window({
+    Name = "Test UI",
+    SubName = "Neverlose + Rayfield"
+})
+
+-- Create a page
+local Page = Window:Page({
+    Name = "Main",
+    Icon = "100050851789190"
+})
+
+-- Add a section
+local Section = Page:Section({
+    Name = "Test Section",
+    Side = "Left"
+})
+
+-- Add elements
+Section:Toggle({
+    Name = "Test Toggle",
+    Default = false,
+    Callback = function(v) print("Toggle:", v) end
+})
+
+Section:Slider({
+    Name = "Test Slider",
+    Min = 0,
+    Max = 100,
+    Default = 50,
+    Callback = function(v) print("Slider:", v) end
+})
+
+Section:Button({
+    Name = "Test Notification",
+    Callback = function()
+        Library:Notification({
+            Title = "Hello",
+            Description = "This is a Rayfield-style notification",
+            Duration = 4
+        })
+    end
+})
+
+-- Test notification on load
+task.delay(1, function()
+    Library:Notification({
+        Title = "Welcome",
+        Description = "UI loaded successfully!",
+        Duration = 5
+    })
+end)
+
+
+================================================================================
+10. WHAT'S STILL TODO / DISCUSSED BUT NOT DONE
+================================================================================
+
+10.1 Remove debug logging
+     - warn("[NeverloseUI] Library loaded successfully") at line ~8430
+     - pcall wrapper around Window:SetCenter() and Window:SetOpen(true)
+     - Should be removed once everything is stable
+
+10.2 Element restyling (COMPLETED 2026-06-20) — see section 5.8
+
+10.3 Search functionality
+     - Search bar animates open/closed but doesn't actually filter pages yet
+     - The SearchInput TextBox exists but no filtering logic is connected
+
+10.4 Potential: Category system in sidebar
+     - Rayfield has categories (collapsible groups of tabs)
+     - Neverlose currently has flat tab list
+     - Not explicitly requested yet
+
+
+================================================================================
+11. COMMIT HISTORY (oldest to newest, relevant commits only)
+================================================================================
+
+86372a6 Add Rayfield-style topbar with animated search
+02bfc49 Add Rayfield-style topbar with 4 icons: Search, Unload, Minimize, Close
+3c6f5f9 Fix topbar: replace ImageButton with TextButton+ImageLabel, remove Interactable
+84f16ff Smooth Rayfield-style animations for minimize/maximize/hide/unhide
+968b646 Add settings panel, configurable keybind, Rayfield-style notifications
+651bd5d Add error handling and debug logging to diagnose invisible UI
+858ad36 Fix layout gaps and sidebar minimize animation
+5b3b2b1 Replace floating settings panel with content-area settings page
+
+
+================================================================================
+12. REFERENCE FILES (for styling/behavior reference, NOT to be modified)
+================================================================================
+
+rayfield/source.lua — The Rayfield UI library. Use this as reference for:
+  - Animation timing and easing styles
+  - Settings page implementation (line 1613-1674)
+  - Element styling (toggles, sliders, etc.)
+  - Notification design
+  - Color scheme and spacing
+
+neverlose/library.lua — Original unmodified Neverlose source.
+  Use to understand base architecture if something breaks.
+
+obsidian/Library.lua — Obsidian UI library.
+  Used for the merged variant, not directly relevant to source/library.lua.
+
+
+================================================================================
+13. QUICK REFERENCE: HOW TO MAKE CHANGES
+================================================================================
+
+1. Edit /Users/rudrakshkotwar/NEW UI 100D/source/library.lua
+2. Test with the test script in section 9 (update URL or use readfile)
+3. Commit: git add source/library.lua && git commit -m "message"
+4. Push:   git push fork main
+5. User loads via loadstring(game:HttpGet("raw github URL"))()
+
+When adding new UI elements:
+- Use Instances:Create(ClassName, Properties)
+- Wrap in Items["UniqueName"] = Instances:Create(...)
+- For theme support: Items["Name"]:AddToTheme({Property = "ThemeKey"})
+- For events: Items["Name"]:Connect("EventName", function() ... end)
+- For animations: Items["Name"]:Tween(TweenInfo.new(...), {Goals})
+
+Theme keys available:
+  Background, Element, Accent, AccentGradient, Text, SubText,
+  Section Background 2, and more (check existing AddToTheme calls)
+
+
+================================================================================
+END OF MEMORY FILE
+================================================================================
