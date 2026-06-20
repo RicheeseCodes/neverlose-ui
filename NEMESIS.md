@@ -60,8 +60,8 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `9fabb40` — Rounded minimized topbar + flat text-only sidebar tabs
-**Last AI to touch this:** Claude Opus 4.7
+**Last commit:** `19a68e3` — Wire search bar to filter sidebar tabs; remove debug logging
+**Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
 ### What works right now:
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Wire search bar to filter sidebar tabs; remove debug logging (`19a68e3`)
 
 - **[2026-06-20]** Claude Opus 4.7: Rounded minimized topbar + flat text-only sidebar tabs (`9fabb40`)
 
