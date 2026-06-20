@@ -2554,7 +2554,7 @@ local Library do
                 -- Format: any valid Roblox asset ID like "rbxassetid://12345"
                 -- ════════════════════════════════════════════════════════════════
                 local Icons = {
-                    Search        = "rbxassetid://10709769456",  -- Lucide search (Rayfield uses Lucide style)
+                    Search        = "rbxassetid://6031763426",  -- Classic Roblox magnifying glass (reliable)
                     Settings      = "rbxassetid://80503127983237",-- Rayfield settings (gear)
                     Minimize      = "rbxassetid://10137941941",  -- Rayfield ChangeSize
                     MinimizeAlt   = "rbxassetid://11036884234",  -- Rayfield ChangeSize (minimised state)
