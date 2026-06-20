@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `013fd74` — Fix dropdown + listbox visibility — visible bg, killed Liner & filler
+**Last commit:** `f050ee9` — Dropdown layout fix: fixed-width box + breathing wrapper
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Dropdown layout fix: fixed-width box + breathing wrapper (`f050ee9`)
 
 - **[2026-06-21]** Claude Opus 4.7: Fix dropdown + listbox visibility — visible bg, killed Liner & filler (`013fd74`)
 
