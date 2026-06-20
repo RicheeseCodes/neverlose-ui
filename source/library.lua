@@ -2554,7 +2554,7 @@ local Library do
                 -- Format: any valid Roblox asset ID like "rbxassetid://12345"
                 -- ════════════════════════════════════════════════════════════════
                 local Icons = {
-                    Search        = "rbxassetid://10734924532",  -- Rayfield search
+                    Search        = "rbxassetid://10709769456",  -- Lucide search (Rayfield uses Lucide style)
                     Settings      = "rbxassetid://80503127983237",-- Rayfield settings (gear)
                     Minimize      = "rbxassetid://10137941941",  -- Rayfield ChangeSize
                     MinimizeAlt   = "rbxassetid://11036884234",  -- Rayfield ChangeSize (minimised state)
@@ -2783,12 +2783,47 @@ local Library do
 
                 -- ════════════════════════════════════════════════════════════════
                 -- MINIMIZE / MAXIMIZE — synchronized clean animation
-                -- All tweens share the same TweenInfo so they finish together.
-                -- No mid-animation Visible toggles. No task.wait blocking the
-                -- caller for state changes.
                 -- ════════════════════════════════════════════════════════════════
-                local MIN_TWEEN = TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-                local MAX_TWEEN = TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                local MIN_TWEEN = TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                local MAX_TWEEN = TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+
+                -- ════════════════════════════════════════════════════════════════
+                -- MANUAL FADE — replacement for Tween:FadeItem which auto-resets
+                -- transparency 1 frame after hide completes, causing a flicker.
+                -- We save originals in Window._fadeSaves once and tween manually.
+                -- ════════════════════════════════════════════════════════════════
+                Window._fadeSaves = Window._fadeSaves or {}
+                local function fadeProp(inst, prop, hide, tweenInfo)
+                    Window._fadeSaves[inst] = Window._fadeSaves[inst] or {}
+                    if hide then
+                        if Window._fadeSaves[inst][prop] == nil then
+                            Window._fadeSaves[inst][prop] = inst[prop]
+                        end
+                        TweenService:Create(inst, tweenInfo, {[prop] = 1}):Play()
+                    else
+                        local saved = Window._fadeSaves[inst][prop]
+                        if saved ~= nil then
+                            TweenService:Create(inst, tweenInfo, {[prop] = saved}):Play()
+                        end
+                    end
+                end
+
+                local function fadeTree(root, hide, tweenInfo)
+                    local list = root:GetDescendants()
+                    table.insert(list, root)
+                    for _, inst in ipairs(list) do
+                        local props = Tween:GetProperty(inst)
+                        if props then
+                            if type(props) == "table" then
+                                for _, p in ipairs(props) do
+                                    fadeProp(inst, p, hide, tweenInfo)
+                                end
+                            else
+                                fadeProp(inst, props, hide, tweenInfo)
+                            end
+                        end
+                    end
+                end
 
                 local function MinimiseWindow()
                     Debounce = true
@@ -2796,45 +2831,31 @@ local Library do
 
                     task.spawn(closeSearch)
 
-                    -- Step 1: Fade out tab buttons and content elements FIRST
-                    -- so they don't visibly contract during the sidebar collapse
-                    local FADE_TWEEN = TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                    -- Enable clipping so the tab buttons inside the sidebar slide
+                    -- off-screen cleanly instead of contracting in width
+                    Items["LeftTabs"].Instance.ClipsDescendants = true
+                    Items["Content"].Instance.ClipsDescendants = true
+
+                    -- Phase 1: Fade out sidebar contents + page contents at once
+                    local FADE_TWEEN = TweenInfo.new(0.22, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
                     for _, page in pairs(Window.Pages) do
                         if page.Items and page.Items.Inactive then
-                            local tabDescendants = page.Items.Inactive.Instance:GetDescendants()
-                            table.insert(tabDescendants, page.Items.Inactive.Instance)
-                            for _, inst in ipairs(tabDescendants) do
-                                local props = Tween:GetProperty(inst)
-                                if props then
-                                    if type(props) == "table" then
-                                        for _, p in ipairs(props) do
-                                            Tween:FadeItem(inst, p, false, FADE_TWEEN.Time)
-                                        end
-                                    else
-                                        Tween:FadeItem(inst, props, false, FADE_TWEEN.Time)
-                                    end
-                                end
-                            end
+                            fadeTree(page.Items.Inactive.Instance, true, FADE_TWEEN)
                         end
                     end
+                    fadeTree(Items["Content"].Instance, true, FADE_TWEEN)
 
-                    -- Step 2: Topbar stays visually anchored, collapse below it
-                    Items["TopbarDivider"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
-
-                    -- Step 3: Sidebar wipes shut horizontally
-                    task.delay(0.1, function()
+                    -- Phase 2 (after 0.15s): geometry collapse — all synced
+                    task.delay(0.15, function()
+                        Items["TopbarDivider"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
                         Items["LeftTabs"]:Tween(MIN_TWEEN, {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
+                        Items["Content"]:Tween(MIN_TWEEN, {Size = UDim2New(1, 0, 0, 0)})
+                        Items["MainFrame"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
+                        Items["Topbar"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45), Position = UDim2New(0, 0, 0, 0)})
                     end)
 
-                    -- Step 4: Content collapses from bottom
-                    Items["Content"]:Tween(MIN_TWEEN, {Size = UDim2New(1, 0, 0, 0)})
-
-                    -- Step 5: MainFrame shrinks to topbar
-                    Items["MainFrame"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
-                    Items["Topbar"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45), Position = UDim2New(0, 0, 0, 0)})
-
                     -- Hide pieces AFTER animation finishes
-                    task.delay(MIN_TWEEN.Time + 0.1, function()
+                    task.delay(0.15 + MIN_TWEEN.Time, function()
                         if Minimised then
                             Items["Content"].Instance.Visible = false
                             Items["LeftTabs"].Instance.Visible = false
@@ -2851,37 +2872,27 @@ local Library do
                     Items["Content"].Instance.Visible = true
                     Items["LeftTabs"].Instance.Visible = true
 
+                    -- Phase 1: geometry expands
                     Items["TopbarDivider"]:Tween(MAX_TWEEN, {BackgroundTransparency = 0})
-
                     Items["MainFrame"]:Tween(MAX_TWEEN, {Size = OriginalMainSize})
                     Items["Topbar"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0)})
-
                     Items["Content"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 0, 1, -45)})
                     Items["LeftTabs"]:Tween(MAX_TWEEN, {Size = UDim2New(0, 225, 1, -44), BackgroundTransparency = Window.HideHeader and 0 or 0.15})
 
-                    -- Fade tab buttons back in AFTER sidebar reaches full width
-                    task.delay(0.25, function()
+                    -- Phase 2 (after sidebar/content reach full size): fade contents in
+                    local FADE_IN = TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                    task.delay(MAX_TWEEN.Time * 0.5, function()
                         for _, page in pairs(Window.Pages) do
                             if page.Items and page.Items.Inactive then
-                                local tabDescendants = page.Items.Inactive.Instance:GetDescendants()
-                                table.insert(tabDescendants, page.Items.Inactive.Instance)
-                                for _, inst in ipairs(tabDescendants) do
-                                    local props = Tween:GetProperty(inst)
-                                    if props then
-                                        if type(props) == "table" then
-                                            for _, p in ipairs(props) do
-                                                Tween:FadeItem(inst, p, true, 0.3)
-                                            end
-                                        else
-                                            Tween:FadeItem(inst, props, true, 0.3)
-                                        end
-                                    end
-                                end
+                                fadeTree(page.Items.Inactive.Instance, false, FADE_IN)
                             end
                         end
+                        fadeTree(Items["Content"].Instance, false, FADE_IN)
                     end)
 
-                    task.delay(MAX_TWEEN.Time, function()
+                    task.delay(MAX_TWEEN.Time + 0.1, function()
+                        Items["LeftTabs"].Instance.ClipsDescendants = false
+                        Items["Content"].Instance.ClipsDescendants = false
                         Debounce = false
                     end)
                 end
@@ -2891,50 +2902,31 @@ local Library do
                 -- Feels like Rayfield: everything fades together, slight scale,
                 -- no flashes or jitters. Visible toggle only at very end.
                 -- ════════════════════════════════════════════════════════════════
-                local HIDE_TWEEN = TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-                local SHOW_TWEEN = TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
-
-                local function FadeAllDescendants(targetVisible)
-                    -- Walks every descendant of MainFrame and fades transparency
-                    -- properties to either 1 (hidden) or their saved value (visible)
-                    local descendants = Items["MainFrame"].Instance:GetDescendants()
-                    table.insert(descendants, Items["MainFrame"].Instance)
-                    for _, inst in ipairs(descendants) do
-                        local props = Tween:GetProperty(inst)
-                        if props then
-                            if type(props) == "table" then
-                                for _, p in ipairs(props) do
-                                    Tween:FadeItem(inst, p, targetVisible, HIDE_TWEEN.Time)
-                                end
-                            else
-                                Tween:FadeItem(inst, props, targetVisible, HIDE_TWEEN.Time)
-                            end
-                        end
-                    end
-                end
+                local HIDE_TWEEN = TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                local SHOW_TWEEN = TweenInfo.new(0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
 
                 local function HideWindow()
                     Debounce = true
+                    Window.BlurActive = false
                     task.spawn(closeSearch)
 
-                    -- Kill blur IMMEDIATELY so it doesn't linger on screen
-                    Window.BlurActive = false
+                    local mainFrame = Items["MainFrame"].Instance
+                    Window._hideOriginalSize = Window._hideOriginalSize or mainFrame.Size
 
-                    -- Subtle scale-down adds polish (Rayfield does this)
-                    local currentSize = Items["MainFrame"].Instance.Size
+                    -- Scale down + fade everything together (manual fade = no flicker)
                     local shrunkSize = UDim2New(
-                        currentSize.X.Scale, math.floor(currentSize.X.Offset * 0.92),
-                        currentSize.Y.Scale, math.floor(currentSize.Y.Offset * 0.92)
+                        mainFrame.Size.X.Scale, math.floor(mainFrame.Size.X.Offset * 0.94),
+                        mainFrame.Size.Y.Scale, math.floor(mainFrame.Size.Y.Offset * 0.94)
                     )
                     Items["MainFrame"]:Tween(HIDE_TWEEN, {Size = shrunkSize})
+                    fadeTree(mainFrame, true, HIDE_TWEEN)
 
-                    -- Fade ALL descendants together
-                    FadeAllDescendants(false)
-
-                    task.delay(HIDE_TWEEN.Time + 0.05, function()
+                    -- Set Visible=false EXACTLY when the tween completes
+                    -- (manual fader doesn't auto-reset transparency, so no flicker)
+                    task.delay(HIDE_TWEEN.Time, function()
                         if Hidden then
-                            Items["MainFrame"].Instance.Visible = false
-                            Items["MainFrame"].Instance.Size = currentSize
+                            mainFrame.Visible = false
+                            mainFrame.Size = Window._hideOriginalSize
                         end
                         Debounce = false
                     end)
@@ -2942,18 +2934,16 @@ local Library do
 
                 local function UnhideWindow()
                     Debounce = true
-                    Items["MainFrame"].Instance.Visible = true
+                    local mainFrame = Items["MainFrame"].Instance
+                    mainFrame.Visible = true
 
-                    -- Re-enable blur after a brief delay so fade-in looks clean
                     task.delay(0.15, function()
                         Window.BlurActive = true
                     end)
 
-                    -- Scale back up to original
-                    Items["MainFrame"]:Tween(SHOW_TWEEN, {Size = Minimised and UDim2New(0, OriginalMainWidth - 5, 0, 45) or OriginalMainSize})
-
-                    -- Fade all descendants back to their saved transparencies
-                    FadeAllDescendants(true)
+                    -- Fade tree back to saved transparencies + tween to original size
+                    Items["MainFrame"]:Tween(SHOW_TWEEN, {Size = Minimised and UDim2New(0, OriginalMainWidth - 5, 0, 45) or (Window._hideOriginalSize or OriginalMainSize)})
+                    fadeTree(mainFrame, false, SHOW_TWEEN)
 
                     task.delay(SHOW_TWEEN.Time, function()
                         Debounce = false
