@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `638ae20` — Tighter sidebar tab spacing + snappy spam-safe page switching
+**Last commit:** `b8b7fdd` — Move notifications to bottom-right (Rayfield position) + restyle
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Claude Opus 4.7: Move notifications to bottom-right (Rayfield position) + restyle (`b8b7fdd`)
 
 - **[2026-06-20]** Claude Opus 4.7: Tighter sidebar tab spacing + snappy spam-safe page switching (`638ae20`)
 
