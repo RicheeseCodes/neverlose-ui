@@ -6439,6 +6439,8 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Value"]:AddToTheme({TextColor3 = "SubText"})
 
+                -- Slider track: visible mid-gray so the full range is obvious
+                -- behind the crimson accent fill.
                 Items["RealSlider"] = Instances:Create("TextButton", {
                     Parent = Items["Slider"].Instance,
                     Name = "\0",
@@ -6453,8 +6455,16 @@ local Library do
                     Size = UDim2New(1, 0, 0, 6),
                     ZIndex = 2,
                     TextSize = 14,
-                    BackgroundColor3 = FromRGB(40, 38, 44)
-                })  Items["RealSlider"]:AddToTheme({BackgroundColor3 = "Element"})
+                    BackgroundColor3 = FromRGB(55, 55, 75)
+                })
+
+                Instances:Create("UIStroke", {
+                    Parent = Items["RealSlider"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(80, 80, 100),
+                    Transparency = 0.5,
+                    Thickness = 1,
+                })
 
                 Instances:Create("UICorner", {
                     Parent = Items["RealSlider"].Instance,
