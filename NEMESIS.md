@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `1485fcd` — Polish slider + dropdown: knob drag color, min fill, selected-row bg, option hover
+**Last commit:** `6dea006` — Replace notification with Rayfield-exact look and animation
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Replace notification with Rayfield-exact look and animation (`6dea006`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Polish slider + dropdown: knob drag color, min fill, selected-row bg, option hover (`1485fcd`)
 
