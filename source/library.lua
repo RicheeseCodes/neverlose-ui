@@ -704,32 +704,37 @@ local Library do
         ResetOnSpawn = false
     })
 
+    -- Rayfield-style notifications: bottom-right of screen, stack upward
     Library.NotifHolder  = Instances:Create("Frame", {
         Parent = Library.Holder.Instance,
         Name = "\0",
         BackgroundTransparency = 1,
+        AnchorPoint = Vector2New(1, 1),
+        Position = UDim2New(1, 0, 1, 0),
         Size = UDim2New(0, 0, 1, 0),
         BorderColor3 = FromRGB(0, 0, 0),
         BorderSizePixel = 0,
         AutomaticSize = Enum.AutomaticSize.X,
         BackgroundColor3 = FromRGB(255, 255, 255)
     })
-    
+
     Instances:Create("UIListLayout", {
         Parent = Library.NotifHolder.Instance,
         Name = "\0",
-        Padding = UDimNew(0, 12),
-        SortOrder = Enum.SortOrder.LayoutOrder
+        Padding = UDimNew(0, 10),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        HorizontalAlignment = Enum.HorizontalAlignment.Right,
+        VerticalAlignment = Enum.VerticalAlignment.Bottom
     })
-    
+
     Instances:Create("UIPadding", {
         Parent = Library.NotifHolder.Instance,
         Name = "\0",
-        PaddingTop = UDimNew(0, 12),
-        PaddingBottom = UDimNew(0, 12),
-        PaddingRight = UDimNew(0, 12),
-        PaddingLeft = UDimNew(0, 12)
-    })    
+        PaddingTop = UDimNew(0, 16),
+        PaddingBottom = UDimNew(0, 16),
+        PaddingRight = UDimNew(0, 16),
+        PaddingLeft = UDimNew(0, 16)
+    })
 
     Library.Unload = function(self)
         for Index, Value in self.Connections do 
@@ -2129,10 +2134,10 @@ local Library do
                 Items["NotifStroke"] = Instances:Create("UIStroke", {
                     Parent = Items["Notification"].Instance,
                     Name = "UIStroke",
-                    Color = FromRGB(240, 240, 240),
+                    Color = FromRGB(34, 34, 46),
                     Transparency = 1,
                     Thickness = 1
-                })  Items["NotifStroke"]:AddToTheme({Color = "Text"})
+                })  Items["NotifStroke"]:AddToTheme({Color = "Outline"})
 
                 Instances:Create("UIPadding", {
                     Parent = Items["Notification"].Instance,
@@ -2232,15 +2237,15 @@ local Library do
                 Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(0, math.max(Size.X, 200), 0, Size.Y)})
 
                 task.wait(0.15)
-                Items["Notification"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45})
+                Items["Notification"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.15})
                 Items["Title"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
 
                 task.wait(0.05)
                 Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
 
                 task.wait(0.05)
-                Items["Description"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35})
-                Items["NotifStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95})
+                Items["Description"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.3})
+                Items["NotifStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.5})
                 Items["Accent"]:Tween(TweenInfo.new(Data.Duration or 5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Size = UDim2New(1, 40, 0, 3)})
 
                 task.wait(Data.Duration or 5)
