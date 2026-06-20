@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `0424254` — Add auto-coordination system for multi-AI workflow
+**Last commit:** `500e44e` — Fix post-commit hook regex to only match real Co-Authored-By trailers
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Claude Opus 4.7: Fix post-commit hook regex to only match real Co-Authored-By trailers (`500e44e`)
 
 - **[2026-06-20]** Claude Opus 4.7: Add auto-coordination system for multi-AI workflow (`0424254`)
 - **[2026-06-20]** Claude (Opus 4.6→4.7): Added Checkbox element, finalized Z code's rebrand work, committed `7ae466a`, pushed.

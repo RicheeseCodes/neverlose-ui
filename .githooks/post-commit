@@ -11,6 +11,11 @@ if [ ! -f "$SYNC_FILE" ]; then
     exit 0
 fi
 
+# Re-entry guard: skip if this commit is itself a log entry (prevents infinite loop)
+if git log -1 --pretty=%B | grep -q "^chore: auto-log NEMESIS.md$"; then
+    exit 0
+fi
+
 # Get commit info
 HASH=$(git rev-parse --short HEAD)
 SUBJECT=$(git log -1 --pretty=%s)
@@ -49,7 +54,12 @@ awk -v entry="$LOG_ENTRY" '
     { print }
 ' "$SYNC_FILE" > "$TMP" && mv "$TMP" "$SYNC_FILE"
 
-# Stage the NEMESIS.md change as part of NEXT commit (amend would change hash, so we leave it for next commit)
-git add NEMESIS.md 2>/dev/null || true
-
-echo "[Nemesis] NEMESIS.md auto-updated for commit $HASH"
+# Auto-commit the NEMESIS.md log update so the working tree stays clean.
+# Uses a sentinel commit message that the re-entry guard above filters out.
+if ! git diff --quiet NEMESIS.md; then
+    git add NEMESIS.md
+    git -c commit.gpgsign=false commit -m "chore: auto-log NEMESIS.md" --no-verify >/dev/null
+    echo "[Nemesis] NEMESIS.md auto-logged ($HASH → $(git rev-parse --short HEAD))"
+else
+    echo "[Nemesis] NEMESIS.md no changes (commit $HASH)"
+fi
