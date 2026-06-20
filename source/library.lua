@@ -705,16 +705,17 @@ local Library do
     })
 
     -- Rayfield-style notifications: bottom-right of screen, stack upward
+    -- Fixed-width container (Rayfield uses a fixed-width Notifications frame;
+    -- auto-size caused jitter and broke Scale.X-based sizing on children).
     Library.NotifHolder  = Instances:Create("Frame", {
         Parent = Library.Holder.Instance,
         Name = "\0",
         BackgroundTransparency = 1,
         AnchorPoint = Vector2New(1, 1),
         Position = UDim2New(1, 0, 1, 0),
-        Size = UDim2New(0, 0, 1, 0),
+        Size = UDim2New(0, 300, 1, 0),
         BorderColor3 = FromRGB(0, 0, 0),
         BorderSizePixel = 0,
-        AutomaticSize = Enum.AutomaticSize.X,
         BackgroundColor3 = FromRGB(255, 255, 255)
     })
 
@@ -2127,8 +2128,8 @@ local Library do
                     BackgroundTransparency = 1,
                     BorderColor3 = FromRGB(0, 0, 0),
                     BorderSizePixel = 0,
-                    AutomaticSize = Enum.AutomaticSize.Y,
-                    Size = UDim2New(0, 0, 0, 0),
+                    -- Scale.X = fills holder width; Y grows on open (Rayfield style)
+                    Size = UDim2New(1, 0, 0, 0),
                     BackgroundColor3 = FromRGB(25, 25, 25)
                 })  Items["Notification"]:AddToTheme({BackgroundColor3 = "Background"})
 
@@ -2156,14 +2157,15 @@ local Library do
                     CornerRadius = UDimNew(0, 8)
                 })
 
-                -- Rayfield-exact icon: 32x32, 20px from left, vertically centered
+                -- Rayfield: NO icon unless one is explicitly provided (Image = "" when absent).
+                -- Avoids broken/blank icon assets showing up.
                 Items["Icon"] = Instances:Create("ImageLabel", {
                     Parent = Items["Notification"].Instance,
                     Name = "\0",
                     ImageColor3 = FromRGB(234, 234, 240),
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(0, 0.5),
-                    Image = Data.Icon and ("rbxassetid://"..Data.Icon) or "rbxassetid://77891951053543",
+                    Image = Data.Icon and ("rbxassetid://"..tostring(Data.Icon)) or "",
                     ImageTransparency = 1,
                     BackgroundTransparency = 1,
                     Position = UDim2New(0, 20, 0.5, 0),
@@ -2209,16 +2211,15 @@ local Library do
                 })  Items["Description"]:AddToTheme({TextColor3 = "Text"})
             end
 
-            -- Target width: 280px (Rayfield-ish fixed width), height auto-grows
-            local TARGET_W = 280
-            Items["Notification"].Instance.Size = UDim2New(0, TARGET_W, 0, 0)
-
             Library:Thread(function()
                 -- ENTER — Rayfield-exact stagger
-                -- 1. Grow (0.6 Exponential) to full height (title 16 + 18 gap + desc + 24 padding)
-                local descHeight = Items["Description"].Instance.TextBounds.Y
-                local targetH = math.max(16 + 18 + descHeight + 24, 60)
-                Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(0, TARGET_W, 0, targetH)})
+                -- 1. Grow: width pops in (from 1,-60 to 1,0), height = title+desc+padding
+                local titleH = Items["Title"].Instance.TextBounds.Y
+                local descH = Items["Description"].Instance.TextBounds.Y
+                local targetH = math.max(titleH + descH + 31, 60)
+                -- Start collapsed (Rayfield starts at 1,-60 width / 800 height tall pre-grow)
+                Items["Notification"].Instance.Size = UDim2New(1, -60, 0, 0)
+                Items["Notification"]:Tween(TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2New(1, 0, 0, targetH)})
 
                 task.wait(0.15)
                 -- 2. Background + title together
@@ -2226,8 +2227,10 @@ local Library do
                 Items["Title"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
 
                 task.wait(0.05)
-                -- 3. Icon
-                Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
+                -- 3. Icon (only fades if one was provided — Image="" stays invisible)
+                if Data.Icon then
+                    Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0})
+                end
 
                 task.wait(0.05)
                 -- 4. Description + stroke together
@@ -2246,7 +2249,7 @@ local Library do
                 Items["Icon"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1})
 
                 -- Shrink (1s Exponential) — Rayfield shrinks width by 90px, height to 0
-                Items["Notification"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2New(0, TARGET_W - 90, 0, 0)})
+                Items["Notification"]:Tween(TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2New(1, -90, 0, 0)})
 
                 task.wait(1)
                 Items["Notification"].Instance.Visible = false
