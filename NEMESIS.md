@@ -60,8 +60,8 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `461ae5e` — Cooler dropdown open animation: pop + vertical row cascade
-**Last AI to touch this:** Claude Opus 4.7
+**Last commit:** `1485fcd` — Polish slider + dropdown: knob drag color, min fill, selected-row bg, option hover
+**Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
 ### What works right now:
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Polish slider + dropdown: knob drag color, min fill, selected-row bg, option hover (`1485fcd`)
 
 - **[2026-06-20]** Claude Opus 4.7: Cooler dropdown open animation: pop + vertical row cascade (`461ae5e`)
 
