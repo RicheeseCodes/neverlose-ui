@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `8068397` — Fix missing search icon — use reliable classic Roblox icon ID
+**Last commit:** `8c51fa6` — Fix minimized pill bottom corners — fade BottomCornerRepair out/in
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Fix minimized pill bottom corners — fade BottomCornerRepair out/in (`8c51fa6`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Fix missing search icon — use reliable classic Roblox icon ID (`8068397`)
 
