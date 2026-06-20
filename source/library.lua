@@ -5168,7 +5168,7 @@ local Library do
                     Parent = Section.Page.ColumnsData[Section.Side].Instance,
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
-                    BackgroundTransparency = 0.6499999761581421,
+                    BackgroundTransparency = 0.65,
                     ClipsDescendants = true,
                     BorderSizePixel = 0,
                     Size = UDim2New(1, 0, 0, 45),
@@ -5176,6 +5176,38 @@ local Library do
                     AutomaticSize = Enum.AutomaticSize.Y,
                     BackgroundColor3 = FromRGB(29, 28, 32)
                 })  Items["Section"]:AddToTheme({BackgroundColor3 = "Section Background 2"})
+
+                -- CS2-style: visible section border + thin accent underline
+                -- under the title bar to make each panel feel framed.
+                Instances:Create("UIStroke", {
+                    Parent = Items["Section"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(55, 55, 75),
+                    Transparency = 0.3,
+                    Thickness = 1,
+                })
+
+                Items["AccentLine"] = Instances:Create("Frame", {
+                    Parent = Items["Section"].Instance,
+                    Name = "\0",
+                    Size = UDim2New(1, 0, 0, 1),
+                    Position = UDim2New(0, 0, 0, 55),
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70),
+                    BackgroundTransparency = 0.6,
+                    ZIndex = 3,
+                })  Items["AccentLine"]:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UIGradient", {
+                    Parent = Items["AccentLine"].Instance,
+                    Name = "\0",
+                    Transparency = NumSequence{
+                        NumSequenceKeypoint(0, 1),
+                        NumSequenceKeypoint(0.3, 0.3),
+                        NumSequenceKeypoint(0.7, 0.3),
+                        NumSequenceKeypoint(1, 1),
+                    },
+                })
                 
                 Items["Top"] = Instances:Create("Frame", {
                     Parent = Items["Section"].Instance,
