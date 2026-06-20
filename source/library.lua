@@ -2885,6 +2885,9 @@ local Library do
                     task.delay(0.15, function()
                         Items["TopbarDivider"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
                         Items["TopbarCornerRepair"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
+                        if Items["BottomCornerRepair"] then
+                            Items["BottomCornerRepair"]:Tween(MIN_TWEEN, {BackgroundTransparency = 1})
+                        end
                         Items["LeftTabs"]:Tween(MIN_TWEEN, {Size = UDim2New(0, 0, 1, -44), BackgroundTransparency = 1})
                         Items["Content"]:Tween(MIN_TWEEN, {Size = UDim2New(1, 0, 0, 0)})
                         Items["MainFrame"]:Tween(MIN_TWEEN, {Size = UDim2New(0, OriginalMainWidth - 5, 0, 45)})
@@ -2912,6 +2915,9 @@ local Library do
                     -- Phase 1: geometry expands
                     Items["TopbarDivider"]:Tween(MAX_TWEEN, {BackgroundTransparency = 0})
                     Items["TopbarCornerRepair"]:Tween(MAX_TWEEN, {BackgroundTransparency = 0})
+                    if Items["BottomCornerRepair"] then
+                        Items["BottomCornerRepair"]:Tween(MAX_TWEEN, {BackgroundTransparency = 0})
+                    end
                     Items["MainFrame"]:Tween(MAX_TWEEN, {Size = OriginalMainSize})
                     Items["Topbar"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 225, 0, 45), Position = UDim2New(0, -225, 0, 0)})
                     Items["Content"]:Tween(MAX_TWEEN, {Size = UDim2New(1, 0, 1, -45)})
