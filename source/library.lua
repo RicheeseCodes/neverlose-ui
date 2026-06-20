@@ -2584,7 +2584,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["Topbar"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 10)
+                    CornerRadius = UDimNew(0, 6)
                 })
 
                 -- CornerRepair: squares off the topbar's BOTTOM corners so they
@@ -3473,7 +3473,7 @@ local Library do
                     Instances:Create("UICorner", {
                         Parent = Items["MainFrame"].Instance,
                         Name = "\0",
-                        CornerRadius = UDimNew(0, 10)
+                        CornerRadius = UDimNew(0, 6)
                     })
 
                     -- BottomCornerRepair: squares off MainFrame's BOTTOM corners
@@ -5463,9 +5463,9 @@ local Library do
                 Instances:Create("UIListLayout", {
                     Parent = Items["Content"].Instance,
                     Name = "\0",
-                    Padding = UDimNew(0, 5),
+                    Padding = UDimNew(0, 3),
                     SortOrder = Enum.SortOrder.LayoutOrder
-                })                
+                })
 
                 Items["Fade"] = Instances:Create("TextButton", {
                     Parent = Items["Background"].Instance,
@@ -6251,7 +6251,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["Button"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
+                    CornerRadius = UDimNew(0, 4)
                 })
 
                 Items["ButtonStroke"] = Instances:Create("UIStroke", {
@@ -6287,7 +6287,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["Accent"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
+                    CornerRadius = UDimNew(0, 4)
                 })
 
                 Items["Text"] = Instances:Create("TextLabel", {
@@ -6758,7 +6758,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["RealDropdown"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
+                    CornerRadius = UDimNew(0, 4)
                 })
 
                 Items["DropdownStroke"] = Instances:Create("UIStroke", {
@@ -6850,7 +6850,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["OptionHolder"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 8)
+                    CornerRadius = UDimNew(0, 4)
                 })
 
                 -- UIScale + UIOrigin allow a pop animation that doesn't fight
