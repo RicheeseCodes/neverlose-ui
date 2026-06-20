@@ -1005,6 +1005,10 @@ local Library do
     end
 
     Library.MakeBlurred = function(self, Item, Window)
+        -- Disabled by user request — the glass blur effect created a visible
+        -- halo/outline around the menu edges. No-op now.
+        if true then return end
+
         Item = Item.Instance
         local BlurItem = Item
 
