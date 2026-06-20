@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `3efe531` — Fix notification placement, animation, and icon to match Rayfield
+**Last commit:** `920c37e` — Fix notification text position and overflow
 **Last AI to touch this:** Z code (GLM-5.2)
 **Date:** 2026-06-20
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-20]** Z code (GLM-5.2): Fix notification text position and overflow (`920c37e`)
 
 - **[2026-06-20]** Z code (GLM-5.2): Fix notification placement, animation, and icon to match Rayfield (`3efe531`)
 
