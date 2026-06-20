@@ -2618,6 +2618,29 @@ local Library do
                     BackgroundColor3 = FromRGB(40, 38, 42)
                 })  Items["TopbarDivider"]:AddToTheme({BackgroundColor3 = "Element"})
 
+                -- CS2-style accent stripe under topbar (matches section accent lines)
+                Items["TopbarAccent"] = Instances:Create("Frame", {
+                    Parent = Items["Topbar"].Instance,
+                    Name = "\0",
+                    BackgroundTransparency = 0.5,
+                    Size = UDim2New(1, 0, 0, 1),
+                    Position = UDim2New(0, 0, 1, 0),
+                    ZIndex = 6,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70),
+                })  Items["TopbarAccent"]:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UIGradient", {
+                    Parent = Items["TopbarAccent"].Instance,
+                    Name = "\0",
+                    Transparency = NumSequence{
+                        NumSequenceKeypoint(0, 1),
+                        NumSequenceKeypoint(0.25, 0.2),
+                        NumSequenceKeypoint(0.75, 0.2),
+                        NumSequenceKeypoint(1, 1),
+                    },
+                })
+
                 Items["TopbarTitle"] = Instances:Create("TextLabel", {
                     Parent = Items["Topbar"].Instance,
                     Name = "Title",
