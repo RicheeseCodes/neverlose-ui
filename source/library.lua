@@ -5637,16 +5637,78 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
 
+                -- CS2-style: small square checkbox on the LEFT, text right after.
+                -- No more sliding pill switch (that was iOS/consumer-app vibe).
+                Items["Indicator"] = Instances:Create("Frame", {
+                    Parent = Items["Toggle"].Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 14, 0, 14),
+                    AnchorPoint = Vector2New(0, 0.5),
+                    Position = UDim2New(0, 0, 0.5, 0),
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    ZIndex = 2,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(20, 20, 30)
+                })
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Indicator"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 3)
+                })
+
+                Items["SwitchStroke"] = Instances:Create("UIStroke", {
+                    Parent = Items["Indicator"].Instance,
+                    Name = "\0",
+                    Color = FromRGB(70, 70, 95),
+                    Transparency = 0.2,
+                    Thickness = 1.2,
+                })
+
+                Items["Accent"] = Instances:Create("Frame", {
+                    Parent = Items["Indicator"].Instance,
+                    Name = "\0",
+                    Size = UDim2New(0, 0, 0, 0),
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    ZIndex = 3,
+                    BorderSizePixel = 0,
+                    BackgroundColor3 = FromRGB(230, 57, 70),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Position = UDim2New(0.5, 0, 0.5, 0)
+                })  Items["Accent"]:AddToTheme({BackgroundColor3 = "Accent"})
+
+                Instances:Create("UICorner", {
+                    Parent = Items["Accent"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 3)
+                })
+
+                Items["CheckIcon"] = Instances:Create("ImageLabel", {
+                    Parent = Items["Accent"].Instance,
+                    Name = "\0",
+                    BorderColor3 = FromRGB(0, 0, 0),
+                    Size = UDim2New(0, 0, 0, 0),
+                    AnchorPoint = Vector2New(0.5, 0.5),
+                    Image = "rbxassetid://121760666525660",
+                    ImageColor3 = FromRGB(255, 255, 255),
+                    BackgroundTransparency = 1,
+                    Position = UDim2New(0.5, 0, 0.5, 0),
+                    ZIndex = 4,
+                    BorderSizePixel = 0,
+                    ImageTransparency = 1,
+                    BackgroundColor3 = FromRGB(255, 255, 255)
+                })
+
                 Items["Text"] = Instances:Create("TextLabel", {
                     Parent = Items["Toggle"].Instance,
                     Name = "\0",
                     FontFace = Library.Font,
-                    TextColor3 = FromRGB(240, 240, 240),
+                    TextColor3 = FromRGB(200, 200, 210),
                     TextTransparency = 0.2,
                     Text = Toggle.Name,
                     AutomaticSize = Enum.AutomaticSize.X,
                     Size = UDim2New(0, 0, 0, 15),
-                    Position = UDim2New(0, 0, 0.5, 0),
+                    Position = UDim2New(0, 22, 0.5, 0),
                     AnchorPoint = Vector2New(0, 0.5),
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
@@ -5657,50 +5719,7 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
 
-                Items["Indicator"] = Instances:Create("Frame", {
-                    Parent = Items["Toggle"].Instance,
-                    Name = "\0",
-                    Size = UDim2New(0, 42, 0, 22),
-                    AnchorPoint = Vector2New(1, 0.5),
-                    Position = UDim2New(1, 0, 0.5, 0),
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 2,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(10, 10, 16)
-                })  Items["Indicator"]:AddToTheme({BackgroundColor3 = "ToggleTrack"})
-
-                Instances:Create("UICorner", {
-                    Parent = Items["Indicator"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(1, 0)
-                })
-
-                Items["SwitchStroke"] = Instances:Create("UIStroke", {
-                    Parent = Items["Indicator"].Instance,
-                    Name = "\0",
-                    Color = FromRGB(34, 34, 46),
-                    Transparency = 0.5,
-                    Thickness = 1
-                })  Items["SwitchStroke"]:AddToTheme({Color = "Outline"})
-
-                Items["Accent"] = Instances:Create("Frame", {
-                    Parent = Items["Indicator"].Instance,
-                    Name = "\0",
-                    Size = UDim2New(0, 16, 0, 16),
-                    BorderColor3 = FromRGB(0, 0, 0),
-                    ZIndex = 3,
-                    BorderSizePixel = 0,
-                    BackgroundColor3 = FromRGB(74, 74, 90),
-                    AnchorPoint = Vector2New(0, 0.5),
-                    Position = UDim2New(0, 3, 0.5, 0)
-                })  Items["Accent"]:AddToTheme({BackgroundColor3 = "ToggleOff"})
-
-                Instances:Create("UICorner", {
-                    Parent = Items["Accent"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(1, 0)
-                })
-
+                -- Kept for backwards compatibility with old code expecting these
                 Items["Gradient"] = Instances:Create("UIGradient", {
                     Parent = Items["Indicator"].Instance,
                     Name = "\0",
@@ -5719,16 +5738,19 @@ local Library do
                 Toggle.Value = Value
                 Library.Flags[Toggle.Flag] = Value
 
+                local TW_BOX = TweenInfo.new(0.22, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+                local TW_CHECK = TweenInfo.new(0.28, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+
                 if Toggle.Value then
-                    Items["Accent"]:Tween(TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(1, -19, 0.5, 0), BackgroundColor3 = FromRGB(255, 255, 255)})
-                    Items["Indicator"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.Accent})
-                    Items["SwitchStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Color = Library.Theme.Accent, Transparency = 0.3})
-                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0})
+                    Items["Accent"]:Tween(TW_BOX, {Size = UDim2New(1, 0, 1, 0)})
+                    Items["CheckIcon"]:Tween(TW_CHECK, {Size = UDim2New(0, 9, 0, 9), ImageTransparency = 0})
+                    Items["SwitchStroke"]:Tween(TW_BOX, {Color = Library.Theme.Accent, Transparency = 0})
+                    Items["Text"]:Tween(TW_BOX, {TextTransparency = 0})
                 else
-                    Items["Accent"]:Tween(TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2New(0, 3, 0.5, 0), BackgroundColor3 = Library.Theme.ToggleOff})
-                    Items["Indicator"]:Tween(TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = Library.Theme.ToggleTrack})
-                    Items["SwitchStroke"]:Tween(TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Color = Library.Theme.Outline, Transparency = 0.5})
-                    Items["Text"]:Tween(TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2})
+                    Items["Accent"]:Tween(TW_BOX, {Size = UDim2New(0, 0, 0, 0)})
+                    Items["CheckIcon"]:Tween(TW_BOX, {Size = UDim2New(0, 0, 0, 0), ImageTransparency = 1})
+                    Items["SwitchStroke"]:Tween(TW_BOX, {Color = FromRGB(70, 70, 95), Transparency = 0.2})
+                    Items["Text"]:Tween(TW_BOX, {TextTransparency = 0.2})
                 end
 
                 if Toggle.Callback then
