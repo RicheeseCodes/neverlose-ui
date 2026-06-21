@@ -4458,7 +4458,7 @@ local Library do
                     Name = "\0",
                     FillDirection = Enum.FillDirection.Horizontal,
                     HorizontalFlex = Enum.UIFlexAlignment.Fill,
-                    Padding = UDimNew(0, 10),
+                    Padding = UDimNew(0, 12),
                     SortOrder = Enum.SortOrder.LayoutOrder,
                     VerticalFlex = Enum.UIFlexAlignment.Fill
                 })
@@ -4466,11 +4466,11 @@ local Library do
                 Instances:Create("UIPadding", {
                     Parent = Items["Page"].Instance,
                     Name = "\0",
-                    PaddingTop = UDimNew(0, 10),
-                    PaddingBottom = UDimNew(0, 10),
-                    PaddingRight = UDimNew(0, 10),
-                    PaddingLeft = UDimNew(0, 10)
-                })                
+                    PaddingTop = UDimNew(0, 14),
+                    PaddingBottom = UDimNew(0, 14),
+                    PaddingRight = UDimNew(0, 14),
+                    PaddingLeft = UDimNew(0, 14)
+                })
 
                 for Index = 1, Page.Columns do 
                     local NewColumn = Instances:Create("ScrollingFrame", {
@@ -4492,7 +4492,7 @@ local Library do
                     Instances:Create("UIListLayout", {
                         Parent = NewColumn.Instance,
                         Name = "\0",
-                        Padding = UDimNew(0, 5),
+                        Padding = UDimNew(0, 10),
                         SortOrder = Enum.SortOrder.LayoutOrder
                     })
 
