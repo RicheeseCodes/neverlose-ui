@@ -2584,7 +2584,7 @@ local Library do
                 Instances:Create("UICorner", {
                     Parent = Items["Topbar"].Instance,
                     Name = "\0",
-                    CornerRadius = UDimNew(0, 6)
+                    CornerRadius = UDimNew(0, 2)
                 })
 
                 -- CornerRepair: squares off the topbar's BOTTOM corners so they
@@ -5202,12 +5202,18 @@ local Library do
 
                 -- CS2-style: visible section border + thin accent underline
                 -- under the title bar to make each panel feel framed.
+                Instances:Create("UICorner", {
+                    Parent = Items["Section"].Instance,
+                    Name = "\0",
+                    CornerRadius = UDimNew(0, 4)
+                })
+
                 Instances:Create("UIStroke", {
                     Parent = Items["Section"].Instance,
                     Name = "\0",
-                    Color = FromRGB(55, 55, 75),
-                    Transparency = 0.3,
-                    Thickness = 1,
+                    Color = FromRGB(70, 70, 95),
+                    Transparency = 0.1,
+                    Thickness = 1.2,
                 })
 
                 Items["AccentLine"] = Instances:Create("Frame", {
@@ -5296,11 +5302,9 @@ local Library do
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })  Items["Description"]:AddToTheme({TextColor3 = "Text"})
                 
-                Instances:Create("UICorner", {
-                    Parent = Items["TopBackground"].Instance,
-                    Name = "\0",
-                    CornerRadius = UDimNew(0, 4)
-                })
+                -- Removed TopBackground UICorner — it was creating a visible
+                -- inner rounded box that made section corners look weird.
+                -- Section is now fully square-cornered for the CS2 vibe.
                 
                 Items["Title"] = Instances:Create("TextLabel", {
                     Parent = Items["TopBackground"].Instance,
