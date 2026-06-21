@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `d179bff` — Breathing room: more padding between sections and menu edges
+**Last commit:** `fbc1102` — Keybind compact: 60px -> 40px per binding
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Keybind compact: 60px -> 40px per binding (`fbc1102`)
 
 - **[2026-06-21]** Claude Opus 4.7: Breathing room: more padding between sections and menu edges (`d179bff`)
 
