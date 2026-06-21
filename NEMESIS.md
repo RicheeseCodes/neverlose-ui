@@ -60,7 +60,7 @@ This repo has a git post-commit hook (`.githooks/post-commit`) that automaticall
 
 ## 📍 CURRENT STATE
 
-**Last commit:** `a0e20f3` — Fix section corner artifacts + strengthen border for visibility
+**Last commit:** `38b097f` — Toggle redesign: CS2-style square checkbox (left-aligned + checkmark)
 **Last AI to touch this:** Claude Opus 4.7
 **Date:** 2026-06-21
 
@@ -170,6 +170,8 @@ Library:Notification({ Title = "Hey", Description = "Hello!", Duration = 4 })
 
 > *Each AI logs ONE LINE when they finish working. Most recent on top.*
 
+
+- **[2026-06-21]** Claude Opus 4.7: Toggle redesign: CS2-style square checkbox (left-aligned + checkmark) (`38b097f`)
 
 - **[2026-06-21]** Claude Opus 4.7: Fix section corner artifacts + strengthen border for visibility (`a0e20f3`)
 
