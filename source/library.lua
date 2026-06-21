@@ -7563,8 +7563,8 @@ local Library do
                 Items["SubElements"] = Instances:Create("Frame", {
                     Parent = Items["Label"].Instance,
                     Name = "\0",
-                    Size = UDim2New(1, 0, 0, 30),
-                    Position = UDim2New(0, 0, 0, 30),
+                    Size = UDim2New(1, 0, 0, 18),
+                    Position = UDim2New(0, 0, 0, 22),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
@@ -7634,7 +7634,7 @@ local Library do
                     BorderColor3 = FromRGB(0, 0, 0),
                     AnchorPoint = Vector2New(1, 0),
                     Position = UDim2New(1, 0, 0, 0),
-                    Size = UDim2New(0, 200, 0, 25),
+                    Size = UDim2New(0, 140, 0, 18),
                     ZIndex = 2,
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(27, 26, 29)
