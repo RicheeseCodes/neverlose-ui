@@ -5220,7 +5220,7 @@ local Library do
                     Parent = Items["Section"].Instance,
                     Name = "\0",
                     Size = UDim2New(1, 0, 0, 1),
-                    Position = UDim2New(0, 0, 0, 55),
+                    Position = UDim2New(0, 0, 0, 38),
                     BorderSizePixel = 0,
                     BackgroundColor3 = FromRGB(230, 57, 70),
                     BackgroundTransparency = 0.6,
@@ -5242,7 +5242,7 @@ local Library do
                     Parent = Items["Section"].Instance,
                     Name = "\0",
                     BackgroundTransparency = 0.6499999761581421,
-                    Size = UDim2New(1, 0, 0, 55),
+                    Size = UDim2New(1, 0, 0, 38),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
@@ -5512,17 +5512,17 @@ local Library do
                     Name = "\0",
                     BorderColor3 = FromRGB(0, 0, 0),
                     BackgroundTransparency = 1,
-                    Position = UDim2New(0, 12, 0, 15),
-                    Size = UDim2New(1, -24, 0, 0),
+                    Position = UDim2New(0, 10, 0, 8),
+                    Size = UDim2New(1, -20, 0, 0),
                     BorderSizePixel = 0,
                     AutomaticSize = Enum.AutomaticSize.Y,
                     BackgroundColor3 = FromRGB(255, 255, 255)
                 })
-                
+
                 Instances:Create("UIListLayout", {
                     Parent = Items["Content"].Instance,
                     Name = "\0",
-                    Padding = UDimNew(0, 3),
+                    Padding = UDimNew(0, 2),
                     SortOrder = Enum.SortOrder.LayoutOrder
                 })
 
@@ -5631,7 +5631,7 @@ local Library do
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
-                    Size = UDim2New(1, 0, 0, 24),
+                    Size = UDim2New(1, 0, 0, 20),
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255)
@@ -6155,7 +6155,7 @@ local Library do
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
-                    Size = UDim2New(1, 0, 0, 24),
+                    Size = UDim2New(1, 0, 0, 20),
                     ZIndex = 2,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(255, 255, 255)
@@ -6477,7 +6477,7 @@ local Library do
                     Parent = Slider.Section.Items["Content"].Instance,
                     Name = "\0",
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 38),
+                    Size = UDim2New(1, 0, 0, 28),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
@@ -6784,7 +6784,7 @@ local Library do
                     Parent = Dropdown.Section.Items["Content"].Instance,
                     Name = "\0",
                     BackgroundTransparency = 1,
-                    Size = UDim2New(1, 0, 0, 32),
+                    Size = UDim2New(1, 0, 0, 26),
                     BorderColor3 = FromRGB(0, 0, 0),
                     ZIndex = 2,
                     BorderSizePixel = 0,
